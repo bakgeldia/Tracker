@@ -10,7 +10,6 @@
 		FCD261682C6B73010073D483 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD261672C6B73010073D483 /* AppDelegate.swift */; };
 		FCD2616A2C6B73010073D483 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD261692C6B73010073D483 /* SceneDelegate.swift */; };
 		FCD2616C2C6B73010073D483 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD2616B2C6B73010073D483 /* ViewController.swift */; };
-		FCD2616F2C6B73010073D483 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = FCD2616E2C6B73010073D483 /* Base */; };
 		FCD261712C6B73030073D483 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FCD261702C6B73030073D483 /* Assets.xcassets */; };
 		FCD261742C6B73030073D483 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = FCD261732C6B73030073D483 /* Base */; };
 /* End PBXBuildFile section */
@@ -20,7 +19,6 @@
 		FCD261672C6B73010073D483 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FCD261692C6B73010073D483 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		FCD2616B2C6B73010073D483 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		FCD2616E2C6B73010073D483 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		FCD261702C6B73030073D483 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FCD261732C6B73030073D483 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		FCD261752C6B73030073D483 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -59,7 +57,6 @@
 				FCD261672C6B73010073D483 /* AppDelegate.swift */,
 				FCD261692C6B73010073D483 /* SceneDelegate.swift */,
 				FCD2616B2C6B73010073D483 /* ViewController.swift */,
-				FCD2616D2C6B73010073D483 /* Main.storyboard */,
 				FCD261702C6B73030073D483 /* Assets.xcassets */,
 				FCD261722C6B73030073D483 /* LaunchScreen.storyboard */,
 				FCD261752C6B73030073D483 /* Info.plist */,
@@ -127,7 +124,6 @@
 			files = (
 				FCD261712C6B73030073D483 /* Assets.xcassets in Resources */,
 				FCD261742C6B73030073D483 /* Base in Resources */,
-				FCD2616F2C6B73010073D483 /* Base in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -147,14 +143,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		FCD2616D2C6B73010073D483 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				FCD2616E2C6B73010073D483 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		FCD261722C6B73030073D483 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -297,7 +285,6 @@
 				INFOPLIST_FILE = Tracker/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = UIInterfaceOrientationPortrait;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
@@ -329,7 +316,6 @@
 				INFOPLIST_FILE = Tracker/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = UIInterfaceOrientationPortrait;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
