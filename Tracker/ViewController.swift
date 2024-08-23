@@ -13,7 +13,6 @@ class ViewController: UITabBarController {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         setTabBarItems()
-        
     }
     
     private func setTabBarItems() {
@@ -32,7 +31,10 @@ class ViewController: UITabBarController {
             selectedImage: nil
         )
         
-        self.viewControllers = [trackersViewController, statisticsViewController]
+        let navigationController = UINavigationController(rootViewController: trackersViewController)
+        
+        
+        self.viewControllers = [navigationController, statisticsViewController]
     }
 
 }
