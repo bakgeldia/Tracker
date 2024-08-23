@@ -13,6 +13,10 @@ final class NewHabitViewController: UIViewController {
     private let textField = UITextField()
     private let tableView = UITableView()
     
+    private let buttonStackView = UIStackView()
+    private let cancelButton = UIButton()
+    private let createButton = UIButton()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
@@ -53,6 +57,35 @@ final class NewHabitViewController: UIViewController {
         tableView.dataSource = self
         tableView.delegate = self
         
+        // Button Stack View
+        buttonStackView.axis = .horizontal
+        buttonStackView.distribution = .fillEqually
+        buttonStackView.spacing = 8
+        buttonStackView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(buttonStackView)
+        
+        // Cancel Button
+        let redColor = UIColor(red: 245.0/255.0, green: 107.0/255.0, blue: 108.0/255.0, alpha: 1)
+        cancelButton.setTitle("Отменить", for: .normal)
+        cancelButton.setTitleColor(redColor, for: .normal)
+        cancelButton.backgroundColor = .white
+        cancelButton.layer.cornerRadius = 16
+        cancelButton.layer.borderColor = redColor.cgColor
+        cancelButton.layer.borderWidth = 1
+        cancelButton.addTarget(self, action: #selector(cancelCreatingNewHabit), for: .touchUpInside)
+        cancelButton.translatesAutoresizingMaskIntoConstraints = false
+        buttonStackView.addArrangedSubview(cancelButton)
+        
+        // Create Button
+        createButton.setTitle("Создать", for: .normal)
+        createButton.setTitleColor(.white, for: .normal)
+        createButton.backgroundColor = UIColor(red: 174.0/255.0, green: 175.0/255.0, blue: 180.0/255.0, alpha: 1)
+        createButton.layer.cornerRadius = 16
+        createButton.addTarget(self, action: #selector(createNewHabit), for: .touchUpInside)
+        createButton.translatesAutoresizingMaskIntoConstraints = false
+        buttonStackView.addArrangedSubview(createButton)
+        
+        
         // Layout constraints
         NSLayoutConstraint.activate([
             // Title
@@ -69,8 +102,29 @@ final class NewHabitViewController: UIViewController {
             tableView.topAnchor.constraint(equalTo: textField.bottomAnchor, constant: 24),
             tableView.leadingAnchor.constraint(equalTo: textField.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: textField.trailingAnchor),
-            tableView.heightAnchor.constraint(equalToConstant: 150)
+            tableView.heightAnchor.constraint(equalToConstant: 150),
+            
+            // Button Stack View
+            buttonStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            buttonStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            buttonStackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 0),
+            buttonStackView.heightAnchor.constraint(equalToConstant: 60),
+            
+            // Button Heights
+            cancelButton.heightAnchor.constraint(equalToConstant: 60),
+            createButton.heightAnchor.constraint(equalToConstant: 60)
         ])
+    }
+    
+    @objc
+    private func cancelCreatingNewHabit() {
+        dismiss(animated: true)
+        print("Cancel button tapped")
+    }
+    
+    @objc
+    private func createNewHabit() {
+        print("Create button tapped")
     }
 }
 
