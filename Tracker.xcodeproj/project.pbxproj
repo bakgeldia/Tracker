@@ -20,6 +20,7 @@
 		FCD7BFBA2C78B502004559A5 /* TrackerCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD7BFB92C78B502004559A5 /* TrackerCollectionViewCell.swift */; };
 		FCD7BFBD2C78B999004559A5 /* AddTrackerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD7BFBC2C78B999004559A5 /* AddTrackerViewController.swift */; };
 		FCD7BFE12C78C996004559A5 /* NewHabitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD7BFE02C78C996004559A5 /* NewHabitViewController.swift */; };
+		FCD7BFE32C78E3A7004559A5 /* ScheduleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD7BFE22C78E3A6004559A5 /* ScheduleViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +39,7 @@
 		FCD7BFB92C78B502004559A5 /* TrackerCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerCollectionViewCell.swift; sourceTree = "<group>"; };
 		FCD7BFBC2C78B999004559A5 /* AddTrackerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTrackerViewController.swift; sourceTree = "<group>"; };
 		FCD7BFE02C78C996004559A5 /* NewHabitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewHabitViewController.swift; sourceTree = "<group>"; };
+		FCD7BFE22C78E3A6004559A5 /* ScheduleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -116,6 +118,7 @@
 			children = (
 				FCD7BFBC2C78B999004559A5 /* AddTrackerViewController.swift */,
 				FCD7BFE02C78C996004559A5 /* NewHabitViewController.swift */,
+				FCD7BFE22C78E3A6004559A5 /* ScheduleViewController.swift */,
 			);
 			path = TrackerCreation;
 			sourceTree = "<group>";
@@ -193,6 +196,7 @@
 				FCD261C72C71E2F50073D483 /* Tracker.swift in Sources */,
 				FCD7BFE12C78C996004559A5 /* NewHabitViewController.swift in Sources */,
 				FCD261CB2C71E3250073D483 /* TrackerRecord.swift in Sources */,
+				FCD7BFE32C78E3A7004559A5 /* ScheduleViewController.swift in Sources */,
 				FCD2616C2C6B73010073D483 /* ViewController.swift in Sources */,
 				FCD261802C6B93DB0073D483 /* StatisticsViewController.swift in Sources */,
 				FCD7BFBA2C78B502004559A5 /* TrackerCollectionViewCell.swift in Sources */,

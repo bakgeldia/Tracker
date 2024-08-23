@@ -126,6 +126,17 @@ final class NewHabitViewController: UIViewController {
     private func createNewHabit() {
         print("Create button tapped")
     }
+    
+    private func showSchedulePopover() {
+        let scheduleVC = ScheduleViewController()
+        let popover = UIPopoverPresentationController(presentedViewController: scheduleVC, presenting: self)
+        popover.sourceView = self.view
+        popover.sourceRect = CGRect(x: view.bounds.midX, y: view.bounds.midY, width: 0, height: 0)
+        popover.permittedArrowDirections = []
+        
+        scheduleVC.modalPresentationStyle = .popover
+        self.present(scheduleVC, animated: true, completion: nil)
+    }
 }
 
 extension NewHabitViewController: UITableViewDataSource {
@@ -154,7 +165,7 @@ extension NewHabitViewController: UITableViewDelegate {
             // Handle category button tap
         } else if indexPath.row == 1 {
             print("Расписание tapped")
-            // Handle schedule button tap
+            showSchedulePopover()
         }
         tableView.deselectRow(at: indexPath, animated: true)
     }
