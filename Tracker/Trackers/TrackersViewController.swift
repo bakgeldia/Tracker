@@ -16,6 +16,15 @@ final class TrackersViewController: UIViewController {
     private let errorImageView = UIImageView()
     private let errorLabel = UILabel()
     
+    private let collectionView: UICollectionView = {
+        let collectionView = UICollectionView(
+            frame: .zero,
+            collectionViewLayout: UICollectionViewFlowLayout()
+        )
+        collectionView.register(TrackerCollectionViewCell.self, forCellWithReuseIdentifier: "Cell")
+        return collectionView
+    }()
+    
     var categories = [TrackerCategory]()
     var completedTrackers = [TrackerRecord]()
     
@@ -43,40 +52,12 @@ final class TrackersViewController: UIViewController {
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: addTrackerButton)
     }
     
+    private func setupCollectionView() {
+        //TODO: setup
+    }
+    
     private func setupView() {
         view.backgroundColor = .white
-        
-//        //Left top Button
-//        addTrackerButton = UIButton.systemButton(
-//            with: UIImage(named: "add_tracker_button") ?? UIImage(),
-//            target: self,
-//            action: #selector(Self.didTapAddButton)
-//        )
-//        addTrackerButton.tintColor = UIColor(red: 26.0/255.0, green: 27.0/255.0, blue: 34.0/255.0, alpha: 1)
-//        addTrackerButton.translatesAutoresizingMaskIntoConstraints = false
-//        view.addSubview(addTrackerButton)
-//        
-//        NSLayoutConstraint.activate([
-//            addTrackerButton.widthAnchor.constraint(equalToConstant: 44),
-//            addTrackerButton.heightAnchor.constraint(equalToConstant: 44),
-//            addTrackerButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 6),
-//            addTrackerButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 1),
-//        ])
-//        
-//        //Date picker
-//        datePicker.locale = .current
-//        datePicker.datePickerMode = .date
-//        datePicker.preferredDatePickerStyle = .compact
-//        
-//        datePicker.translatesAutoresizingMaskIntoConstraints = false
-//        view.addSubview(datePicker)
-//        
-//        NSLayoutConstraint.activate([
-//            datePicker.widthAnchor.constraint(equalToConstant: 100),
-//            datePicker.heightAnchor.constraint(equalToConstant: 34),
-//            datePicker.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
-//            datePicker.centerYAnchor.constraint(equalTo: addTrackerButton.centerYAnchor)
-//        ])
         
         //Title label
         pageTitle.text = "Трекеры"
@@ -132,10 +113,30 @@ final class TrackersViewController: UIViewController {
         
     }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "showAddTracker" {
+            let destinationVC = segue.destination as! AddTrackerViewController
+            destinationVC.modalPresentationStyle = .overCurrentContext
+            destinationVC.view.backgroundColor = UIColor.black.withAlphaComponent(0.5)
+        }
+    }
+    
     @objc
     private func didTapAddButton() {
-        //TODO: adding new tracker
+        // Инициализируем PopoverViewController
+        let addTrackerVC = AddTrackerViewController()
         
+        // Создаем контейнер для popover
+        let popover = UIPopoverPresentationController(presentedViewController: addTrackerVC, presenting: self)
+        popover.sourceView = self.view
+        popover.sourceRect = CGRect(x: view.bounds.midX, y: view.bounds.midY, width: 0, height: 0)
+        popover.permittedArrowDirections = []
+        
+        // Настройки popover
+        addTrackerVC.modalPresentationStyle = .popover
+        
+        // Отображаем popover
+        self.present(addTrackerVC, animated: true, completion: nil)
     }
     
     @objc func datePickerValueChanged(_ sender: UIDatePicker) {
