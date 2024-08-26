@@ -1,13 +1,13 @@
 //
-//  NewHabitViewController.swift
+//  NonReguarEventViewController.swift
 //  Tracker
 //
-//  Created by Bakgeldi Alkhabay on 23.08.2024.
+//  Created by Bakgeldi Alkhabay on 27.08.2024.
 //
 
 import UIKit
 
-final class NewHabitViewController: UIViewController {
+final class NonRegularEventViewController: UIViewController {
     
     private let titleLabel = UILabel()
     private let textField = UITextField()
@@ -17,8 +17,11 @@ final class NewHabitViewController: UIViewController {
     private let cancelButton = UIButton()
     private let createButton = UIButton()
     
+    var categories = [TrackerCategory]()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         setupView()
     }
     
@@ -28,7 +31,7 @@ final class NewHabitViewController: UIViewController {
         view.clipsToBounds = true
         
         // Title Label
-        titleLabel.text = "Новая привычка"
+        titleLabel.text = "Нерегулярное событие"
         titleLabel.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         titleLabel.textColor = UIColor(red: 26.0/255.0, green: 27.0/255.0, blue: 34.0/255.0, alpha: 1)
         titleLabel.textAlignment = .center
@@ -36,7 +39,7 @@ final class NewHabitViewController: UIViewController {
         view.addSubview(titleLabel)
         
         // TextField
-        textField.placeholder = "Введите название трекера"
+        textField.placeholder = "Введите название события"
         textField.backgroundColor = UIColor(red: 230.0/255.0, green: 232.0/255.0, blue: 235.0/255.0, alpha: 0.3)
         textField.layer.cornerRadius = 16
         textField.textAlignment = .left
@@ -72,19 +75,18 @@ final class NewHabitViewController: UIViewController {
         cancelButton.layer.cornerRadius = 16
         cancelButton.layer.borderColor = redColor.cgColor
         cancelButton.layer.borderWidth = 1
-        cancelButton.addTarget(self, action: #selector(cancelCreatingNewHabit), for: .touchUpInside)
+        cancelButton.addTarget(self, action: #selector(cancelCreatingNewEvent), for: .touchUpInside)
         cancelButton.translatesAutoresizingMaskIntoConstraints = false
         buttonStackView.addArrangedSubview(cancelButton)
         
         // Create Button
         createButton.setTitle("Создать", for: .normal)
         createButton.setTitleColor(.white, for: .normal)
-        createButton.backgroundColor = UIColor(red: 174.0/255.0, green: 175.0/255.0, blue: 180.0/255.0, alpha: 1)
+        createButton.backgroundColor = UIColor(red: 26.0/255.0, green: 27.0/255.0, blue: 34.0/255.0, alpha: 1)
         createButton.layer.cornerRadius = 16
-        createButton.addTarget(self, action: #selector(createNewHabit), for: .touchUpInside)
+        createButton.addTarget(self, action: #selector(createNewEvent), for: .touchUpInside)
         createButton.translatesAutoresizingMaskIntoConstraints = false
         buttonStackView.addArrangedSubview(createButton)
-        
         
         // Layout constraints
         NSLayoutConstraint.activate([
@@ -102,7 +104,7 @@ final class NewHabitViewController: UIViewController {
             tableView.topAnchor.constraint(equalTo: textField.bottomAnchor, constant: 24),
             tableView.leadingAnchor.constraint(equalTo: textField.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: textField.trailingAnchor),
-            tableView.heightAnchor.constraint(equalToConstant: 150),
+            tableView.heightAnchor.constraint(equalToConstant: 75), // Only one row, so height is smaller
             
             // Button Stack View
             buttonStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
@@ -117,56 +119,55 @@ final class NewHabitViewController: UIViewController {
     }
     
     @objc
-    private func cancelCreatingNewHabit() {
+    private func cancelCreatingNewEvent() {
         dismiss(animated: true)
         print("Cancel button tapped")
     }
     
     @objc
-    private func createNewHabit() {
+    private func createNewEvent() {
+        dismiss(animated: true)
         print("Create button tapped")
     }
     
-    private func showSchedulePopover() {
-        let scheduleVC = ScheduleViewController()
-        let popover = UIPopoverPresentationController(presentedViewController: scheduleVC, presenting: self)
+    private func showCategoriesPopover() {
+        let categoryVC = CategoryViewController()
+        let popover = UIPopoverPresentationController(presentedViewController: categoryVC, presenting: self)
         popover.sourceView = self.view
         popover.sourceRect = CGRect(x: view.bounds.midX, y: view.bounds.midY, width: 0, height: 0)
         popover.permittedArrowDirections = []
         
-        scheduleVC.modalPresentationStyle = .popover
-        self.present(scheduleVC, animated: true, completion: nil)
+        categoryVC.modalPresentationStyle = .popover
+        categoryVC.categories = self.categories
+        
+        self.present(categoryVC, animated: true, completion: nil)
     }
 }
 
-extension NewHabitViewController: UITableViewDataSource {
+extension NonRegularEventViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 2
+        return 1 // Only one cell now
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
-        cell.textLabel?.text = indexPath.row == 0 ? "Категория" : "Расписание"
+        cell.textLabel?.text = "Категория"
         cell.accessoryType = .disclosureIndicator
         cell.backgroundColor = UIColor(red: 230.0/255.0, green: 232.0/255.0, blue: 235.0/255.0, alpha: 0.3)
         return cell
     }
 }
 
-extension NewHabitViewController: UITableViewDelegate {
+extension NonRegularEventViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 75
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         // Handle button taps
-        if indexPath.row == 0 {
-            print("Категория tapped")
-            // Handle category button tap
-        } else if indexPath.row == 1 {
-            print("Расписание tapped")
-            showSchedulePopover()
-        }
+        print("Категория tapped")
+        showCategoriesPopover()
+        
         tableView.deselectRow(at: indexPath, animated: true)
     }
 }

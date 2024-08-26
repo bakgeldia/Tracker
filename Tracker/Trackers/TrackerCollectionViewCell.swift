@@ -17,8 +17,9 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
     let completeTrackerButton = UIButton()
     
     let trackerView = UIView()
-    
     var checkedButton = false
+    
+    var dayCounter = 0
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -31,8 +32,7 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         contentView.addSubview(trackerView)
         trackerView.translatesAutoresizingMaskIntoConstraints = false
         
-        //Emoji and tracker name view rgba(51, 207, 105, 1)
-        emojiAndNameView.backgroundColor = UIColor(red: 51.0/255.0, green: 207.0/255.0, blue: 105.0/255.0, alpha: 1)
+        //Emoji and tracker name view
         emojiAndNameView.layer.cornerRadius = 16
         trackerView.addSubview(emojiAndNameView)
         emojiAndNameView.translatesAutoresizingMaskIntoConstraints = false
@@ -43,7 +43,6 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         emoji.translatesAutoresizingMaskIntoConstraints = false
         
         //Tracker name
-        //trackerName.text = "Поливать растения"
         trackerName.textColor = .white
         trackerName.font = UIFont.systemFont(ofSize: 12, weight: .medium)
         emojiAndNameView.addSubview(trackerName)
@@ -55,7 +54,7 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         daysAndButtonView.translatesAutoresizingMaskIntoConstraints = false
         
         //Days label
-        numOfDays.text = "1 day"
+        numOfDays.text = "0 день"
         numOfDays.font = UIFont.systemFont(ofSize: 12, weight: .medium)
         daysAndButtonView.addSubview(numOfDays)
         numOfDays.translatesAutoresizingMaskIntoConstraints = false
@@ -64,7 +63,6 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         completeTrackerButton.setTitle("+", for: .normal)
         completeTrackerButton.titleLabel?.textColor = .white
         completeTrackerButton.titleLabel?.font = UIFont.systemFont(ofSize: 25, weight: .medium)
-        completeTrackerButton.backgroundColor = UIColor(red: 51.0/255.0, green: 207.0/255.0, blue: 105.0/255.0, alpha: 1)
         completeTrackerButton.layer.cornerRadius = 22
         completeTrackerButton.addTarget(self, action: #selector(self.didTapCompleteButton), for: .touchUpInside)
         daysAndButtonView.addSubview(completeTrackerButton)
@@ -102,11 +100,10 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
             numOfDays.widthAnchor.constraint(equalToConstant: 101),
             numOfDays.centerYAnchor.constraint(equalTo: completeTrackerButton.centerYAnchor),
             
-            //completeTrackerButton.centerYAnchor.constraint(equalTo: numOfDays.centerYAnchor),
             completeTrackerButton.topAnchor.constraint(equalTo: emojiAndNameView.bottomAnchor, constant: 8),
             completeTrackerButton.heightAnchor.constraint(equalToConstant: 44),
             completeTrackerButton.widthAnchor.constraint(equalToConstant: 44),
-            completeTrackerButton.trailingAnchor.constraint(equalTo: daysAndButtonView.trailingAnchor, constant: -12),
+            completeTrackerButton.trailingAnchor.constraint(equalTo: daysAndButtonView.trailingAnchor, constant: -10),
         ])
     }
     
@@ -117,11 +114,15 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         if checkedButton {
             completeTrackerButton.setTitle("", for: .normal)
             completeTrackerButton.setImage(UIImage(named: "Done"), for: .normal)
-            completeTrackerButton.backgroundColor = UIColor(red: 51.0/255.0, green: 207.0/255.0, blue: 105.0/255.0, alpha: 0.3)
+            completeTrackerButton.backgroundColor?.withAlphaComponent(0.3)
+            dayCounter += 1
+            numOfDays.text = "\(dayCounter) день"
         } else {
             completeTrackerButton.setImage(UIImage(), for: .normal)
             completeTrackerButton.setTitle("+", for: .normal)
-            completeTrackerButton.backgroundColor = UIColor(red: 51.0/255.0, green: 207.0/255.0, blue: 105.0/255.0, alpha: 1)
+            completeTrackerButton.backgroundColor?.withAlphaComponent(1)
+            dayCounter -= 1
+            numOfDays.text = "\(dayCounter) день"
         }
     }
     

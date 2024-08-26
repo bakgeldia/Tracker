@@ -8,10 +8,11 @@
 import UIKit
 
 final class AddTrackerViewController: UIViewController {
-    
     private let titleLabel = UILabel()
     private let habitButton = UIButton()
     private let eventButton = UIButton()
+    
+    var categories = [TrackerCategory]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -47,6 +48,7 @@ final class AddTrackerViewController: UIViewController {
         eventButton.backgroundColor = UIColor(red: 26.0/255.0, green: 27.0/255.0, blue: 34.0/255.0, alpha: 1)
         eventButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         eventButton.layer.cornerRadius = 16
+        eventButton.addTarget(self, action: #selector(self.showNonRegularEventPopover), for: .touchUpInside)
         eventButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(eventButton)
         
@@ -83,8 +85,28 @@ final class AddTrackerViewController: UIViewController {
         
         // Настройки popover
         newHabitVC.modalPresentationStyle = .popover
+        newHabitVC.categories = self.categories
         
         // Отображаем popover
         self.present(newHabitVC, animated: true, completion: nil)
+    }
+    
+    @objc
+    private func showNonRegularEventPopover() {
+        // Инициализируем PopoverViewController
+        let newEventVC = NonRegularEventViewController()
+        
+        // Создаем контейнер для popover
+        let popover = UIPopoverPresentationController(presentedViewController: newEventVC, presenting: self)
+        popover.sourceView = self.view
+        popover.sourceRect = CGRect(x: view.bounds.midX, y: view.bounds.midY, width: 0, height: 0)
+        popover.permittedArrowDirections = []
+        
+        // Настройки popover
+        newEventVC.modalPresentationStyle = .popover
+        newEventVC.categories = self.categories
+        
+        // Отображаем popover
+        self.present(newEventVC, animated: true, completion: nil)
     }
 }
