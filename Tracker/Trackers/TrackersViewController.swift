@@ -30,6 +30,8 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
     
     private var visibleEmojies: [String] = []
     
+    private var trackerCounters = [UInt: Int]()
+    
     private let collectionView: UICollectionView = {
         let collectionView = UICollectionView(
             frame: .zero,
@@ -178,7 +180,7 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
         addTrackerVC.categories = self.categories
         
         // Отображаем popover
-        self.present(addTrackerVC, animated: true, completion: nil)
+        present(addTrackerVC, animated: true, completion: nil)
     }
     
     @objc func datePickerValueChanged(_ sender: UIDatePicker) {
@@ -217,6 +219,16 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
         
         updatePlaceholderVisibility()
     }
+    
+    private func dateWithoutTime(from date: Date) -> Date {
+        let calendar = Calendar.current
+        let dateComponents = calendar.dateComponents([.year, .month, .day], from: date)
+        if let dateOnly = calendar.date(from: dateComponents) {
+            return dateOnly
+        }
+        
+        return Date()
+    }
 }
 
 extension TrackersViewController: UICollectionViewDataSource {
@@ -242,6 +254,24 @@ extension TrackersViewController: UICollectionViewDataSource {
         cell.trackerName.text = tracker.name
         cell.emojiAndNameView.backgroundColor = tracker.color
         cell.completeTrackerButton.backgroundColor = tracker.color
+        
+        let todayDate = Date()
+        cell.completeTrackerButton.isEnabled = currentDate <= todayDate
+        
+        let trackerRecord = TrackerRecord(id: tracker.id, date: dateWithoutTime(from: currentDate))
+        if completedTrackers.contains(trackerRecord) {
+            cell.completeTrackerButton.setImage(UIImage(systemName: "checkmark"), for: .normal) // Иконка завершения
+            cell.completeTrackerButton.backgroundColor?.withAlphaComponent(0.3)
+        } else {
+            cell.completeTrackerButton.setImage(UIImage(systemName: "plus"), for: .normal) // Иконка добавления
+            cell.completeTrackerButton.backgroundColor?.withAlphaComponent(1)
+        }
+        
+        let count = trackerCounters[tracker.id, default: 0]
+        cell.numOfDays.text = "\(count) день"
+        
+        cell.delegate = self
+        
         return cell
     }
     
@@ -310,5 +340,29 @@ extension TrackersViewController {
         // Обновляем отображение
         updatePlaceholderVisibility()
         collectionView.reloadData()
+    }
+}
+
+extension TrackersViewController: TrackerCollectionViewCellDelegate {
+    func didTapCompleteButton(in cell: TrackerCollectionViewCell) {
+        guard let indexPath = collectionView.indexPath(for: cell) else { return }
+        let tracker = filteredTrackers[indexPath.section].trackers[indexPath.item]
+        let trackerRecord = TrackerRecord(id: tracker.id, date: dateWithoutTime(from: currentDate))
+
+        if let index = completedTrackers.firstIndex(of: trackerRecord) {
+            // Если трекер уже в массиве, удаляем его
+            completedTrackers.remove(at: index)
+            print("Deleted from completedtrackers")
+            print(completedTrackers)
+            trackerCounters[tracker.id, default: 0] -= 1
+            collectionView.reloadData()
+        } else {
+            // Если трекер не в массиве, добавляем его
+            completedTrackers.append(trackerRecord)
+            print("Added to completedtrackers")
+            print(completedTrackers)
+            trackerCounters[tracker.id, default: 0] += 1
+            collectionView.reloadData()
+        }
     }
 }

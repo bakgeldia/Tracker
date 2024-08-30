@@ -7,18 +7,25 @@
 
 import UIKit
 
+protocol TrackerCollectionViewCellDelegate: AnyObject {
+    func didTapCompleteButton(in cell: TrackerCollectionViewCell)
+}
+
 final class TrackerCollectionViewCell: UICollectionViewCell {
+    weak var delegate: TrackerCollectionViewCellDelegate?
+    
     let emojiAndNameView = UIView()
     let emoji = UILabel()
     let trackerName = UILabel()
     
-    let daysAndButtonView = UIView()
+    private let daysAndButtonView = UIView()
     let numOfDays = UILabel()
     let completeTrackerButton = UIButton()
     
-    let trackerView = UIView()
+    private let trackerView = UIView()
     var checkedButton = false
     
+    var trackerDate: Date?
     var dayCounter = 0
     
     override init(frame: CGRect) {
@@ -54,15 +61,14 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         daysAndButtonView.translatesAutoresizingMaskIntoConstraints = false
         
         //Days label
-        numOfDays.text = "0 день"
+        numOfDays.text = "\(dayCounter) день"
         numOfDays.font = UIFont.systemFont(ofSize: 12, weight: .medium)
         daysAndButtonView.addSubview(numOfDays)
         numOfDays.translatesAutoresizingMaskIntoConstraints = false
         
         //Button
-        completeTrackerButton.setTitle("+", for: .normal)
-        completeTrackerButton.titleLabel?.textColor = .white
-        completeTrackerButton.titleLabel?.font = UIFont.systemFont(ofSize: 25, weight: .medium)
+        completeTrackerButton.setImage(UIImage(systemName: "plus"), for: .normal)
+        completeTrackerButton.imageView?.tintColor = .white
         completeTrackerButton.layer.cornerRadius = 22
         completeTrackerButton.addTarget(self, action: #selector(self.didTapCompleteButton), for: .touchUpInside)
         daysAndButtonView.addSubview(completeTrackerButton)
@@ -109,21 +115,21 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
     
     @objc
     private func didTapCompleteButton() {
-        checkedButton = !checkedButton
+//        checkedButton = !checkedButton
+//        
+//        if checkedButton {
+//            completeTrackerButton.setImage(UIImage(systemName: "checkmark"), for: .normal)
+//            completeTrackerButton.backgroundColor?.withAlphaComponent(0.3)
+//            dayCounter += 1
+//            numOfDays.text = "\(dayCounter) день"
+//        } else {
+//            completeTrackerButton.setImage(UIImage(systemName: "plus"), for: .normal)
+//            completeTrackerButton.backgroundColor?.withAlphaComponent(1)
+//            dayCounter -= 1
+//            numOfDays.text = "\(dayCounter) день"
+//        }
         
-        if checkedButton {
-            completeTrackerButton.setTitle("", for: .normal)
-            completeTrackerButton.setImage(UIImage(named: "Done"), for: .normal)
-            completeTrackerButton.backgroundColor?.withAlphaComponent(0.3)
-            dayCounter += 1
-            numOfDays.text = "\(dayCounter) день"
-        } else {
-            completeTrackerButton.setImage(UIImage(), for: .normal)
-            completeTrackerButton.setTitle("+", for: .normal)
-            completeTrackerButton.backgroundColor?.withAlphaComponent(1)
-            dayCounter -= 1
-            numOfDays.text = "\(dayCounter) день"
-        }
+        delegate?.didTapCompleteButton(in: self)
     }
     
     required init?(coder: NSCoder) {
