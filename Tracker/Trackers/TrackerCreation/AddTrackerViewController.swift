@@ -7,12 +7,18 @@
 
 import UIKit
 
+protocol AddTrackerViewControllerDelegate: AnyObject {
+    func getTrackerDetail(title: String, category: String, schedule: [String]?)
+}
+
 final class AddTrackerViewController: UIViewController {
     private let titleLabel = UILabel()
     private let habitButton = UIButton()
     private let eventButton = UIButton()
     
     var categories = [TrackerCategory]()
+    
+    weak var delegate: AddTrackerViewControllerDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -86,6 +92,7 @@ final class AddTrackerViewController: UIViewController {
         // Настройки popover
         newHabitVC.modalPresentationStyle = .popover
         newHabitVC.categories = self.categories
+        newHabitVC.delegate = self
         
         // Отображаем popover
         self.present(newHabitVC, animated: true, completion: nil)
@@ -105,8 +112,23 @@ final class AddTrackerViewController: UIViewController {
         // Настройки popover
         newEventVC.modalPresentationStyle = .popover
         newEventVC.categories = self.categories
+        newEventVC.delegate = self
         
         // Отображаем popover
         self.present(newEventVC, animated: true, completion: nil)
+    }
+}
+
+extension AddTrackerViewController: NewHabitViewControllerDelegate {
+    func createNewHabit(title: String, category: String, schedule: [String]) {
+        delegate?.getTrackerDetail(title: title, category: category, schedule: schedule)
+        dismiss(animated: false)
+    }
+}
+
+extension AddTrackerViewController: NonRegularEventViewControllerDelegate {
+    func createNewEvent(title: String, category: String) {
+        delegate?.getTrackerDetail(title: title, category: category, schedule: nil)
+        dismiss(animated: false)
     }
 }

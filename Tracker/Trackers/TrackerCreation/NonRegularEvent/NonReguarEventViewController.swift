@@ -7,7 +7,13 @@
 
 import UIKit
 
+protocol NonRegularEventViewControllerDelegate: AnyObject {
+    func createNewEvent(title: String, category: String)
+}
+
 final class NonRegularEventViewController: UIViewController {
+    
+    weak var delegate: NonRegularEventViewControllerDelegate?
     
     private let titleLabel = UILabel()
     private let textField = UITextField()
@@ -18,6 +24,7 @@ final class NonRegularEventViewController: UIViewController {
     private let createButton = UIButton()
     
     var categories = [TrackerCategory]()
+    var selectedCategory: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -121,13 +128,23 @@ final class NonRegularEventViewController: UIViewController {
     @objc
     private func cancelCreatingNewEvent() {
         dismiss(animated: true)
-        print("Cancel button tapped")
     }
     
     @objc
     private func createNewEvent() {
-        dismiss(animated: true)
-        print("Create button tapped")
+        guard let eventTitle = textField.text, !eventTitle.isEmpty else {
+            print("Название события не может быть пустым")
+            return
+        }
+        
+        // Проверяем, выбрана ли категория
+        guard let category = selectedCategory else {
+            print("Категория не выбрана")
+            return
+        }
+        
+        dismiss(animated: true, completion: nil)
+        delegate?.createNewEvent(title: eventTitle, category: category)
     }
     
     private func showCategoriesPopover() {
@@ -139,6 +156,7 @@ final class NonRegularEventViewController: UIViewController {
         
         categoryVC.modalPresentationStyle = .popover
         categoryVC.categories = self.categories
+        categoryVC.delegate = self
         
         self.present(categoryVC, animated: true, completion: nil)
     }
@@ -146,14 +164,50 @@ final class NonRegularEventViewController: UIViewController {
 
 extension NonRegularEventViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1 // Only one cell now
+        return 1
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
-        cell.textLabel?.text = "Категория"
+        
         cell.accessoryType = .disclosureIndicator
+        
+        // Удаляем все существующие субвью
+        cell.contentView.subviews.forEach { $0.removeFromSuperview() }
+        
+        // Category Label
+        let categoryLabel = UILabel()
+        categoryLabel.text = "Категория"
+        categoryLabel.font = UIFont.systemFont(ofSize: 16, weight: .regular)
+        categoryLabel.textColor = UIColor(red: 26.0/255.0, green: 27.0/255.0, blue: 34.0/255.0, alpha: 1)
+        categoryLabel.translatesAutoresizingMaskIntoConstraints = false
+        cell.contentView.addSubview(categoryLabel)
+        
+        // Description Label
+        let descriptionLabel = UILabel()
+        descriptionLabel.text = "" // Initially empty
+        descriptionLabel.font = UIFont.systemFont(ofSize: 16, weight: .regular)
+        descriptionLabel.textColor = UIColor(red: 174.0/255.0, green: 175.0/255.0, blue: 180.0/255.0, alpha: 1)
+        descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
+        descriptionLabel.isHidden = true // Initially hidden
+        cell.contentView.addSubview(descriptionLabel)
+        
+        // Layout constraints
+        NSLayoutConstraint.activate([
+            // Category Label
+            categoryLabel.topAnchor.constraint(equalTo: cell.contentView.topAnchor, constant: 15),
+            categoryLabel.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor, constant: 16),
+            categoryLabel.trailingAnchor.constraint(equalTo: cell.contentView.trailingAnchor, constant: -16),
+            
+            // Description Label
+            descriptionLabel.topAnchor.constraint(equalTo: categoryLabel.bottomAnchor, constant: 8),
+            descriptionLabel.leadingAnchor.constraint(equalTo: categoryLabel.leadingAnchor),
+            descriptionLabel.trailingAnchor.constraint(equalTo: categoryLabel.trailingAnchor),
+            descriptionLabel.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor, constant: -15)
+        ])
+        
         cell.backgroundColor = UIColor(red: 230.0/255.0, green: 232.0/255.0, blue: 235.0/255.0, alpha: 0.3)
+        
         return cell
     }
 }
@@ -171,3 +225,16 @@ extension NonRegularEventViewController: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
     }
 }
+
+extension NonRegularEventViewController: CategoryViewControllerDelegate {
+    func didSelectCategory(_ category: TrackerCategory) {
+        // Сохраняем выбранную категорию
+        let categoryCell = tableView.cellForRow(at: IndexPath(row: 0, section: 0))
+        if let descriptionLabel = categoryCell?.contentView.subviews.last as? UILabel {
+            descriptionLabel.text = category.title
+            selectedCategory = category.title
+            descriptionLabel.isHidden = false // Делаем лейбл видимым
+        }
+    }
+}
+

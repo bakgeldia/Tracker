@@ -7,7 +7,13 @@
 
 import UIKit
 
+protocol CategoryViewControllerDelegate: AnyObject {
+    func didSelectCategory(_ category: TrackerCategory)
+}
+
 final class CategoryViewController: UIViewController {
+    
+    weak var delegate: CategoryViewControllerDelegate?
     
     private let titleLabel = UILabel()
     private let tableView = UITableView()
@@ -93,6 +99,9 @@ extension CategoryViewController: UITableViewDataSource {
 
 extension CategoryViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        // Получаем выбранную категорию
+        let selectedCategory = categories[indexPath.row]
+        
         // Сначала убираем галочку с ранее выбранной ячейки, если она существует
         if let previousIndexPath = selectedIndexPath {
             if previousIndexPath != indexPath {
@@ -107,7 +116,31 @@ extension CategoryViewController: UITableViewDelegate {
         
         // Обновляем выбранную ячейку
         selectedIndexPath = indexPath
-        
         tableView.deselectRow(at: indexPath, animated: true)
+        
+        delegate?.didSelectCategory(selectedCategory)
+        dismiss(animated: true, completion: nil)
+    }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        // Убираем сепаратор для последней ячейки
+        if indexPath.row == categories.count - 1 {
+            cell.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: .greatestFiniteMagnitude)
+        } else {
+            cell.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+        }
+        
+        // Добавляем скругление внизу таблицы для последней ячейки
+        if indexPath.row == categories.count - 1 {
+            cell.layer.cornerRadius = 16
+            cell.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+            cell.clipsToBounds = true
+        } else {
+            cell.layer.cornerRadius = 0
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 75
     }
 }

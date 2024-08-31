@@ -178,6 +178,7 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
         // Настройки popover
         addTrackerVC.modalPresentationStyle = .popover
         addTrackerVC.categories = self.categories
+        addTrackerVC.delegate = self
         
         // Отображаем popover
         present(addTrackerVC, animated: true, completion: nil)
@@ -364,5 +365,44 @@ extension TrackersViewController: TrackerCollectionViewCellDelegate {
             trackerCounters[tracker.id, default: 0] += 1
             collectionView.reloadData()
         }
+    }
+}
+
+extension TrackersViewController: AddTrackerViewControllerDelegate {
+    func getTrackerDetail(title: String, category: String, schedule: [String]?) {
+        // Создаем новый трекер с параметрами по умолчанию
+        let newTracker = Tracker(
+            id: (categories.flatMap { $0.trackers }.map { $0.id }.max() ?? 0) + 1,
+            name: title,
+            color: UIColor(red: 51.0/255.0, green: 207.0/255.0, blue: 105.0/255.0, alpha: 1),
+            emoji: "💤",
+            schedule: schedule ?? ["Everyday"]
+        )
+        
+        // Найти категорию, которая соответствует полученной категории
+        var updatedCategories = [TrackerCategory]()
+        var categoryFound = false
+        for var cat in categories {
+            if cat.title == category {
+                var updatedTrackers = cat.trackers
+                updatedTrackers.append(newTracker)
+                cat = TrackerCategory(title: cat.title, trackers: updatedTrackers)
+                categoryFound = true
+            }
+            updatedCategories.append(cat)
+        }
+        
+        // Если категория не найдена, добавляем новый трекер в новую категорию
+        if !categoryFound {
+            let newCategory = TrackerCategory(title: category, trackers: [newTracker])
+            updatedCategories.append(newCategory)
+        }
+        
+        // Обновляем массив категорий и перезагружаем коллекцию
+        self.categories = updatedCategories
+        
+        datePickerValueChanged(datePicker)
+        let searchText = searchController.searchBar.text ?? ""
+        filterTrackers(for: searchText)
     }
 }
