@@ -23,9 +23,13 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
     private var filteredTrackers = [TrackerCategory]()
     
     private let emojies = [
-        "🍇", "🍈", "🍉", "🍊", "🍋", "🍌", "🍍", "🥭", "🍎", "🍏", "🍐", "🍒",
-        "🍓", "🫐", "🥝", "🍅", "🫒", "🥥", "🥑", "🍆", "🥔", "🥕", "🌽", "🌶️",
-        "🫑", "🥒", "🥬", "🥦", "🧄", "🧅", "🍄",
+        "😀", "😂", "🥲", "😍", "😎", "🤔", "😱", "🤯", "🥳", "😅",
+        "🙈", "🙉", "🙊", "💩", "💖", "🌟", "🔥", "🌈", "🌹", "🎉",
+        "🎂", "🍕", "🍔", "🍣", "🍦", "🍩", "🍪", "🍉", "🍓", "🍑",
+        "🏠", "🚗", "✈️", "🚀", "🛳️", "🚤", "🚲", "🛵", "🕰️", "📱",
+        "💻", "⌚", "📚", "📝", "🖼️", "🎨", "🎵", "🎸", "🎻", "🎺",
+        "🎷", "🎹", "🎼", "🎧", "🎤", "🎬", "🎮", "🎲", "🎯", "🎳",
+        "🎮", "🏆", "🥇", "🥈", "🥉", "🏅", "🎖️", "🏅", "🛡️", "⚔️"
     ]
     
     private var visibleEmojies: [String] = []
@@ -45,16 +49,9 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
         super.viewDidLoad()
         
         //-------------- Example ------------------
-        let tracker1 = Tracker(id: 0, name: "Поливать растения", color: UIColor(red: 51.0/255.0, green: 207.0/255.0, blue: 105.0/255.0, alpha: 1), emoji: "🍇", schedule: ["Monday", "Friday"])
-        let tracker2 = Tracker(id: 1, name: "Читать книгу", color: UIColor(red: 255.0/255.0, green: 102.0/255.0, blue: 102.0/255.0, alpha: 1), emoji: "📚", schedule: ["Wednesday"])
-        let tracker3 = Tracker(id: 2, name: "Медитация", color: UIColor(red: 0.0/255.0, green: 150.0/255.0, blue: 255.0/255.0, alpha: 1), emoji: "🧘‍♂️", schedule: ["Tuesday"])
-        let tracker4 = Tracker(id: 3, name: "Занятия спортом", color: UIColor(red: 255.0/255.0, green: 255.0/255.0, blue: 0.0/255.0, alpha: 1), emoji: "🏋️‍♂️", schedule: ["Tuesday", "Thursday"])
-        let tracker5 = Tracker(id: 4, name: "Уборка", color: UIColor(red: 75.0/255.0, green: 0.0/255.0, blue: 130.0/255.0, alpha: 1), emoji: "🧹", schedule: ["Saturday", "Wednesday"])
+        let category2 = TrackerCategory(title: "Здоровый образ жизни", trackers: [])
         
-        let category1 = TrackerCategory(title: "Домашний уют", trackers: [tracker1, tracker5])
-        let category2 = TrackerCategory(title: "Здоровый образ жизни", trackers: [tracker2, tracker3, tracker4])
-        
-        categories = [category1, category2]
+        categories = [category2]
         //-------------- Example -------------------
         
         searchController.searchBar.delegate = self
@@ -82,6 +79,15 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
     }
     
     private func setupNavBar() {
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = .white
+        appearance.shadowColor = .clear
+
+        navigationController?.navigationBar.standardAppearance = appearance
+        navigationController?.navigationBar.scrollEdgeAppearance = appearance
+        navigationController?.navigationBar.compactAppearance = appearance
+        
         //Date picker
         datePicker.datePickerMode = .date
         datePicker.preferredDatePickerStyle = .compact
@@ -97,9 +103,11 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
         addTrackerButton.tintColor = UIColor(red: 26.0/255.0, green: 27.0/255.0, blue: 34.0/255.0, alpha: 1)
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: addTrackerButton)
         
+//        pageTitle.text = "Трекеры"
+//        pageTitle.font = UIFont.systemFont(ofSize: 34, weight: .bold)
+        
         navigationItem.title = "Трекеры"
         navigationController?.navigationBar.prefersLargeTitles = true
-        
         
         searchController.searchBar.placeholder = "Поиск"
         searchController.searchBar.tintColor = UIColor(red: 118.0/255.0, green: 118.0/255.0, blue: 128.0/255.0, alpha: 0.12)
@@ -279,6 +287,7 @@ extension TrackersViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "Header", for: indexPath) as! CategoryHeaderReusableView
         headerView.categoryTitle.text = filteredTrackers[indexPath.section].title
+        headerView.categoryTitle.font = UIFont.systemFont(ofSize: 19, weight: .bold)
         return headerView
     }
 }
@@ -375,7 +384,7 @@ extension TrackersViewController: AddTrackerViewControllerDelegate {
             id: (categories.flatMap { $0.trackers }.map { $0.id }.max() ?? 0) + 1,
             name: title,
             color: UIColor(red: 51.0/255.0, green: 207.0/255.0, blue: 105.0/255.0, alpha: 1),
-            emoji: "💤",
+            emoji: emojies.randomElement() ?? "❤️",
             schedule: schedule ?? ["Everyday"]
         )
         

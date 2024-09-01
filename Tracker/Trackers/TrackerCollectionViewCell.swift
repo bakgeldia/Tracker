@@ -14,6 +14,7 @@ protocol TrackerCollectionViewCellDelegate: AnyObject {
 final class TrackerCollectionViewCell: UICollectionViewCell {
     weak var delegate: TrackerCollectionViewCellDelegate?
     
+    private let emojiBackgroundView = UIView()
     let emojiAndNameView = UIView()
     let emoji = UILabel()
     let trackerName = UILabel()
@@ -44,9 +45,17 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         trackerView.addSubview(emojiAndNameView)
         emojiAndNameView.translatesAutoresizingMaskIntoConstraints = false
         
+        // Emoji Background View
+        emojiBackgroundView.backgroundColor = UIColor(white: 1.0, alpha: 0.3)
+        emojiBackgroundView.layer.cornerRadius = 12
+        emojiBackgroundView.layer.masksToBounds = true
+        emojiAndNameView.addSubview(emojiBackgroundView)
+        emojiBackgroundView.translatesAutoresizingMaskIntoConstraints = false
         
         //Emoji
-        emojiAndNameView.addSubview(emoji)
+        emoji.font = UIFont.systemFont(ofSize: 16) // Размер эмодзи
+        emoji.textAlignment = .center
+        emojiBackgroundView.addSubview(emoji)
         emoji.translatesAutoresizingMaskIntoConstraints = false
         
         //Tracker name
@@ -86,10 +95,13 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
             emojiAndNameView.trailingAnchor.constraint(equalTo: trackerView.trailingAnchor),
             emojiAndNameView.heightAnchor.constraint(equalToConstant: 90),
             
-            emoji.heightAnchor.constraint(equalToConstant: 24),
-            emoji.widthAnchor.constraint(equalToConstant: 24),
-            emoji.topAnchor.constraint(equalTo: emojiAndNameView.topAnchor, constant: 12),
-            emoji.leadingAnchor.constraint(equalTo: emojiAndNameView.leadingAnchor, constant: 12),
+            emojiBackgroundView.topAnchor.constraint(equalTo: emojiAndNameView.topAnchor, constant: 12),
+            emojiBackgroundView.leadingAnchor.constraint(equalTo: emojiAndNameView.leadingAnchor, constant: 12),
+            emojiBackgroundView.widthAnchor.constraint(equalToConstant: 24),
+            emojiBackgroundView.heightAnchor.constraint(equalToConstant: 24),
+            
+            emoji.centerXAnchor.constraint(equalTo: emojiBackgroundView.centerXAnchor),
+            emoji.centerYAnchor.constraint(equalTo: emojiBackgroundView.centerYAnchor),
             
             trackerName.topAnchor.constraint(equalTo: emoji.bottomAnchor, constant: 8),
             trackerName.leadingAnchor.constraint(equalTo: emojiAndNameView.leadingAnchor, constant: 12),
@@ -115,20 +127,6 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
     
     @objc
     private func didTapCompleteButton() {
-//        checkedButton = !checkedButton
-//        
-//        if checkedButton {
-//            completeTrackerButton.setImage(UIImage(systemName: "checkmark"), for: .normal)
-//            completeTrackerButton.backgroundColor?.withAlphaComponent(0.3)
-//            dayCounter += 1
-//            numOfDays.text = "\(dayCounter) день"
-//        } else {
-//            completeTrackerButton.setImage(UIImage(systemName: "plus"), for: .normal)
-//            completeTrackerButton.backgroundColor?.withAlphaComponent(1)
-//            dayCounter -= 1
-//            numOfDays.text = "\(dayCounter) день"
-//        }
-        
         delegate?.didTapCompleteButton(in: self)
     }
     

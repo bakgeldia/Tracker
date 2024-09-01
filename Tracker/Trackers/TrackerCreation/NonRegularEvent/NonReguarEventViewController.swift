@@ -47,6 +47,7 @@ final class NonRegularEventViewController: UIViewController {
         
         // TextField
         textField.placeholder = "Введите название события"
+        textField.font = UIFont.systemFont(ofSize: 17, weight: .regular)
         textField.backgroundColor = UIColor(red: 230.0/255.0, green: 232.0/255.0, blue: 235.0/255.0, alpha: 0.3)
         textField.layer.cornerRadius = 16
         textField.textAlignment = .left
@@ -77,6 +78,7 @@ final class NonRegularEventViewController: UIViewController {
         // Cancel Button
         let redColor = UIColor(red: 245.0/255.0, green: 107.0/255.0, blue: 108.0/255.0, alpha: 1)
         cancelButton.setTitle("Отменить", for: .normal)
+        cancelButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         cancelButton.setTitleColor(redColor, for: .normal)
         cancelButton.backgroundColor = .white
         cancelButton.layer.cornerRadius = 16
@@ -88,6 +90,7 @@ final class NonRegularEventViewController: UIViewController {
         
         // Create Button
         createButton.setTitle("Создать", for: .normal)
+        createButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         createButton.setTitleColor(.white, for: .normal)
         createButton.backgroundColor = UIColor(red: 26.0/255.0, green: 27.0/255.0, blue: 34.0/255.0, alpha: 1)
         createButton.layer.cornerRadius = 16
@@ -178,7 +181,7 @@ extension NonRegularEventViewController: UITableViewDataSource {
         // Category Label
         let categoryLabel = UILabel()
         categoryLabel.text = "Категория"
-        categoryLabel.font = UIFont.systemFont(ofSize: 16, weight: .regular)
+        categoryLabel.font = UIFont.systemFont(ofSize: 17, weight: .regular)
         categoryLabel.textColor = UIColor(red: 26.0/255.0, green: 27.0/255.0, blue: 34.0/255.0, alpha: 1)
         categoryLabel.translatesAutoresizingMaskIntoConstraints = false
         cell.contentView.addSubview(categoryLabel)
@@ -186,7 +189,7 @@ extension NonRegularEventViewController: UITableViewDataSource {
         // Description Label
         let descriptionLabel = UILabel()
         descriptionLabel.text = "" // Initially empty
-        descriptionLabel.font = UIFont.systemFont(ofSize: 16, weight: .regular)
+        descriptionLabel.font = UIFont.systemFont(ofSize: 17, weight: .regular)
         descriptionLabel.textColor = UIColor(red: 174.0/255.0, green: 175.0/255.0, blue: 180.0/255.0, alpha: 1)
         descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
         descriptionLabel.isHidden = true // Initially hidden
@@ -223,6 +226,14 @@ extension NonRegularEventViewController: UITableViewDelegate {
         showCategoriesPopover()
         
         tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if indexPath.row == tableView.numberOfRows(inSection: indexPath.section) - 1 {
+            cell.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: .greatestFiniteMagnitude)
+        } else {
+            cell.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+        }
     }
 }
 

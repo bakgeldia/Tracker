@@ -97,6 +97,7 @@ extension ScheduleViewController: UITableViewDataSource {
         
         // Configure cell
         cell.textLabel?.text = day
+        cell.textLabel?.font = UIFont.systemFont(ofSize: 17, weight: .regular)
         let switchControl = UISwitch()
         switchControl.tag = indexPath.row
         switchControl.addTarget(self, action: #selector(switchValueChanged(_:)), for: .valueChanged)

@@ -49,6 +49,7 @@ final class CategoryViewController: UIViewController {
         
         // Add Button
         addButton.setTitle("Добавить категорию", for: .normal)
+        addButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         addButton.setTitleColor(.white, for: .normal)
         addButton.backgroundColor = UIColor(red: 26.0/255.0, green: 27.0/255.0, blue: 34.0/255.0, alpha: 1)
         addButton.layer.cornerRadius = 16
@@ -92,6 +93,8 @@ extension CategoryViewController: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath)
         // Устанавливаем название категории в текст метки ячейки
         cell.textLabel?.text = categories[indexPath.row].title
+        cell.textLabel?.font = UIFont.systemFont(ofSize: 17, weight: .regular)
+        cell.textLabel?.textColor = UIColor(red: 26.0/255.0, green: 27.0/255.0, blue: 34.0/255.0, alpha: 1)
         cell.backgroundColor = UIColor(red: 230.0/255.0, green: 232.0/255.0, blue: 235.0/255.0, alpha: 0.3)
         return cell
     }
