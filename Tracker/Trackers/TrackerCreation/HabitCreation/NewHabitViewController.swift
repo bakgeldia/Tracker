@@ -155,6 +155,8 @@ final class NewHabitViewController: UIViewController {
             return
         }
         
+        createButton.isEnabled = false
+        
         delegate?.createNewHabit(title: habitTitle, category: category, schedule: schedule)
     }
     

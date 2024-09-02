@@ -148,6 +148,8 @@ final class NonRegularEventViewController: UIViewController {
             return
         }
         
+        createButton.isEnabled = false
+        
         delegate?.createNewEvent(title: eventTitle, category: category)
     }
     

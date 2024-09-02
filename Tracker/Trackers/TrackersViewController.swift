@@ -15,7 +15,7 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
     private var searchBar = UISearchBar()
     private let errorImageView = UIImageView()
     private let errorLabel = UILabel()
-    private let searchController = UISearchController()
+    private var searchController = UISearchController()
     
     var categories = [TrackerCategory]()
     var completedTrackers = [TrackerRecord]()
@@ -57,6 +57,7 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
         searchController.searchBar.delegate = self
         
         setupNavBar()
+        setupSearchController()
         setupView()
         
         let today = Date()
@@ -103,19 +104,32 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
         addTrackerButton.tintColor = UIColor(red: 26.0/255.0, green: 27.0/255.0, blue: 34.0/255.0, alpha: 1)
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: addTrackerButton)
         
-//        pageTitle.text = "Трекеры"
-//        pageTitle.font = UIFont.systemFont(ofSize: 34, weight: .bold)
-        
         navigationItem.title = "Трекеры"
         navigationController?.navigationBar.prefersLargeTitles = true
-        
+    }
+    
+    private func setupSearchController() {
+        searchController = UISearchController(searchResultsController: nil)
+        searchController.searchBar.delegate = self
         searchController.searchBar.placeholder = "Поиск"
         searchController.searchBar.tintColor = UIColor(red: 118.0/255.0, green: 118.0/255.0, blue: 128.0/255.0, alpha: 0.12)
         searchController.searchBar.layer.cornerRadius = 30
         searchController.searchBar.backgroundImage = UIImage()
+        searchController.obscuresBackgroundDuringPresentation = false
+        searchController.hidesNavigationBarDuringPresentation = false
+        searchController.searchBar.setValue("Отменить", forKey: "cancelButtonText")
         
+        // Настройка кнопки отмены
+        let cancelButtonAttributes: [NSAttributedString.Key: Any] = [
+            .foregroundColor: UIColor(red: 55.0/255.0, green: 114.0/255.0, blue: 231.0/255.0, alpha: 1),
+            .font: UIFont.systemFont(ofSize: 17, weight: .regular)
+        ]
         
+        UIBarButtonItem.appearance(whenContainedInInstancesOf: [UISearchBar.self]).setTitleTextAttributes(cancelButtonAttributes, for: .normal)
+        
+        definesPresentationContext = true
         navigationItem.searchController = searchController
+        navigationItem.hidesSearchBarWhenScrolling = false
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
@@ -222,6 +236,7 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
         // Фильтруем только если поисковый текст не пустой
         if searchText.isEmpty {
             filteredTrackers = categories
+            datePickerValueChanged(datePicker)
         } else {
             filteredTrackers = filteredCategories.filter { !$0.trackers.isEmpty }
         }
