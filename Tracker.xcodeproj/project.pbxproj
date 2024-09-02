@@ -84,7 +84,6 @@
 				FCD261C52C71E2E30073D483 /* Models */,
 				FCD2617B2C6B939E0073D483 /* Trackers */,
 				FCD2617E2C6B93BE0073D483 /* Statistics */,
-				FCDC3FA52C84F92D00BC490A /* Resources */,
 				FCD261702C6B73030073D483 /* Assets.xcassets */,
 				FCD261722C6B73030073D483 /* LaunchScreen.storyboard */,
 				FCD261752C6B73030073D483 /* Info.plist */,
@@ -147,13 +146,6 @@
 				FCDC3FA12C7D140C00BC490A /* NonReguarEventViewController.swift */,
 			);
 			path = NonRegularEvent;
-			sourceTree = "<group>";
-		};
-		FCDC3FA52C84F92D00BC490A /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
