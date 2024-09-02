@@ -18,7 +18,7 @@ final class ScheduleViewController: UIViewController {
     private let doneButton = UIButton()
     
     private let daysOfWeek = ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"]
-    private var selectedDays = [String]()
+    var selectedDays = [String]()
     
     weak var delegate: ScheduleViewControllerDelegate?
     
@@ -100,6 +100,7 @@ extension ScheduleViewController: UITableViewDataSource {
         cell.textLabel?.font = UIFont.systemFont(ofSize: 17, weight: .regular)
         let switchControl = UISwitch()
         switchControl.tag = indexPath.row
+        switchControl.isOn = selectedDays.contains(day)
         switchControl.addTarget(self, action: #selector(switchValueChanged(_:)), for: .valueChanged)
         cell.accessoryView = switchControl
         cell.backgroundColor = UIColor(red: 230.0/255.0, green: 232.0/255.0, blue: 235.0/255.0, alpha: 0.3)

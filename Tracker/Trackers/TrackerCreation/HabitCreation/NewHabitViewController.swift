@@ -23,6 +23,7 @@ final class NewHabitViewController: UIViewController {
     private let cancelButton = UIButton()
     private let createButton = UIButton()
     
+    private var prevDays: [String] = []
     var categories = [TrackerCategory]()
     var selectedCategory: String?
     var selectedCategoryPath: IndexPath?
@@ -139,7 +140,7 @@ final class NewHabitViewController: UIViewController {
     @objc
     private func createNewHabit() {
         guard let habitTitle = textField.text, !habitTitle.isEmpty else {
-            print("Название события не может быть пустым")
+            print("Название привычки не может быть пустым")
             return
         }
         
@@ -168,6 +169,7 @@ final class NewHabitViewController: UIViewController {
         popover.permittedArrowDirections = []
         
         scheduleVC.modalPresentationStyle = .popover
+        scheduleVC.selectedDays = prevDays
         scheduleVC.delegate = self
         
         self.present(scheduleVC, animated: true, completion: nil)
@@ -299,6 +301,8 @@ extension NewHabitViewController: CategoryViewControllerDelegate {
 
 extension NewHabitViewController: ScheduleViewControllerDelegate {
     func didSelectDays(_ days: [String]) {
+        prevDays = days
+        
         // Сохраняем выбранную категорию
         let scheduleCell = tableView.cellForRow(at: IndexPath(row: 1, section: 0))
         
