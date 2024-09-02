@@ -23,8 +23,10 @@ final class NonRegularEventViewController: UIViewController {
     private let cancelButton = UIButton()
     private let createButton = UIButton()
     
+    private var selectedCategoryPath: IndexPath?
     var categories = [TrackerCategory]()
     var selectedCategory: String?
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -146,7 +148,6 @@ final class NonRegularEventViewController: UIViewController {
             return
         }
         
-        dismiss(animated: true, completion: nil)
         delegate?.createNewEvent(title: eventTitle, category: category)
     }
     
@@ -159,6 +160,7 @@ final class NonRegularEventViewController: UIViewController {
         
         categoryVC.modalPresentationStyle = .popover
         categoryVC.categories = self.categories
+        categoryVC.selectedIndexPath = selectedCategoryPath
         categoryVC.delegate = self
         
         self.present(categoryVC, animated: true, completion: nil)
@@ -238,8 +240,9 @@ extension NonRegularEventViewController: UITableViewDelegate {
 }
 
 extension NonRegularEventViewController: CategoryViewControllerDelegate {
-    func didSelectCategory(_ category: TrackerCategory) {
+    func didSelectCategory(_ category: TrackerCategory, _ selectedIndexPath: IndexPath?) {
         // Сохраняем выбранную категорию
+        selectedCategoryPath = selectedIndexPath
         let categoryCell = tableView.cellForRow(at: IndexPath(row: 0, section: 0))
         if let descriptionLabel = categoryCell?.contentView.subviews.last as? UILabel {
             descriptionLabel.text = category.title

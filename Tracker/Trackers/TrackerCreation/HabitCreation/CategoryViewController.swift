@@ -8,7 +8,7 @@
 import UIKit
 
 protocol CategoryViewControllerDelegate: AnyObject {
-    func didSelectCategory(_ category: TrackerCategory)
+    func didSelectCategory(_ category: TrackerCategory, _ selectedIndexPath: IndexPath?)
 }
 
 final class CategoryViewController: UIViewController {
@@ -18,13 +18,12 @@ final class CategoryViewController: UIViewController {
     private let titleLabel = UILabel()
     private let tableView = UITableView()
     private let addButton = UIButton()
-    private var selectedIndexPath: IndexPath?
+    var selectedIndexPath: IndexPath?
     
     var categories: [TrackerCategory] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         setupView()
     }
     
@@ -96,6 +95,13 @@ extension CategoryViewController: UITableViewDataSource {
         cell.textLabel?.font = UIFont.systemFont(ofSize: 17, weight: .regular)
         cell.textLabel?.textColor = UIColor(red: 26.0/255.0, green: 27.0/255.0, blue: 34.0/255.0, alpha: 1)
         cell.backgroundColor = UIColor(red: 230.0/255.0, green: 232.0/255.0, blue: 235.0/255.0, alpha: 0.3)
+        
+        if indexPath == selectedIndexPath {
+            cell.accessoryType = .checkmark
+        } else {
+            cell.accessoryType = .none
+        }
+        
         return cell
     }
 }
@@ -121,7 +127,7 @@ extension CategoryViewController: UITableViewDelegate {
         selectedIndexPath = indexPath
         tableView.deselectRow(at: indexPath, animated: true)
         
-        delegate?.didSelectCategory(selectedCategory)
+        delegate?.didSelectCategory(selectedCategory, selectedIndexPath)
         dismiss(animated: true, completion: nil)
     }
     

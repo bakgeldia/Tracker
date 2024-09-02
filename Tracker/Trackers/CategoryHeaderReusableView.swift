@@ -22,12 +22,11 @@ final class CategoryHeaderReusableView: UICollectionReusableView {
     private func setupView() {
         addSubview(categoryTitle)
         categoryTitle.translatesAutoresizingMaskIntoConstraints = false
-        categoryTitle.font = UIFont.boldSystemFont(ofSize: 16)
-        categoryTitle.textColor = .black
+        categoryTitle.font = UIFont.systemFont(ofSize: 19, weight: .bold)
+        categoryTitle.textColor = UIColor(red: 26.0/255.0, green: 27.0/255.0, blue: 34.0/255.0, alpha: 1)
         
         NSLayoutConstraint.activate([
-            categoryTitle.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-            categoryTitle.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+            categoryTitle.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),
             categoryTitle.centerYAnchor.constraint(equalTo: centerYAnchor)
         ])
     }

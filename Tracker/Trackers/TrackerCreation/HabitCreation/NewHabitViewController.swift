@@ -25,6 +25,7 @@ final class NewHabitViewController: UIViewController {
     
     var categories = [TrackerCategory]()
     var selectedCategory: String?
+    var selectedCategoryPath: IndexPath?
     var selectedDays: [String]?
     
     override func viewDidLoad() {
@@ -154,7 +155,6 @@ final class NewHabitViewController: UIViewController {
             return
         }
         
-        dismiss(animated: true, completion: nil)
         delegate?.createNewHabit(title: habitTitle, category: category, schedule: schedule)
     }
     
@@ -180,6 +180,7 @@ final class NewHabitViewController: UIViewController {
         
         categoryVC.modalPresentationStyle = .popover
         categoryVC.categories = self.categories
+        categoryVC.selectedIndexPath = selectedCategoryPath
         categoryVC.delegate = self
         
         self.present(categoryVC, animated: true, completion: nil)
@@ -282,8 +283,9 @@ extension NewHabitViewController: UITableViewDelegate {
 }
 
 extension NewHabitViewController: CategoryViewControllerDelegate {
-    func didSelectCategory(_ category: TrackerCategory) {
+    func didSelectCategory(_ category: TrackerCategory, _ selectedIndexPath: IndexPath?) {
         // Сохраняем выбранную категорию
+        selectedCategoryPath = selectedIndexPath
         let categoryCell = tableView.cellForRow(at: IndexPath(row: 0, section: 0))
         if let descriptionLabel = categoryCell?.contentView.subviews.last as? UILabel {
             selectedCategory = category.title

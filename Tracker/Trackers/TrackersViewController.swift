@@ -287,7 +287,6 @@ extension TrackersViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "Header", for: indexPath) as! CategoryHeaderReusableView
         headerView.categoryTitle.text = filteredTrackers[indexPath.section].title
-        headerView.categoryTitle.font = UIFont.systemFont(ofSize: 19, weight: .bold)
         return headerView
     }
 }
@@ -379,6 +378,9 @@ extension TrackersViewController: TrackerCollectionViewCellDelegate {
 
 extension TrackersViewController: AddTrackerViewControllerDelegate {
     func getTrackerDetail(title: String, category: String, schedule: [String]?) {
+        //Закрываем все экраны одновременно после создания трекера
+        dismiss(animated: true)
+        
         // Создаем новый трекер с параметрами по умолчанию
         let newTracker = Tracker(
             id: (categories.flatMap { $0.trackers }.map { $0.id }.max() ?? 0) + 1,
@@ -411,7 +413,5 @@ extension TrackersViewController: AddTrackerViewControllerDelegate {
         self.categories = updatedCategories
         
         datePickerValueChanged(datePicker)
-        let searchText = searchController.searchBar.text ?? ""
-        filterTrackers(for: searchText)
     }
 }

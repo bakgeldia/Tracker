@@ -122,13 +122,11 @@ final class AddTrackerViewController: UIViewController {
 extension AddTrackerViewController: NewHabitViewControllerDelegate {
     func createNewHabit(title: String, category: String, schedule: [String]) {
         delegate?.getTrackerDetail(title: title, category: category, schedule: schedule)
-        dismiss(animated: false)
     }
 }
 
 extension AddTrackerViewController: NonRegularEventViewControllerDelegate {
     func createNewEvent(title: String, category: String) {
         delegate?.getTrackerDetail(title: title, category: category, schedule: nil)
-        dismiss(animated: false)
     }
 }
