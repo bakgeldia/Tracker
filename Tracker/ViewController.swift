@@ -11,9 +11,8 @@ class ViewController: UITabBarController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
         setTabBarItems()
-        
+        customizeTabBarAppearance()
     }
     
     private func setTabBarItems() {
@@ -32,7 +31,23 @@ class ViewController: UITabBarController {
             selectedImage: nil
         )
         
-        self.viewControllers = [trackersViewController, statisticsViewController]
+        let navigationController = UINavigationController(rootViewController: trackersViewController)
+        
+        self.viewControllers = [navigationController, statisticsViewController]
+    }
+    
+    private func customizeTabBarAppearance() {
+        let appearance = UITabBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = .white
+        
+        appearance.shadowColor = .lightGray
+        
+        tabBar.standardAppearance = appearance
+        
+        if #available(iOS 15.0, *) {
+            tabBar.scrollEdgeAppearance = tabBar.standardAppearance
+        }
     }
 
 }

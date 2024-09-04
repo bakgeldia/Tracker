@@ -14,6 +14,16 @@
 		FCD261742C6B73030073D483 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = FCD261732C6B73030073D483 /* Base */; };
 		FCD2617D2C6B93B90073D483 /* TrackersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD2617C2C6B93B90073D483 /* TrackersViewController.swift */; };
 		FCD261802C6B93DB0073D483 /* StatisticsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD2617F2C6B93DB0073D483 /* StatisticsViewController.swift */; };
+		FCD261C72C71E2F50073D483 /* Tracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD261C62C71E2F50073D483 /* Tracker.swift */; };
+		FCD261C92C71E30B0073D483 /* TrackerCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD261C82C71E30B0073D483 /* TrackerCategory.swift */; };
+		FCD261CB2C71E3250073D483 /* TrackerRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD261CA2C71E3250073D483 /* TrackerRecord.swift */; };
+		FCD7BFBA2C78B502004559A5 /* TrackerCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD7BFB92C78B502004559A5 /* TrackerCollectionViewCell.swift */; };
+		FCD7BFBD2C78B999004559A5 /* AddTrackerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD7BFBC2C78B999004559A5 /* AddTrackerViewController.swift */; };
+		FCD7BFE12C78C996004559A5 /* NewHabitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD7BFE02C78C996004559A5 /* NewHabitViewController.swift */; };
+		FCD7BFE32C78E3A7004559A5 /* ScheduleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD7BFE22C78E3A6004559A5 /* ScheduleViewController.swift */; };
+		FCDC3F9C2C7A361600BC490A /* CategoryHeaderReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCDC3F9B2C7A361600BC490A /* CategoryHeaderReusableView.swift */; };
+		FCDC3F9F2C7A4AD300BC490A /* CategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCDC3F9E2C7A4AD300BC490A /* CategoryViewController.swift */; };
+		FCDC3FA22C7D140C00BC490A /* NonReguarEventViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCDC3FA12C7D140C00BC490A /* NonReguarEventViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +36,16 @@
 		FCD261752C6B73030073D483 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FCD2617C2C6B93B90073D483 /* TrackersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersViewController.swift; sourceTree = "<group>"; };
 		FCD2617F2C6B93DB0073D483 /* StatisticsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsViewController.swift; sourceTree = "<group>"; };
+		FCD261C62C71E2F50073D483 /* Tracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tracker.swift; sourceTree = "<group>"; };
+		FCD261C82C71E30B0073D483 /* TrackerCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerCategory.swift; sourceTree = "<group>"; };
+		FCD261CA2C71E3250073D483 /* TrackerRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerRecord.swift; sourceTree = "<group>"; };
+		FCD7BFB92C78B502004559A5 /* TrackerCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerCollectionViewCell.swift; sourceTree = "<group>"; };
+		FCD7BFBC2C78B999004559A5 /* AddTrackerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTrackerViewController.swift; sourceTree = "<group>"; };
+		FCD7BFE02C78C996004559A5 /* NewHabitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewHabitViewController.swift; sourceTree = "<group>"; };
+		FCD7BFE22C78E3A6004559A5 /* ScheduleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleViewController.swift; sourceTree = "<group>"; };
+		FCDC3F9B2C7A361600BC490A /* CategoryHeaderReusableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryHeaderReusableView.swift; sourceTree = "<group>"; };
+		FCDC3F9E2C7A4AD300BC490A /* CategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryViewController.swift; sourceTree = "<group>"; };
+		FCDC3FA12C7D140C00BC490A /* NonReguarEventViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NonReguarEventViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,6 +81,7 @@
 				FCD261672C6B73010073D483 /* AppDelegate.swift */,
 				FCD261692C6B73010073D483 /* SceneDelegate.swift */,
 				FCD2616B2C6B73010073D483 /* ViewController.swift */,
+				FCD261C52C71E2E30073D483 /* Models */,
 				FCD2617B2C6B939E0073D483 /* Trackers */,
 				FCD2617E2C6B93BE0073D483 /* Statistics */,
 				FCD261702C6B73030073D483 /* Assets.xcassets */,
@@ -74,6 +95,9 @@
 			isa = PBXGroup;
 			children = (
 				FCD2617C2C6B93B90073D483 /* TrackersViewController.swift */,
+				FCD7BFB92C78B502004559A5 /* TrackerCollectionViewCell.swift */,
+				FCDC3F9B2C7A361600BC490A /* CategoryHeaderReusableView.swift */,
+				FCD7BFBB2C78B961004559A5 /* TrackerCreation */,
 			);
 			path = Trackers;
 			sourceTree = "<group>";
@@ -84,6 +108,44 @@
 				FCD2617F2C6B93DB0073D483 /* StatisticsViewController.swift */,
 			);
 			path = Statistics;
+			sourceTree = "<group>";
+		};
+		FCD261C52C71E2E30073D483 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				FCD261C62C71E2F50073D483 /* Tracker.swift */,
+				FCD261C82C71E30B0073D483 /* TrackerCategory.swift */,
+				FCD261CA2C71E3250073D483 /* TrackerRecord.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		FCD7BFBB2C78B961004559A5 /* TrackerCreation */ = {
+			isa = PBXGroup;
+			children = (
+				FCD7BFBC2C78B999004559A5 /* AddTrackerViewController.swift */,
+				FCDC3FA02C7D13DB00BC490A /* NonRegularEvent */,
+				FCDC3F9D2C7A49E900BC490A /* HabitCreation */,
+			);
+			path = TrackerCreation;
+			sourceTree = "<group>";
+		};
+		FCDC3F9D2C7A49E900BC490A /* HabitCreation */ = {
+			isa = PBXGroup;
+			children = (
+				FCD7BFE02C78C996004559A5 /* NewHabitViewController.swift */,
+				FCD7BFE22C78E3A6004559A5 /* ScheduleViewController.swift */,
+				FCDC3F9E2C7A4AD300BC490A /* CategoryViewController.swift */,
+			);
+			path = HabitCreation;
+			sourceTree = "<group>";
+		};
+		FCDC3FA02C7D13DB00BC490A /* NonRegularEvent */ = {
+			isa = PBXGroup;
+			children = (
+				FCDC3FA12C7D140C00BC490A /* NonReguarEventViewController.swift */,
+			);
+			path = NonRegularEvent;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -156,11 +218,21 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FCD261C72C71E2F50073D483 /* Tracker.swift in Sources */,
+				FCD7BFE12C78C996004559A5 /* NewHabitViewController.swift in Sources */,
+				FCDC3F9F2C7A4AD300BC490A /* CategoryViewController.swift in Sources */,
+				FCD261CB2C71E3250073D483 /* TrackerRecord.swift in Sources */,
+				FCD7BFE32C78E3A7004559A5 /* ScheduleViewController.swift in Sources */,
 				FCD2616C2C6B73010073D483 /* ViewController.swift in Sources */,
 				FCD261802C6B93DB0073D483 /* StatisticsViewController.swift in Sources */,
+				FCDC3F9C2C7A361600BC490A /* CategoryHeaderReusableView.swift in Sources */,
+				FCD7BFBA2C78B502004559A5 /* TrackerCollectionViewCell.swift in Sources */,
+				FCD7BFBD2C78B999004559A5 /* AddTrackerViewController.swift in Sources */,
 				FCD2617D2C6B93B90073D483 /* TrackersViewController.swift in Sources */,
 				FCD261682C6B73010073D483 /* AppDelegate.swift in Sources */,
+				FCDC3FA22C7D140C00BC490A /* NonReguarEventViewController.swift in Sources */,
 				FCD2616A2C6B73010073D483 /* SceneDelegate.swift in Sources */,
+				FCD261C92C71E30B0073D483 /* TrackerCategory.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
