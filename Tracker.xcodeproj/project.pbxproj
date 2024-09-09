@@ -27,6 +27,7 @@
 		FCDC3FB12C8A099200BC490A /* EmojiCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCDC3FB02C8A099200BC490A /* EmojiCell.swift */; };
 		FCDC3FB32C8A0C0A00BC490A /* ColorCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCDC3FB22C8A0C0A00BC490A /* ColorCell.swift */; };
 		FCDC3FB52C8B05F400BC490A /* CollectionHeaderReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCDC3FB42C8B05F400BC490A /* CollectionHeaderReusableView.swift */; };
+		FCDC3FE72C8EFAAF00BC490A /* TrackerData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = FCDC3FE52C8EFAAF00BC490A /* TrackerData.xcdatamodeld */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -52,6 +53,7 @@
 		FCDC3FB02C8A099200BC490A /* EmojiCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiCell.swift; sourceTree = "<group>"; };
 		FCDC3FB22C8A0C0A00BC490A /* ColorCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorCell.swift; sourceTree = "<group>"; };
 		FCDC3FB42C8B05F400BC490A /* CollectionHeaderReusableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionHeaderReusableView.swift; sourceTree = "<group>"; };
+		FCDC3FE62C8EFAAF00BC490A /* TrackerApp.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TrackerApp.xcdatamodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -90,6 +92,7 @@
 				FCD261C52C71E2E30073D483 /* Models */,
 				FCD2617B2C6B939E0073D483 /* Trackers */,
 				FCD2617E2C6B93BE0073D483 /* Statistics */,
+				FCDC3FE42C8EFA7900BC490A /* DataBase */,
 				FCD261702C6B73030073D483 /* Assets.xcassets */,
 				FCD261722C6B73030073D483 /* LaunchScreen.storyboard */,
 				FCD261752C6B73030073D483 /* Info.plist */,
@@ -155,6 +158,14 @@
 				FCDC3FA12C7D140C00BC490A /* NonReguarEventViewController.swift */,
 			);
 			path = NonRegularEvent;
+			sourceTree = "<group>";
+		};
+		FCDC3FE42C8EFA7900BC490A /* DataBase */ = {
+			isa = PBXGroup;
+			children = (
+				FCDC3FE52C8EFAAF00BC490A /* TrackerData.xcdatamodeld */,
+			);
+			path = DataBase;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -227,6 +238,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FCDC3FE72C8EFAAF00BC490A /* TrackerData.xcdatamodeld in Sources */,
 				FCDC3FB32C8A0C0A00BC490A /* ColorCell.swift in Sources */,
 				FCD261C72C71E2F50073D483 /* Tracker.swift in Sources */,
 				FCDC3FB52C8B05F400BC490A /* CollectionHeaderReusableView.swift in Sources */,
@@ -465,6 +477,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		FCDC3FE52C8EFAAF00BC490A /* TrackerData.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				FCDC3FE62C8EFAAF00BC490A /* TrackerApp.xcdatamodel */,
+			);
+			currentVersion = FCDC3FE62C8EFAAF00BC490A /* TrackerApp.xcdatamodel */;
+			path = TrackerData.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = FCD2615C2C6B73010073D483 /* Project object */;
 }
