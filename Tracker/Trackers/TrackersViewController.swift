@@ -320,7 +320,6 @@ extension TrackersViewController: UICollectionViewDelegateFlowLayout {
         let totalSpacing: CGFloat = 9
         let width = (collectionView.bounds.width - totalSpacing) / 2
         return CGSize(width: width, height: 148)
-        //return CGSize(width: collectionView.bounds.width / 2, height: 148)
     }
     
     func collectionView(

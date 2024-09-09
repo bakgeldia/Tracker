@@ -24,6 +24,9 @@
 		FCDC3F9C2C7A361600BC490A /* CategoryHeaderReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCDC3F9B2C7A361600BC490A /* CategoryHeaderReusableView.swift */; };
 		FCDC3F9F2C7A4AD300BC490A /* CategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCDC3F9E2C7A4AD300BC490A /* CategoryViewController.swift */; };
 		FCDC3FA22C7D140C00BC490A /* NonReguarEventViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCDC3FA12C7D140C00BC490A /* NonReguarEventViewController.swift */; };
+		FCDC3FB12C8A099200BC490A /* EmojiCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCDC3FB02C8A099200BC490A /* EmojiCell.swift */; };
+		FCDC3FB32C8A0C0A00BC490A /* ColorCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCDC3FB22C8A0C0A00BC490A /* ColorCell.swift */; };
+		FCDC3FB52C8B05F400BC490A /* CollectionHeaderReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCDC3FB42C8B05F400BC490A /* CollectionHeaderReusableView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -46,6 +49,9 @@
 		FCDC3F9B2C7A361600BC490A /* CategoryHeaderReusableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryHeaderReusableView.swift; sourceTree = "<group>"; };
 		FCDC3F9E2C7A4AD300BC490A /* CategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryViewController.swift; sourceTree = "<group>"; };
 		FCDC3FA12C7D140C00BC490A /* NonReguarEventViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NonReguarEventViewController.swift; sourceTree = "<group>"; };
+		FCDC3FB02C8A099200BC490A /* EmojiCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiCell.swift; sourceTree = "<group>"; };
+		FCDC3FB22C8A0C0A00BC490A /* ColorCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorCell.swift; sourceTree = "<group>"; };
+		FCDC3FB42C8B05F400BC490A /* CollectionHeaderReusableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionHeaderReusableView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -126,6 +132,9 @@
 				FCD7BFBC2C78B999004559A5 /* AddTrackerViewController.swift */,
 				FCDC3FA02C7D13DB00BC490A /* NonRegularEvent */,
 				FCDC3F9D2C7A49E900BC490A /* HabitCreation */,
+				FCDC3FB02C8A099200BC490A /* EmojiCell.swift */,
+				FCDC3FB22C8A0C0A00BC490A /* ColorCell.swift */,
+				FCDC3FB42C8B05F400BC490A /* CollectionHeaderReusableView.swift */,
 			);
 			path = TrackerCreation;
 			sourceTree = "<group>";
@@ -218,8 +227,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FCDC3FB32C8A0C0A00BC490A /* ColorCell.swift in Sources */,
 				FCD261C72C71E2F50073D483 /* Tracker.swift in Sources */,
+				FCDC3FB52C8B05F400BC490A /* CollectionHeaderReusableView.swift in Sources */,
 				FCD7BFE12C78C996004559A5 /* NewHabitViewController.swift in Sources */,
+				FCDC3FB12C8A099200BC490A /* EmojiCell.swift in Sources */,
 				FCDC3F9F2C7A4AD300BC490A /* CategoryViewController.swift in Sources */,
 				FCD261CB2C71E3250073D483 /* TrackerRecord.swift in Sources */,
 				FCD7BFE32C78E3A7004559A5 /* ScheduleViewController.swift in Sources */,
