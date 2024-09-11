@@ -28,6 +28,10 @@
 		FCDC3FB32C8A0C0A00BC490A /* ColorCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCDC3FB22C8A0C0A00BC490A /* ColorCell.swift */; };
 		FCDC3FB52C8B05F400BC490A /* CollectionHeaderReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCDC3FB42C8B05F400BC490A /* CollectionHeaderReusableView.swift */; };
 		FCDC3FE72C8EFAAF00BC490A /* TrackerData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = FCDC3FE52C8EFAAF00BC490A /* TrackerData.xcdatamodeld */; };
+		FCDC40162C90A15000BC490A /* TrackerStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCDC40152C90A15000BC490A /* TrackerStore.swift */; };
+		FCDC40182C90A16400BC490A /* TrackerCategoryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCDC40172C90A16400BC490A /* TrackerCategoryStore.swift */; };
+		FCDC401A2C90A17D00BC490A /* TrackerRecordStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCDC40192C90A17D00BC490A /* TrackerRecordStore.swift */; };
+		FCDC401C2C90A59100BC490A /* UIColorMarshalling.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCDC401B2C90A59000BC490A /* UIColorMarshalling.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -54,6 +58,10 @@
 		FCDC3FB22C8A0C0A00BC490A /* ColorCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorCell.swift; sourceTree = "<group>"; };
 		FCDC3FB42C8B05F400BC490A /* CollectionHeaderReusableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionHeaderReusableView.swift; sourceTree = "<group>"; };
 		FCDC3FE62C8EFAAF00BC490A /* TrackerApp.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TrackerApp.xcdatamodel; sourceTree = "<group>"; };
+		FCDC40152C90A15000BC490A /* TrackerStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerStore.swift; sourceTree = "<group>"; };
+		FCDC40172C90A16400BC490A /* TrackerCategoryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerCategoryStore.swift; sourceTree = "<group>"; };
+		FCDC40192C90A17D00BC490A /* TrackerRecordStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerRecordStore.swift; sourceTree = "<group>"; };
+		FCDC401B2C90A59000BC490A /* UIColorMarshalling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColorMarshalling.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,7 +100,7 @@
 				FCD261C52C71E2E30073D483 /* Models */,
 				FCD2617B2C6B939E0073D483 /* Trackers */,
 				FCD2617E2C6B93BE0073D483 /* Statistics */,
-				FCDC3FE42C8EFA7900BC490A /* DataBase */,
+				FCDC3FE42C8EFA7900BC490A /* CoreData */,
 				FCD261702C6B73030073D483 /* Assets.xcassets */,
 				FCD261722C6B73030073D483 /* LaunchScreen.storyboard */,
 				FCD261752C6B73030073D483 /* Info.plist */,
@@ -107,6 +115,7 @@
 				FCD7BFB92C78B502004559A5 /* TrackerCollectionViewCell.swift */,
 				FCDC3F9B2C7A361600BC490A /* CategoryHeaderReusableView.swift */,
 				FCD7BFBB2C78B961004559A5 /* TrackerCreation */,
+				FCDC40142C90A12000BC490A /* Store */,
 			);
 			path = Trackers;
 			sourceTree = "<group>";
@@ -160,12 +169,23 @@
 			path = NonRegularEvent;
 			sourceTree = "<group>";
 		};
-		FCDC3FE42C8EFA7900BC490A /* DataBase */ = {
+		FCDC3FE42C8EFA7900BC490A /* CoreData */ = {
 			isa = PBXGroup;
 			children = (
 				FCDC3FE52C8EFAAF00BC490A /* TrackerData.xcdatamodeld */,
 			);
-			path = DataBase;
+			path = CoreData;
+			sourceTree = "<group>";
+		};
+		FCDC40142C90A12000BC490A /* Store */ = {
+			isa = PBXGroup;
+			children = (
+				FCDC40152C90A15000BC490A /* TrackerStore.swift */,
+				FCDC40172C90A16400BC490A /* TrackerCategoryStore.swift */,
+				FCDC40192C90A17D00BC490A /* TrackerRecordStore.swift */,
+				FCDC401B2C90A59000BC490A /* UIColorMarshalling.swift */,
+			);
+			path = Store;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -252,11 +272,15 @@
 				FCDC3F9C2C7A361600BC490A /* CategoryHeaderReusableView.swift in Sources */,
 				FCD7BFBA2C78B502004559A5 /* TrackerCollectionViewCell.swift in Sources */,
 				FCD7BFBD2C78B999004559A5 /* AddTrackerViewController.swift in Sources */,
+				FCDC40162C90A15000BC490A /* TrackerStore.swift in Sources */,
 				FCD2617D2C6B93B90073D483 /* TrackersViewController.swift in Sources */,
 				FCD261682C6B73010073D483 /* AppDelegate.swift in Sources */,
 				FCDC3FA22C7D140C00BC490A /* NonReguarEventViewController.swift in Sources */,
 				FCD2616A2C6B73010073D483 /* SceneDelegate.swift in Sources */,
+				FCDC401A2C90A17D00BC490A /* TrackerRecordStore.swift in Sources */,
+				FCDC401C2C90A59100BC490A /* UIColorMarshalling.swift in Sources */,
 				FCD261C92C71E30B0073D483 /* TrackerCategory.swift in Sources */,
+				FCDC40182C90A16400BC490A /* TrackerCategoryStore.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

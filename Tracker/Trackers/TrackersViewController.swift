@@ -17,6 +17,8 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
     private let errorLabel = UILabel()
     private var searchController = UISearchController()
     
+    private let trackerStore = TrackerStore()
+    
     var categories = [TrackerCategory]()
     var completedTrackers = [TrackerRecord]()
     var currentDate: Date = Date()
@@ -33,9 +35,7 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
     ]
     
     private var visibleEmojies: [String] = []
-    
     private var trackerCounters = [UInt: Int]()
-    
     private let collectionView: UICollectionView = {
         let collectionView = UICollectionView(
             frame: .zero,

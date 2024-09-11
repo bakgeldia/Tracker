@@ -462,7 +462,7 @@ extension NewHabitViewController: UICollectionViewDelegate {
         } else {
             selectedColor = colors[indexPath.item]
         }
-
+        
         collectionView.reloadData()
     }
 }
