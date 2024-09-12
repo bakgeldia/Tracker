@@ -328,7 +328,8 @@ extension TrackersViewController: UICollectionViewDataSource {
             cell.completeTrackerButton.backgroundColor?.withAlphaComponent(1)
         }
         
-        let count = trackerCounters[tracker.id, default: 0]
+        //let count = trackerCounters[tracker.id, default: 0]
+        let count = trackerRecordStore.countTrackerRecords(byId: Int(tracker.id))
         cell.numOfDays.text = "\(count) день"
         
         cell.delegate = self
@@ -372,37 +373,6 @@ extension TrackersViewController: UICollectionViewDelegateFlowLayout {
     }
 }
 
-extension TrackersViewController {
-    func didCreateNewHabit(_ habit: Tracker, _ categories: [TrackerCategory]) {
-        // Создаем новый массив категорий с обновленными данными
-        var updatedCategories = categories
-        
-        // Попробуем добавить трекер в существующую категорию
-        if let index = updatedCategories.firstIndex(where: { !$0.trackers.isEmpty }) {
-            var category = updatedCategories[index]
-            var updatedTrackers = category.trackers
-            updatedTrackers.append(habit)
-            category = TrackerCategory(title: category.title, trackers: updatedTrackers)
-            updatedCategories[index] = category
-        } else {
-            // Если нет подходящей категории, создаем новую
-            let newCategory = TrackerCategory(title: "Новая категория", trackers: [habit])
-            updatedCategories.append(newCategory)
-        }
-        
-        // Обновляем категорию и фильтруем трекеры
-        self.categories = updatedCategories
-        
-        datePickerValueChanged(datePicker)
-        let searchText = searchController.searchBar.text ?? ""
-        filterTrackers(for: searchText)
-        
-        // Обновляем отображение
-        updatePlaceholderVisibility()
-        //collectionView.reloadData()
-    }
-}
-
 extension TrackersViewController: TrackerCollectionViewCellDelegate {
     func didTapCompleteButton(in cell: TrackerCollectionViewCell) {
         guard let indexPath = collectionView.indexPath(for: cell) else { return }
@@ -411,19 +381,19 @@ extension TrackersViewController: TrackerCollectionViewCellDelegate {
         
         if let index = completedTrackers.firstIndex(of: trackerRecord) {
             // Если трекер уже в массиве, удаляем его
-            completedTrackers.remove(at: index)
-            print("Deleted from completedtrackers")
+            //completedTrackers.remove(at: index)
+            //print("Deleted from completedtrackers")
             try! trackerRecordStore.deleteExistingTrackerRecord(trackerRecord)
             print(try! trackerRecordStore.fetchTrackerRecords())
-            trackerCounters[tracker.id, default: 0] -= 1
+            //trackerCounters[tracker.id, default: 0] -= 1
             //collectionView.reloadData()
         } else {
             // Если трекер не в массиве, добавляем его
-            completedTrackers.append(trackerRecord)
-            print("Added to completedtrackers")
+            //completedTrackers.append(trackerRecord)
+            //print("Added to completedtrackers")
             try! trackerRecordStore.addNewTrackerRecord(trackerRecord)
             print(try! trackerRecordStore.fetchTrackerRecords())
-            trackerCounters[tracker.id, default: 0] += 1
+            //trackerCounters[tracker.id, default: 0] += 1
             //collectionView.reloadData()
         }
     }
@@ -473,7 +443,6 @@ extension TrackersViewController: AddTrackerViewControllerDelegate {
         }
         
         // Обновляем массив категорий и перезагружаем коллекцию
-        //self.categories = updatedCategories
         self.categories = try! trackerCategoryStore.fetchTrackerCategories()
         
         datePickerValueChanged(datePicker)

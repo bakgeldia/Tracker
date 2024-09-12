@@ -122,6 +122,19 @@ final class TrackerRecordStore: NSObject {
             return false
         }
     }
+    
+    func countTrackerRecords(byId id: Int) -> Int {
+        let fetchRequest: NSFetchRequest<TrackerRecordCoreData> = TrackerRecordCoreData.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "id == %d", id)
+
+        do {
+            let count = try context.count(for: fetchRequest)
+            return count
+        } catch {
+            print("Ошибка при подсчете записей: \(error)")
+            return 0
+        }
+    }
 
     
     func fetchTrackerRecords() throws -> [TrackerRecord] {
