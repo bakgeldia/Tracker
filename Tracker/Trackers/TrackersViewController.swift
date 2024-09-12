@@ -63,10 +63,7 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
                 print(error)
             }
         }
-        print(try! trackerCategoryStore.fetchTrackerCategories())
         categories = try! trackerCategoryStore.fetchTrackerCategories()
-        
-        //categories = [category2]
         //-------------- Example -------------------
         
         searchController.searchBar.delegate = self
@@ -80,7 +77,8 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
         datePickerValueChanged(datePicker)
         
         setupCollectionView()
-        
+        trackerCategoryStore.delegate = self
+        trackerRecordStore.delegate = self
     }
     
     private func updatePlaceholderVisibility() {
@@ -271,6 +269,28 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
     }
 }
 
+extension TrackersViewController: TrackerCategoryDelegate {
+    func store(_ store: TrackerCategoryStore, didUpdate update: TrackerCategoryUpdate) {
+        filteredTrackers = store.categories
+        collectionView.reloadData()
+    }
+}
+
+extension TrackersViewController: TrackerRecordDelegate {
+    func store(_ store: TrackerRecordStore, didUpdate update: TrackerRecordUpdate) {
+        completedTrackers = store.trackerRecords
+        
+        collectionView.reloadData()
+    }
+}
+
+extension TrackersViewController: TrackerDelegate {
+    func store(_ store: TrackerStore, didUpdate update: TrackerUpdate) {
+        
+        collectionView.reloadData()
+    }
+}
+
 extension TrackersViewController: UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return filteredTrackers.count
@@ -379,7 +399,7 @@ extension TrackersViewController {
         
         // Обновляем отображение
         updatePlaceholderVisibility()
-        collectionView.reloadData()
+        //collectionView.reloadData()
     }
 }
 
@@ -396,7 +416,7 @@ extension TrackersViewController: TrackerCollectionViewCellDelegate {
             try! trackerRecordStore.deleteExistingTrackerRecord(trackerRecord)
             print(try! trackerRecordStore.fetchTrackerRecords())
             trackerCounters[tracker.id, default: 0] -= 1
-            collectionView.reloadData()
+            //collectionView.reloadData()
         } else {
             // Если трекер не в массиве, добавляем его
             completedTrackers.append(trackerRecord)
@@ -404,13 +424,13 @@ extension TrackersViewController: TrackerCollectionViewCellDelegate {
             try! trackerRecordStore.addNewTrackerRecord(trackerRecord)
             print(try! trackerRecordStore.fetchTrackerRecords())
             trackerCounters[tracker.id, default: 0] += 1
-            collectionView.reloadData()
+            //collectionView.reloadData()
         }
     }
 }
 
 extension TrackersViewController: AddTrackerViewControllerDelegate {
-    func getTrackerDetail(title: String, category: String, schedule: [String]?) {
+    func getTrackerDetail(title: String, category: String, emoji: String, color: UIColor, schedule: [String]?) {
         //Закрываем все экраны одновременно после создания трекера
         dismiss(animated: true)
         
@@ -418,10 +438,11 @@ extension TrackersViewController: AddTrackerViewControllerDelegate {
         let newTracker = Tracker(
             id: (categories.flatMap { $0.trackers }.map { $0.id }.max() ?? 0) + 1,
             name: title,
-            color: UIColor(red: 51.0/255.0, green: 207.0/255.0, blue: 105.0/255.0, alpha: 1),
-            emoji: emojies.randomElement() ?? "❤️",
+            color: color,
+            emoji: emoji,
             schedule: schedule ?? ["Everyday"]
         )
+        print(newTracker)
         
         do {
             try trackerStore.addNewTracker(newTracker)

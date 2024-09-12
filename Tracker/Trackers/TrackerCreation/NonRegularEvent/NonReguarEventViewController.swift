@@ -8,7 +8,7 @@
 import UIKit
 
 protocol NonRegularEventViewControllerDelegate: AnyObject {
-    func createNewEvent(title: String, category: String)
+    func createNewEvent(title: String, category: String, emoji: String, color: UIColor)
 }
 
 final class NonRegularEventViewController: UIViewController {
@@ -211,9 +211,19 @@ final class NonRegularEventViewController: UIViewController {
             return
         }
         
+        guard let emoji = selectedEmoji else {
+            print("Эмодзи не выбрана")
+            return
+        }
+        
+        guard let color = selectedColor else {
+            print("Цвет не выбран")
+            return
+        }
+        
         createButton.isEnabled = false
         
-        delegate?.createNewEvent(title: eventTitle, category: category)
+        delegate?.createNewEvent(title: eventTitle, category: category, emoji: emoji, color: color)
     }
     
     private func showCategoriesPopover() {

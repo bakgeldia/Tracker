@@ -13,15 +13,70 @@ enum TrackerCategoryStoreError: Error {
     case decodingErrorInvalidColorHex
 }
 
-final class TrackerCategoryStore {
+struct TrackerCategoryUpdate {
+    struct Move: Hashable {
+        let oldIndex: Int
+        let newIndex: Int
+    }
+    let insertedIndexes: IndexSet
+    let deletedIndexes: IndexSet
+    let updatedIndexes: IndexSet
+    let movedIndexes: Set<Move>
+}
+
+protocol TrackerCategoryDelegate: AnyObject {
+    func store(
+        _ store: TrackerCategoryStore,
+        didUpdate update: TrackerCategoryUpdate
+    )
+}
+
+final class TrackerCategoryStore: NSObject {
     private let trackerStore = TrackerStore()
     private let trackersArrayMarshalling = TrackersArrayMarshalling()
     private var appDelegate: AppDelegate {
         UIApplication.shared.delegate as! AppDelegate
     }
     
-    private var context: NSManagedObjectContext {
-        appDelegate.persistentContainer.viewContext
+    private var context: NSManagedObjectContext
+    
+    private var fetchedResultsController: NSFetchedResultsController<TrackerCategoryCoreData>?
+    weak var delegate: TrackerCategoryDelegate?
+    private var insertedIndexes: IndexSet?
+    private var deletedIndexes: IndexSet?
+    private var updatedIndexes: IndexSet?
+    private var movedIndexes: Set<TrackerCategoryUpdate.Move>?
+    
+    override convenience init() {
+        let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+        try! self.init(context: context)
+    }
+
+    init(context: NSManagedObjectContext) throws {
+        self.context = context
+        super.init()
+
+        let fetchRequest = TrackerCategoryCoreData.fetchRequest()
+        fetchRequest.sortDescriptors = [
+            NSSortDescriptor(keyPath: \TrackerCategoryCoreData.title, ascending: true)
+        ]
+        let controller = NSFetchedResultsController(
+            fetchRequest: fetchRequest,
+            managedObjectContext: context,
+            sectionNameKeyPath: nil,
+            cacheName: nil
+        )
+        controller.delegate = self
+        self.fetchedResultsController = controller
+        try controller.performFetch()
+    }
+    
+    var categories: [TrackerCategory] {
+        guard
+            let objects = self.fetchedResultsController?.fetchedObjects,
+            let categories = try? objects.map({ try self.getCategory(from: $0) })
+        else { return [] }
+        return categories
     }
     
     func addNewTrackerCategory(_ category: TrackerCategory) throws {
@@ -69,4 +124,56 @@ final class TrackerCategoryStore {
                                trackers: trackers)
     }
     
+}
+
+extension TrackerCategoryStore: NSFetchedResultsControllerDelegate {
+    
+    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        insertedIndexes = IndexSet()
+        deletedIndexes = IndexSet()
+        updatedIndexes = IndexSet()
+        movedIndexes = Set<TrackerCategoryUpdate.Move>()
+    }
+    
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        delegate?.store(
+            self,
+            didUpdate: TrackerCategoryUpdate(
+                insertedIndexes: insertedIndexes!,
+                deletedIndexes: deletedIndexes!,
+                updatedIndexes: updatedIndexes!,
+                movedIndexes: movedIndexes!
+            )
+        )
+        insertedIndexes = nil
+        deletedIndexes = nil
+        updatedIndexes = nil
+        movedIndexes = nil
+    }
+    
+    func controller(
+        _ controller: NSFetchedResultsController<NSFetchRequestResult>,
+        didChange anObject: Any,
+        at indexPath: IndexPath?,
+        for type: NSFetchedResultsChangeType,
+        newIndexPath: IndexPath?
+    ) {
+
+        switch type {
+        case .insert:
+            guard let indexPath = newIndexPath else { fatalError() }
+            insertedIndexes?.insert(indexPath.item)
+        case .delete:
+            guard let indexPath = indexPath else { fatalError() }
+            deletedIndexes?.insert(indexPath.item)
+        case .update:
+            guard let indexPath = indexPath else { fatalError() }
+            updatedIndexes?.insert(indexPath.item)
+        case .move:
+            guard let oldIndexPath = indexPath, let newIndexPath = newIndexPath else { fatalError() }
+            movedIndexes?.insert(.init(oldIndex: oldIndexPath.item, newIndex: newIndexPath.item))
+        @unknown default:
+            fatalError()
+        }
+    }
 }

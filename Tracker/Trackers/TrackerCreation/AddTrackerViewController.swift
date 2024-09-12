@@ -8,7 +8,7 @@
 import UIKit
 
 protocol AddTrackerViewControllerDelegate: AnyObject {
-    func getTrackerDetail(title: String, category: String, schedule: [String]?)
+    func getTrackerDetail(title: String, category: String, emoji: String, color: UIColor, schedule: [String]?)
 }
 
 final class AddTrackerViewController: UIViewController {
@@ -120,13 +120,13 @@ final class AddTrackerViewController: UIViewController {
 }
 
 extension AddTrackerViewController: NewHabitViewControllerDelegate {
-    func createNewHabit(title: String, category: String, schedule: [String]) {
-        delegate?.getTrackerDetail(title: title, category: category, schedule: schedule)
+    func createNewHabit(title: String, category: String, emoji: String, color: UIColor, schedule: [String]) {
+        delegate?.getTrackerDetail(title: title, category: category, emoji: emoji, color: color, schedule: schedule)
     }
 }
 
 extension AddTrackerViewController: NonRegularEventViewControllerDelegate {
-    func createNewEvent(title: String, category: String) {
-        delegate?.getTrackerDetail(title: title, category: category, schedule: nil)
+    func createNewEvent(title: String, category: String, emoji: String, color: UIColor) {
+        delegate?.getTrackerDetail(title: title, category: category, emoji: emoji, color: color, schedule: nil)
     }
 }

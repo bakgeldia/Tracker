@@ -8,7 +8,7 @@
 import UIKit
 
 protocol NewHabitViewControllerDelegate: AnyObject {
-    func createNewHabit(title: String, category: String, schedule: [String])
+    func createNewHabit(title: String, category: String, emoji: String, color: UIColor, schedule: [String])
 }
 
 final class NewHabitViewController: UIViewController {
@@ -218,9 +218,19 @@ final class NewHabitViewController: UIViewController {
             return
         }
         
+        guard let emoji = selectedEmoji else {
+            print("Эмодзи не выбрана")
+            return
+        }
+        
+        guard let color = selectedColor else {
+            print("Цвет не выбран")
+            return
+        }
+        
         createButton.isEnabled = false
         
-        delegate?.createNewHabit(title: habitTitle, category: category, schedule: schedule)
+        delegate?.createNewHabit(title: habitTitle, category: category, emoji: emoji, color: color, schedule: schedule)
     }
     
     private func showSchedulePopover() {
@@ -431,6 +441,7 @@ extension NewHabitViewController: UICollectionViewDataSource {
             }
             
             return cell
+            
         } else {
             
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "colorCell", for: indexPath) as! ColorCell
