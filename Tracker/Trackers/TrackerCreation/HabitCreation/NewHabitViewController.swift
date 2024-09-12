@@ -177,7 +177,7 @@ final class NewHabitViewController: UIViewController {
         
         collectionView.register(EmojiCell.self, forCellWithReuseIdentifier: "emojiCell")
         collectionView.register(ColorCell.self, forCellWithReuseIdentifier: "colorCell")
-        collectionView.register(CategoryHeaderReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "Header")
+        collectionView.register(CollectionHeaderReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "CollectionHeader")
         
         NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: tableView.bottomAnchor, constant: 32),
@@ -460,7 +460,7 @@ extension NewHabitViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "Header", for: indexPath) as! CategoryHeaderReusableView
+        let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "CollectionHeader", for: indexPath) as! CollectionHeaderReusableView
         headerView.categoryTitle.text = indexPath.section == 0 ? "Emoji" : "Цвет"
         return headerView
     }
