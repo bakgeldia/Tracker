@@ -18,6 +18,8 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
     private var searchController = UISearchController()
     
     private let trackerStore = TrackerStore()
+    private let trackerCategoryStore = TrackerCategoryStore()
+    private let trackerRecordStore = TrackerRecordStore()
     
     var categories = [TrackerCategory]()
     var completedTrackers = [TrackerRecord]()
@@ -49,9 +51,22 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
         super.viewDidLoad()
         
         //-------------- Example ------------------
+        //try! trackerRecordStore.clearCoreData()
+        
         let category2 = TrackerCategory(title: "Здоровый образ жизни", trackers: [])
         
-        categories = [category2]
+        if !trackerCategoryStore.categoryExists(category2) {
+            do {
+                try trackerCategoryStore.addNewTrackerCategory(category2)
+                print(try! trackerCategoryStore.fetchTrackerCategories())
+            } catch {
+                print(error)
+            }
+        }
+        print(try! trackerCategoryStore.fetchTrackerCategories())
+        categories = try! trackerCategoryStore.fetchTrackerCategories()
+        
+        //categories = [category2]
         //-------------- Example -------------------
         
         searchController.searchBar.delegate = self
@@ -65,6 +80,7 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
         datePickerValueChanged(datePicker)
         
         setupCollectionView()
+        
     }
     
     private func updatePlaceholderVisibility() {
@@ -283,7 +299,8 @@ extension TrackersViewController: UICollectionViewDataSource {
         cell.completeTrackerButton.isEnabled = currentDate <= todayDate
         
         let trackerRecord = TrackerRecord(id: tracker.id, date: dateWithoutTime(from: currentDate))
-        if completedTrackers.contains(trackerRecord) {
+        //if completedTrackers.contains(trackerRecord)
+        if trackerRecordStore.trackerRecordExists(trackerRecord) {
             cell.completeTrackerButton.setImage(UIImage(systemName: "checkmark"), for: .normal) // Иконка завершения
             cell.completeTrackerButton.backgroundColor?.withAlphaComponent(0.3)
         } else {
@@ -371,19 +388,21 @@ extension TrackersViewController: TrackerCollectionViewCellDelegate {
         guard let indexPath = collectionView.indexPath(for: cell) else { return }
         let tracker = filteredTrackers[indexPath.section].trackers[indexPath.item]
         let trackerRecord = TrackerRecord(id: tracker.id, date: dateWithoutTime(from: currentDate))
-
+        
         if let index = completedTrackers.firstIndex(of: trackerRecord) {
             // Если трекер уже в массиве, удаляем его
             completedTrackers.remove(at: index)
             print("Deleted from completedtrackers")
-            print(completedTrackers)
+            try! trackerRecordStore.deleteExistingTrackerRecord(trackerRecord)
+            print(try! trackerRecordStore.fetchTrackerRecords())
             trackerCounters[tracker.id, default: 0] -= 1
             collectionView.reloadData()
         } else {
             // Если трекер не в массиве, добавляем его
             completedTrackers.append(trackerRecord)
             print("Added to completedtrackers")
-            print(completedTrackers)
+            try! trackerRecordStore.addNewTrackerRecord(trackerRecord)
+            print(try! trackerRecordStore.fetchTrackerRecords())
             trackerCounters[tracker.id, default: 0] += 1
             collectionView.reloadData()
         }
@@ -404,13 +423,21 @@ extension TrackersViewController: AddTrackerViewControllerDelegate {
             schedule: schedule ?? ["Everyday"]
         )
         
+        do {
+            try trackerStore.addNewTracker(newTracker)
+        } catch {
+            print(error)
+        }
+        
+        let addedTracker = try! trackerStore.fetchTrackers()[0]
+        
         // Найти категорию, которая соответствует полученной категории
         var updatedCategories = [TrackerCategory]()
         var categoryFound = false
         for var cat in categories {
             if cat.title == category {
                 var updatedTrackers = cat.trackers
-                updatedTrackers.append(newTracker)
+                updatedTrackers.append(addedTracker)
                 cat = TrackerCategory(title: cat.title, trackers: updatedTrackers)
                 categoryFound = true
             }
@@ -419,12 +446,14 @@ extension TrackersViewController: AddTrackerViewControllerDelegate {
         
         // Если категория не найдена, добавляем новый трекер в новую категорию
         if !categoryFound {
-            let newCategory = TrackerCategory(title: category, trackers: [newTracker])
+            let newCategory = TrackerCategory(title: category, trackers: [addedTracker])
             updatedCategories.append(newCategory)
+            try! trackerCategoryStore.addNewTrackerCategory(newCategory)
         }
         
         // Обновляем массив категорий и перезагружаем коллекцию
-        self.categories = updatedCategories
+        //self.categories = updatedCategories
+        self.categories = try! trackerCategoryStore.fetchTrackerCategories()
         
         datePickerValueChanged(datePicker)
     }

@@ -8,7 +8,14 @@
 import UIKit
 import CoreData
 
+enum TrackerCategoryStoreError: Error {
+    case decodingErrorInvalidEmojies
+    case decodingErrorInvalidColorHex
+}
+
 final class TrackerCategoryStore {
+    private let trackerStore = TrackerStore()
+    private let trackersArrayMarshalling = TrackersArrayMarshalling()
     private var appDelegate: AppDelegate {
         UIApplication.shared.delegate as! AppDelegate
     }
@@ -17,51 +24,49 @@ final class TrackerCategoryStore {
         appDelegate.persistentContainer.viewContext
     }
     
-    func trackerToDictionary(_ tracker: Tracker) -> NSDictionary {
-        return [
-            "id": tracker.id,
-            "name": tracker.name,
-            "color": tracker.color,
-            "emoji": tracker.emoji,
-            "schedule": tracker.schedule
-        ] as NSDictionary
-    }
-    
-    func dictionaryToTracker(_ dictionary: NSDictionary) -> Tracker? {
-        guard let id = dictionary["id"] as? UInt,
-              let name = dictionary["name"] as? String,
-              let color = dictionary["color"] as? UIColor,
-              let emoji = dictionary["emoji"] as? String,
-              let schedule = dictionary["schedule"] as? [String] else {
-            return nil
-        }
-        
-        return Tracker(id: id, name: name, color: color, emoji: emoji, schedule: schedule)
-    }
-    
-    func trackersToNSObject(_ trackers: [Tracker]) -> NSObject {
-        let trackerDictionaries = trackers.map { trackerToDictionary($0) }
-        return NSArray(array: trackerDictionaries)
-    }
-
-    func nsObjectToTrackers(_ object: NSObject?) -> [Tracker] {
-        guard let trackerDictionaries = object as? [NSDictionary] else { return [] }
-        
-        return trackerDictionaries.compactMap { dictionaryToTracker($0) }
-    }
-    
     func addNewTrackerCategory(_ category: TrackerCategory) throws {
         let trackerCategoryCoreData = TrackerCategoryCoreData(context: context)
         trackerCategoryCoreData.title = category.title
-        trackerCategoryCoreData.trackers = trackersToNSObject(category.trackers)
+        trackerCategoryCoreData.trackers = category.trackers as NSObject
         
         appDelegate.saveContext()
     }
 
     func updateExistingTrackerCategory(_ trackerCategoryCoreData: TrackerCategoryCoreData, with category: TrackerCategory) {
         trackerCategoryCoreData.title = category.title
-        trackerCategoryCoreData.trackers = trackersToNSObject(category.trackers)
+        trackerCategoryCoreData.trackers = category.trackers as NSObject
         
         appDelegate.saveContext()
     }
+    
+    func categoryExists(_ trackerCategory: TrackerCategory) -> Bool {
+        let fetchRequest: NSFetchRequest<TrackerCategoryCoreData> = TrackerCategoryCoreData.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "title == %@", trackerCategory.title)
+        
+        do {
+            let count = try context.count(for: fetchRequest)
+            return count > 0
+        } catch {
+            print("Ошибка при проверке наличия категории: \(error)")
+            return false
+        }
+    }
+
+    
+    func fetchTrackerCategories() throws -> [TrackerCategory] {
+        let fetchRequest = TrackerCategoryCoreData.fetchRequest()
+        fetchRequest.fetchLimit = 1
+        let trackerCategoriesFromCoreData = try context.fetch(fetchRequest)
+        return try trackerCategoriesFromCoreData.map { try self.getCategory(from: $0) }
+    }
+    
+    func getCategory(from trackerCategoryCoreData: TrackerCategoryCoreData) throws -> TrackerCategory {
+        guard let name = trackerCategoryCoreData.title else {
+            throw TrackerCategoryStoreError.decodingErrorInvalidEmojies
+        }
+        let trackers = try! trackerStore.fetchTrackers()
+        return TrackerCategory(title: name,
+                               trackers: trackers)
+    }
+    
 }

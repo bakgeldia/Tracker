@@ -32,6 +32,10 @@
 		FCDC40182C90A16400BC490A /* TrackerCategoryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCDC40172C90A16400BC490A /* TrackerCategoryStore.swift */; };
 		FCDC401A2C90A17D00BC490A /* TrackerRecordStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCDC40192C90A17D00BC490A /* TrackerRecordStore.swift */; };
 		FCDC401C2C90A59100BC490A /* UIColorMarshalling.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCDC401B2C90A59000BC490A /* UIColorMarshalling.swift */; };
+		FCDC401E2C91EF5700BC490A /* ScheduleMarshalling.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCDC401D2C91EF5600BC490A /* ScheduleMarshalling.swift */; };
+		FCDC40202C91F06B00BC490A /* TrackersArrayMarshalling.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCDC401F2C91F06B00BC490A /* TrackersArrayMarshalling.swift */; };
+		FCDC40242C93264D00BC490A /* ScheduleTransformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCDC40232C93264D00BC490A /* ScheduleTransformer.swift */; };
+		FCDC40292C932D6D00BC490A /* TrackersTransformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCDC40282C932D6D00BC490A /* TrackersTransformer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -62,6 +66,10 @@
 		FCDC40172C90A16400BC490A /* TrackerCategoryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerCategoryStore.swift; sourceTree = "<group>"; };
 		FCDC40192C90A17D00BC490A /* TrackerRecordStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerRecordStore.swift; sourceTree = "<group>"; };
 		FCDC401B2C90A59000BC490A /* UIColorMarshalling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColorMarshalling.swift; sourceTree = "<group>"; };
+		FCDC401D2C91EF5600BC490A /* ScheduleMarshalling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleMarshalling.swift; sourceTree = "<group>"; };
+		FCDC401F2C91F06B00BC490A /* TrackersArrayMarshalling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersArrayMarshalling.swift; sourceTree = "<group>"; };
+		FCDC40232C93264D00BC490A /* ScheduleTransformer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleTransformer.swift; sourceTree = "<group>"; };
+		FCDC40282C932D6D00BC490A /* TrackersTransformer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersTransformer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -184,6 +192,10 @@
 				FCDC40172C90A16400BC490A /* TrackerCategoryStore.swift */,
 				FCDC40192C90A17D00BC490A /* TrackerRecordStore.swift */,
 				FCDC401B2C90A59000BC490A /* UIColorMarshalling.swift */,
+				FCDC401D2C91EF5600BC490A /* ScheduleMarshalling.swift */,
+				FCDC401F2C91F06B00BC490A /* TrackersArrayMarshalling.swift */,
+				FCDC40232C93264D00BC490A /* ScheduleTransformer.swift */,
+				FCDC40282C932D6D00BC490A /* TrackersTransformer.swift */,
 			);
 			path = Store;
 			sourceTree = "<group>";
@@ -261,6 +273,7 @@
 				FCDC3FE72C8EFAAF00BC490A /* TrackerData.xcdatamodeld in Sources */,
 				FCDC3FB32C8A0C0A00BC490A /* ColorCell.swift in Sources */,
 				FCD261C72C71E2F50073D483 /* Tracker.swift in Sources */,
+				FCDC401E2C91EF5700BC490A /* ScheduleMarshalling.swift in Sources */,
 				FCDC3FB52C8B05F400BC490A /* CollectionHeaderReusableView.swift in Sources */,
 				FCD7BFE12C78C996004559A5 /* NewHabitViewController.swift in Sources */,
 				FCDC3FB12C8A099200BC490A /* EmojiCell.swift in Sources */,
@@ -270,13 +283,16 @@
 				FCD2616C2C6B73010073D483 /* ViewController.swift in Sources */,
 				FCD261802C6B93DB0073D483 /* StatisticsViewController.swift in Sources */,
 				FCDC3F9C2C7A361600BC490A /* CategoryHeaderReusableView.swift in Sources */,
+				FCDC40292C932D6D00BC490A /* TrackersTransformer.swift in Sources */,
 				FCD7BFBA2C78B502004559A5 /* TrackerCollectionViewCell.swift in Sources */,
 				FCD7BFBD2C78B999004559A5 /* AddTrackerViewController.swift in Sources */,
 				FCDC40162C90A15000BC490A /* TrackerStore.swift in Sources */,
+				FCDC40242C93264D00BC490A /* ScheduleTransformer.swift in Sources */,
 				FCD2617D2C6B93B90073D483 /* TrackersViewController.swift in Sources */,
 				FCD261682C6B73010073D483 /* AppDelegate.swift in Sources */,
 				FCDC3FA22C7D140C00BC490A /* NonReguarEventViewController.swift in Sources */,
 				FCD2616A2C6B73010073D483 /* SceneDelegate.swift in Sources */,
+				FCDC40202C91F06B00BC490A /* TrackersArrayMarshalling.swift in Sources */,
 				FCDC401A2C90A17D00BC490A /* TrackerRecordStore.swift in Sources */,
 				FCDC401C2C90A59100BC490A /* UIColorMarshalling.swift in Sources */,
 				FCD261C92C71E30B0073D483 /* TrackerCategory.swift in Sources */,
