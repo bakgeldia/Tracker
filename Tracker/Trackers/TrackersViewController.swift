@@ -309,7 +309,9 @@ extension TrackersViewController: UICollectionViewDataSource {
         _ collectionView: UICollectionView,
         cellForItemAt indexPath: IndexPath
     ) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as! TrackerCollectionViewCell
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as? TrackerCollectionViewCell else {
+            return UICollectionViewCell()
+        }
         let tracker = filteredTrackers[indexPath.section].trackers[indexPath.item]
         
         cell.emoji.text = tracker.emoji
@@ -339,7 +341,14 @@ extension TrackersViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "Header", for: indexPath) as! CategoryHeaderReusableView
+        guard let headerView = collectionView.dequeueReusableSupplementaryView(
+            ofKind: kind,
+            withReuseIdentifier: "Header",
+            for: indexPath
+        ) as? CategoryHeaderReusableView else {
+            return UICollectionViewCell()
+        }
+        
         headerView.categoryTitle.text = filteredTrackers[indexPath.section].title
         return headerView
     }

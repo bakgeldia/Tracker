@@ -431,7 +431,13 @@ extension NewHabitViewController: UICollectionViewDataSource {
         cellForItemAt indexPath: IndexPath
     ) -> UICollectionViewCell {
         if indexPath.section == 0 {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "emojiCell", for: indexPath) as! EmojiCell
+            guard let cell = collectionView.dequeueReusableCell(
+                withReuseIdentifier: "emojiCell",
+                for: indexPath
+            ) as? EmojiCell else {
+                return UICollectionViewCell()
+            }
+            
             cell.emoji.text = emojis[indexPath.item]
             
             if emojis[indexPath.item] == selectedEmoji {
@@ -445,7 +451,12 @@ extension NewHabitViewController: UICollectionViewDataSource {
             
         } else {
             
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "colorCell", for: indexPath) as! ColorCell
+            guard let cell = collectionView.dequeueReusableCell(
+                withReuseIdentifier: "colorCell",
+                for: indexPath
+            ) as? ColorCell else {
+                return UICollectionViewCell()
+            }
             cell.square.backgroundColor = colors[indexPath.item]
             
             if colors[indexPath.item] == selectedColor {
@@ -461,7 +472,13 @@ extension NewHabitViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "CollectionHeader", for: indexPath) as! CollectionHeaderReusableView
+        guard let headerView = collectionView.dequeueReusableSupplementaryView(
+            ofKind: kind,
+            withReuseIdentifier: "CollectionHeader",
+            for: indexPath
+        ) as? CollectionHeaderReusableView else {
+            return UICollectionViewCell()
+        }
         headerView.categoryTitle.text = indexPath.section == 0 ? "Emoji" : "Цвет"
         return headerView
     }
