@@ -49,7 +49,11 @@ final class TrackerCategoryStore: NSObject {
     
     override convenience init() {
         let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-        try! self.init(context: context)
+        do {
+            try self.init(context: context)
+        } catch {
+            fatalError("Ошибка при инициализации с context: \(error)")
+        }
     }
 
     init(context: NSManagedObjectContext) throws {
@@ -119,9 +123,14 @@ final class TrackerCategoryStore: NSObject {
         guard let name = trackerCategoryCoreData.title else {
             throw TrackerCategoryStoreError.decodingErrorInvalidEmojies
         }
-        let trackers = try! trackerStore.fetchTrackers()
-        return TrackerCategory(title: name,
-                               trackers: trackers)
+        
+        do {
+            let trackers = try trackerStore.fetchTrackers()
+            return TrackerCategory(title: name, trackers: trackers)
+        } catch {
+            print("Ошибка при получении трекеров: \(error)")
+            throw error
+        }
     }
     
 }

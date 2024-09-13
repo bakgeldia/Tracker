@@ -51,19 +51,21 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
         super.viewDidLoad()
         
         //-------------- Example ------------------
-        //try! trackerRecordStore.clearCoreData()
-        
         let category2 = TrackerCategory(title: "Здоровый образ жизни", trackers: [])
         
         if !trackerCategoryStore.categoryExists(category2) {
             do {
                 try trackerCategoryStore.addNewTrackerCategory(category2)
-                print(try! trackerCategoryStore.fetchTrackerCategories())
             } catch {
                 print(error)
             }
         }
-        categories = try! trackerCategoryStore.fetchTrackerCategories()
+        
+        do {
+            categories = try trackerCategoryStore.fetchTrackerCategories()
+        } catch {
+            print("Ошибка при получении категории")
+        }
         //-------------- Example -------------------
         
         searchController.searchBar.delegate = self
@@ -380,21 +382,17 @@ extension TrackersViewController: TrackerCollectionViewCellDelegate {
         let trackerRecord = TrackerRecord(id: tracker.id, date: dateWithoutTime(from: currentDate))
         
         if let index = completedTrackers.firstIndex(of: trackerRecord) {
-            // Если трекер уже в массиве, удаляем его
-            //completedTrackers.remove(at: index)
-            //print("Deleted from completedtrackers")
-            try! trackerRecordStore.deleteExistingTrackerRecord(trackerRecord)
-            print(try! trackerRecordStore.fetchTrackerRecords())
-            //trackerCounters[tracker.id, default: 0] -= 1
-            //collectionView.reloadData()
+            do {
+                try trackerRecordStore.deleteExistingTrackerRecord(trackerRecord)
+            } catch {
+                print("Ошибка удаления трекера из отмеченных")
+            }
         } else {
-            // Если трекер не в массиве, добавляем его
-            //completedTrackers.append(trackerRecord)
-            //print("Added to completedtrackers")
-            try! trackerRecordStore.addNewTrackerRecord(trackerRecord)
-            print(try! trackerRecordStore.fetchTrackerRecords())
-            //trackerCounters[tracker.id, default: 0] += 1
-            //collectionView.reloadData()
+            do {
+                try trackerRecordStore.addNewTrackerRecord(trackerRecord)
+            } catch {
+                print("Ошибка добавленмя трекера в отмеченные")
+            }
         }
     }
 }
@@ -412,38 +410,19 @@ extension TrackersViewController: AddTrackerViewControllerDelegate {
             emoji: emoji,
             schedule: schedule ?? ["Everyday"]
         )
-        print(newTracker)
         
         do {
             try trackerStore.addNewTracker(newTracker)
         } catch {
-            print(error)
-        }
-        
-        let addedTracker = try! trackerStore.fetchTrackers()[0]
-        
-        // Найти категорию, которая соответствует полученной категории
-        var updatedCategories = [TrackerCategory]()
-        var categoryFound = false
-        for var cat in categories {
-            if cat.title == category {
-                var updatedTrackers = cat.trackers
-                updatedTrackers.append(addedTracker)
-                cat = TrackerCategory(title: cat.title, trackers: updatedTrackers)
-                categoryFound = true
-            }
-            updatedCategories.append(cat)
-        }
-        
-        // Если категория не найдена, добавляем новый трекер в новую категорию
-        if !categoryFound {
-            let newCategory = TrackerCategory(title: category, trackers: [addedTracker])
-            updatedCategories.append(newCategory)
-            try! trackerCategoryStore.addNewTrackerCategory(newCategory)
+            print("Ошибка при добавлении нового трекера в бд")
         }
         
         // Обновляем массив категорий и перезагружаем коллекцию
-        self.categories = try! trackerCategoryStore.fetchTrackerCategories()
+        do {
+            self.categories = try trackerCategoryStore.fetchTrackerCategories()
+        } catch {
+            print("Ошибка при получении категории из бд")
+        }
         
         datePickerValueChanged(datePicker)
     }
