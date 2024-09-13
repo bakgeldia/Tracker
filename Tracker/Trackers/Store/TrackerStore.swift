@@ -34,11 +34,8 @@ protocol TrackerDelegate: AnyObject {
 final class TrackerStore: NSObject {
     private let uiColorMarshalling = UIColorMarshalling()
     private let scheduleMarshalling = ScheduleMarshalling()
-    private let scheduleTransformer = ScheduleTransformer()
     
-    private var appDelegate: AppDelegate {
-        UIApplication.shared.delegate as! AppDelegate
-    }
+    private var dbStore = DBStore.shared
     
     private var context: NSManagedObjectContext
     private var fetchedResultsController: NSFetchedResultsController<TrackerCoreData>?
@@ -49,7 +46,8 @@ final class TrackerStore: NSObject {
     private var movedIndexes: Set<TrackerUpdate.Move>?
     
     override convenience init() {
-        let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+        let store = DBStore.shared
+        let context = store.persistentContainer.viewContext
         do {
             try self.init(context: context)
         } catch {
@@ -92,7 +90,7 @@ final class TrackerStore: NSObject {
         trackerCoreData.color = uiColorMarshalling.hexString(from: tracker.color)
         trackerCoreData.schedule = tracker.schedule as NSObject
         
-        appDelegate.saveContext()
+        dbStore.saveContext()
     }
 
     func updateExistingTracker(_ trackerCoreData: TrackerCoreData, with tracker: Tracker) {
@@ -102,7 +100,7 @@ final class TrackerStore: NSObject {
         trackerCoreData.color = uiColorMarshalling.hexString(from: tracker.color)
         trackerCoreData.schedule = scheduleMarshalling.transformToNSObject(from: tracker.schedule)
         
-        appDelegate.saveContext()
+        dbStore.saveContext()
     }
     
     func fetchTrackers() throws -> [Tracker] {
@@ -150,10 +148,10 @@ extension TrackerStore: NSFetchedResultsControllerDelegate {
         delegate?.store(
             self,
             didUpdate: TrackerUpdate(
-                insertedIndexes: insertedIndexes!,
-                deletedIndexes: deletedIndexes!,
-                updatedIndexes: updatedIndexes!,
-                movedIndexes: movedIndexes!
+                insertedIndexes: insertedIndexes ?? IndexSet(),
+                deletedIndexes: deletedIndexes ?? IndexSet(),
+                updatedIndexes: updatedIndexes ?? IndexSet(),
+                movedIndexes: movedIndexes ?? Set<TrackerUpdate.Move>()
             )
         )
         insertedIndexes = nil

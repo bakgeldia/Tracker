@@ -32,9 +32,7 @@ protocol TrackerRecordDelegate: AnyObject {
 }
 
 final class TrackerRecordStore: NSObject {
-    private var appDelegate: AppDelegate {
-        UIApplication.shared.delegate as! AppDelegate
-    }
+    private var dbStore = DBStore.shared
     
     private var context: NSManagedObjectContext
     private var fetchedResultsController: NSFetchedResultsController<TrackerRecordCoreData>?
@@ -45,7 +43,8 @@ final class TrackerRecordStore: NSObject {
     private var movedIndexes: Set<TrackerRecordUpdate.Move>?
     
     override convenience init() {
-        let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+        let store = DBStore.shared
+        let context = store.persistentContainer.viewContext
         do {
             try self.init(context: context)
         } catch {
@@ -85,14 +84,14 @@ final class TrackerRecordStore: NSObject {
         trackerRecordCoreData.id = Int16(trackerRecord.id)
         trackerRecordCoreData.date = trackerRecord.date
         
-        appDelegate.saveContext()
+        dbStore.saveContext()
     }
     
     func updateExistingTrackerRecord(_ trackerRecordCoreData: TrackerRecordCoreData, with trackerRecord: TrackerRecord) {
         trackerRecordCoreData.id = Int16(trackerRecord.id)
         trackerRecordCoreData.date = trackerRecord.date
         
-        appDelegate.saveContext()
+        dbStore.saveContext()
     }
     
     func deleteExistingTrackerRecord(_ trackerRecord: TrackerRecord) throws {
@@ -104,7 +103,7 @@ final class TrackerRecordStore: NSObject {
             
             if let recordToDelete = records.first {
                 context.delete(recordToDelete)
-                appDelegate.saveContext()
+                dbStore.saveContext()
             } else {
                 print("Запись не найдена")
             }
@@ -159,7 +158,7 @@ final class TrackerRecordStore: NSObject {
     }
     
     func clearCoreData() throws {
-        let entities = appDelegate.persistentContainer.managedObjectModel.entities
+        let entities = dbStore.persistentContainer.managedObjectModel.entities
 
         for entity in entities {
             let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entity.name ?? "")
@@ -174,7 +173,7 @@ final class TrackerRecordStore: NSObject {
             }
         }
 
-        appDelegate.saveContext()
+        dbStore.saveContext()
     }
 }
 
@@ -191,10 +190,10 @@ extension TrackerRecordStore: NSFetchedResultsControllerDelegate {
         delegate?.store(
             self,
             didUpdate: TrackerRecordUpdate(
-                insertedIndexes: insertedIndexes!,
-                deletedIndexes: deletedIndexes!,
-                updatedIndexes: updatedIndexes!,
-                movedIndexes: movedIndexes!
+                insertedIndexes: insertedIndexes ?? IndexSet(),
+                deletedIndexes: deletedIndexes ?? IndexSet(),
+                updatedIndexes: updatedIndexes ?? IndexSet(),
+                movedIndexes: movedIndexes ?? Set<TrackerRecordUpdate.Move>()
             )
         )
         insertedIndexes = nil

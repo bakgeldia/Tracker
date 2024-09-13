@@ -36,6 +36,7 @@
 		FCDC40202C91F06B00BC490A /* TrackersArrayMarshalling.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCDC401F2C91F06B00BC490A /* TrackersArrayMarshalling.swift */; };
 		FCDC40242C93264D00BC490A /* ScheduleTransformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCDC40232C93264D00BC490A /* ScheduleTransformer.swift */; };
 		FCDC40292C932D6D00BC490A /* TrackersTransformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCDC40282C932D6D00BC490A /* TrackersTransformer.swift */; };
+		FCDC402B2C94556500BC490A /* DBStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCDC402A2C94556500BC490A /* DBStore.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -70,6 +71,7 @@
 		FCDC401F2C91F06B00BC490A /* TrackersArrayMarshalling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersArrayMarshalling.swift; sourceTree = "<group>"; };
 		FCDC40232C93264D00BC490A /* ScheduleTransformer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleTransformer.swift; sourceTree = "<group>"; };
 		FCDC40282C932D6D00BC490A /* TrackersTransformer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersTransformer.swift; sourceTree = "<group>"; };
+		FCDC402A2C94556500BC490A /* DBStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBStore.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -188,6 +190,7 @@
 		FCDC40142C90A12000BC490A /* Store */ = {
 			isa = PBXGroup;
 			children = (
+				FCDC402A2C94556500BC490A /* DBStore.swift */,
 				FCDC40152C90A15000BC490A /* TrackerStore.swift */,
 				FCDC40172C90A16400BC490A /* TrackerCategoryStore.swift */,
 				FCDC40192C90A17D00BC490A /* TrackerRecordStore.swift */,
@@ -285,6 +288,7 @@
 				FCDC3F9C2C7A361600BC490A /* CategoryHeaderReusableView.swift in Sources */,
 				FCDC40292C932D6D00BC490A /* TrackersTransformer.swift in Sources */,
 				FCD7BFBA2C78B502004559A5 /* TrackerCollectionViewCell.swift in Sources */,
+				FCDC402B2C94556500BC490A /* DBStore.swift in Sources */,
 				FCD7BFBD2C78B999004559A5 /* AddTrackerViewController.swift in Sources */,
 				FCDC40162C90A15000BC490A /* TrackerStore.swift in Sources */,
 				FCDC40242C93264D00BC490A /* ScheduleTransformer.swift in Sources */,

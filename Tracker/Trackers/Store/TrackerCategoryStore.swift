@@ -34,9 +34,7 @@ protocol TrackerCategoryDelegate: AnyObject {
 final class TrackerCategoryStore: NSObject {
     private let trackerStore = TrackerStore()
     private let trackersArrayMarshalling = TrackersArrayMarshalling()
-    private var appDelegate: AppDelegate {
-        UIApplication.shared.delegate as! AppDelegate
-    }
+    private let dbStore = DBStore.shared
     
     private var context: NSManagedObjectContext
     
@@ -48,7 +46,8 @@ final class TrackerCategoryStore: NSObject {
     private var movedIndexes: Set<TrackerCategoryUpdate.Move>?
     
     override convenience init() {
-        let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+        let store = DBStore.shared
+        let context = store.persistentContainer.viewContext
         do {
             try self.init(context: context)
         } catch {
@@ -88,14 +87,14 @@ final class TrackerCategoryStore: NSObject {
         trackerCategoryCoreData.title = category.title
         trackerCategoryCoreData.trackers = category.trackers as NSObject
         
-        appDelegate.saveContext()
+        dbStore.saveContext()
     }
 
     func updateExistingTrackerCategory(_ trackerCategoryCoreData: TrackerCategoryCoreData, with category: TrackerCategory) {
         trackerCategoryCoreData.title = category.title
         trackerCategoryCoreData.trackers = category.trackers as NSObject
         
-        appDelegate.saveContext()
+        dbStore.saveContext()
     }
     
     func categoryExists(_ trackerCategory: TrackerCategory) -> Bool {
@@ -148,10 +147,10 @@ extension TrackerCategoryStore: NSFetchedResultsControllerDelegate {
         delegate?.store(
             self,
             didUpdate: TrackerCategoryUpdate(
-                insertedIndexes: insertedIndexes!,
-                deletedIndexes: deletedIndexes!,
-                updatedIndexes: updatedIndexes!,
-                movedIndexes: movedIndexes!
+                insertedIndexes: insertedIndexes ?? IndexSet(),
+                deletedIndexes: deletedIndexes ?? IndexSet(),
+                updatedIndexes: updatedIndexes ?? IndexSet(),
+                movedIndexes: movedIndexes ?? Set<TrackerCategoryUpdate.Move>()
             )
         )
         insertedIndexes = nil
