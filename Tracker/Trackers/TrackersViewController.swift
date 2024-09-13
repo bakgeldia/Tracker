@@ -321,7 +321,6 @@ extension TrackersViewController: UICollectionViewDataSource {
         cell.completeTrackerButton.isEnabled = currentDate <= todayDate
         
         let trackerRecord = TrackerRecord(id: tracker.id, date: dateWithoutTime(from: currentDate))
-        //if completedTrackers.contains(trackerRecord)
         if trackerRecordStore.trackerRecordExists(trackerRecord) {
             cell.completeTrackerButton.setImage(UIImage(systemName: "checkmark"), for: .normal) // Иконка завершения
             cell.completeTrackerButton.backgroundColor?.withAlphaComponent(0.3)

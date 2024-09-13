@@ -98,6 +98,7 @@ final class NonRegularEventViewController: UIViewController {
         
         // Table View
         tableView.layer.cornerRadius = 16
+        tableView.isScrollEnabled = false
         tableView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(tableView)
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
