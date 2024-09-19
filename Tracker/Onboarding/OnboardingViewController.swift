@@ -61,11 +61,6 @@ final class OnboardingViewController: UIPageViewController, UIPageViewController
     
     @objc private func buttonPressed() {
         UserDefaults.standard.set(true, forKey: "hasSeenOnboarding")
-        
-//        let viewController = ViewController()
-//        viewController.modalPresentationStyle = .fullScreen
-//        
-//        present(viewController, animated: false, completion: nil)
         dismiss(animated: true)
     }
     
