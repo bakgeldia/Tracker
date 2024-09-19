@@ -16,8 +16,6 @@ final class AddTrackerViewController: UIViewController {
     private let habitButton = UIButton()
     private let eventButton = UIButton()
     
-    var categories = [TrackerCategory]()
-    
     weak var delegate: AddTrackerViewControllerDelegate?
     
     override func viewDidLoad() {
@@ -91,7 +89,6 @@ final class AddTrackerViewController: UIViewController {
         
         // Настройки popover
         newHabitVC.modalPresentationStyle = .popover
-        newHabitVC.categories = self.categories
         newHabitVC.delegate = self
         
         // Отображаем popover
@@ -111,7 +108,6 @@ final class AddTrackerViewController: UIViewController {
         
         // Настройки popover
         newEventVC.modalPresentationStyle = .popover
-        newEventVC.categories = self.categories
         newEventVC.delegate = self
         
         // Отображаем popover

@@ -215,7 +215,6 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
         
         // Настройки popover
         addTrackerVC.modalPresentationStyle = .popover
-        addTrackerVC.categories = self.categories
         addTrackerVC.delegate = self
         
         // Отображаем popover
@@ -389,7 +388,7 @@ extension TrackersViewController: TrackerCollectionViewCellDelegate {
         let tracker = filteredTrackers[indexPath.section].trackers[indexPath.item]
         let trackerRecord = TrackerRecord(id: tracker.id, date: dateWithoutTime(from: currentDate))
         
-        if let index = completedTrackers.firstIndex(of: trackerRecord) {
+        if completedTrackers.firstIndex(of: trackerRecord) != nil {
             do {
                 try trackerRecordStore.deleteExistingTrackerRecord(trackerRecord)
             } catch {

@@ -235,7 +235,6 @@ final class NonRegularEventViewController: UIViewController {
         popover.permittedArrowDirections = []
         
         categoryVC.modalPresentationStyle = .popover
-        categoryVC.categories = self.categories
         categoryVC.selectedIndexPath = selectedCategoryPath
         categoryVC.delegate = self
         

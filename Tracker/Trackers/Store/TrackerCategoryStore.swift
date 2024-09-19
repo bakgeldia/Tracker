@@ -113,7 +113,6 @@ final class TrackerCategoryStore: NSObject {
     
     func fetchTrackerCategories() throws -> [TrackerCategory] {
         let fetchRequest = TrackerCategoryCoreData.fetchRequest()
-        fetchRequest.fetchLimit = 1
         let trackerCategoriesFromCoreData = try context.fetch(fetchRequest)
         return try trackerCategoriesFromCoreData.map { try self.getCategory(from: $0) }
     }

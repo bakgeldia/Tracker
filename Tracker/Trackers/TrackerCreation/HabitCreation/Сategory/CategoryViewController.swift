@@ -15,16 +15,37 @@ final class CategoryViewController: UIViewController {
     
     weak var delegate: CategoryViewControllerDelegate?
     
+    private let trackerCategoryStore = TrackerCategoryStore()
+    
     private let titleLabel = UILabel()
     private let tableView = UITableView()
     private let addButton = UIButton()
     var selectedIndexPath: IndexPath?
     
-    var categories: [TrackerCategory] = []
+    private var viewModel = CategoryViewModel()
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
+        setupBindings()
+        viewModel.fetchCategories()
+    }
+    
+    private func setupBindings() {
+        // Биндим обновление списка категорий
+        viewModel.categoriesDidUpdate = { [weak self] categories in
+            DispatchQueue.main.async {
+                self?.tableView.reloadData()
+            }
+        }
+        
+        // Биндим изменение выбранной категории
+        viewModel.selectedCategoryDidChange = { [weak self] selectedIndexPath in
+            DispatchQueue.main.async {
+                self?.tableView.reloadData()
+            }
+        }
     }
     
     private func setupView() {
@@ -45,6 +66,8 @@ final class CategoryViewController: UIViewController {
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "CategoryCell")
         tableView.dataSource = self
         tableView.delegate = self
+        
+        tableView.register(CategoryTableViewCell.self, forCellReuseIdentifier: CategoryTableViewCell.identifier)
         
         // Add Button
         addButton.setTitle("Добавить категорию", for: .normal)
@@ -85,22 +108,16 @@ final class CategoryViewController: UIViewController {
 extension CategoryViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // Возвращаем количество категорий
-        return categories.count
+        return viewModel.categories.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath)
-        // Устанавливаем название категории в текст метки ячейки
-        cell.textLabel?.text = categories[indexPath.row].title
-        cell.textLabel?.font = UIFont.systemFont(ofSize: 17, weight: .regular)
-        cell.textLabel?.textColor = UIColor(red: 26.0/255.0, green: 27.0/255.0, blue: 34.0/255.0, alpha: 1)
-        cell.backgroundColor = UIColor(red: 230.0/255.0, green: 232.0/255.0, blue: 235.0/255.0, alpha: 0.3)
-        
-        if indexPath == selectedIndexPath {
-            cell.accessoryType = .checkmark
-        } else {
-            cell.accessoryType = .none
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: CategoryTableViewCell.identifier, for: indexPath) as? CategoryTableViewCell else {
+            return UITableViewCell()
         }
+        let title = viewModel.categoryTitle(at: indexPath)
+        let isSelected = selectedIndexPath == indexPath
+        cell.configure(with: title, isSelected: isSelected)
         
         return cell
     }
@@ -108,39 +125,23 @@ extension CategoryViewController: UITableViewDataSource {
 
 extension CategoryViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        // Получаем выбранную категорию
-        let selectedCategory = categories[indexPath.row]
-        
-        // Сначала убираем галочку с ранее выбранной ячейки, если она существует
-        if let previousIndexPath = selectedIndexPath {
-            if previousIndexPath != indexPath {
-                let previousCell = tableView.cellForRow(at: previousIndexPath)
-                previousCell?.accessoryType = .none
-            }
-        }
-        
-        // Устанавливаем галочку на текущей выбранной ячейке
-        let currentCell = tableView.cellForRow(at: indexPath)
-        currentCell?.accessoryType = .checkmark
-        
-        // Обновляем выбранную ячейку
+        viewModel.selectCategory(at: indexPath)
         selectedIndexPath = indexPath
-        tableView.deselectRow(at: indexPath, animated: true)
         
-        delegate?.didSelectCategory(selectedCategory, selectedIndexPath)
+        delegate?.didSelectCategory(viewModel.categories[indexPath.row], selectedIndexPath)
         dismiss(animated: true, completion: nil)
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         // Убираем сепаратор для последней ячейки
-        if indexPath.row == categories.count - 1 {
+        if indexPath.row == viewModel.categories.count - 1 {
             cell.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: .greatestFiniteMagnitude)
         } else {
             cell.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         }
         
         // Добавляем скругление внизу таблицы для последней ячейки
-        if indexPath.row == categories.count - 1 {
+        if indexPath.row == viewModel.categories.count - 1 {
             cell.layer.cornerRadius = 16
             cell.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
             cell.clipsToBounds = true

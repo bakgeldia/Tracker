@@ -57,7 +57,6 @@ final class NewHabitViewController: UIViewController {
     private let createButton = UIButton()
     
     private var prevDays: [String] = []
-    var categories = [TrackerCategory]()
     var selectedCategory: String?
     var selectedCategoryPath: IndexPath?
     var selectedDays: [String]?
@@ -256,7 +255,6 @@ final class NewHabitViewController: UIViewController {
         popover.permittedArrowDirections = []
         
         categoryVC.modalPresentationStyle = .popover
-        categoryVC.categories = self.categories
         categoryVC.selectedIndexPath = selectedCategoryPath
         categoryVC.delegate = self
         
