@@ -52,7 +52,7 @@ final class CategoryViewController: UIViewController {
         // Title Label
         titleLabel.text = "Категория"
         titleLabel.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-        titleLabel.textColor = UIColor(red: 26.0/255.0, green: 27.0/255.0, blue: 34.0/255.0, alpha: 1)
+        titleLabel.textColor = Colors.black
         titleLabel.textAlignment = .center
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(titleLabel)
@@ -71,7 +71,7 @@ final class CategoryViewController: UIViewController {
         addButton.setTitle("Добавить категорию", for: .normal)
         addButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         addButton.setTitleColor(.white, for: .normal)
-        addButton.backgroundColor = UIColor(red: 26.0/255.0, green: 27.0/255.0, blue: 34.0/255.0, alpha: 1)
+        addButton.backgroundColor = Colors.black
         addButton.layer.cornerRadius = 16
         addButton.translatesAutoresizingMaskIntoConstraints = false
         addButton.addTarget(self, action: #selector(addCategory), for: .touchUpInside)

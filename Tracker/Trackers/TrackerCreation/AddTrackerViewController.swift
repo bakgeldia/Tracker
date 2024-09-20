@@ -31,7 +31,7 @@ final class AddTrackerViewController: UIViewController {
         // Title Label
         titleLabel.text = "Создание трекера"
         titleLabel.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-        titleLabel.textColor = UIColor(red: 26.0/255.0, green: 27.0/255.0, blue: 34.0/255.0, alpha: 1)
+        titleLabel.textColor = Colors.black
         titleLabel.textAlignment = .center
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(titleLabel)
@@ -39,7 +39,7 @@ final class AddTrackerViewController: UIViewController {
         // Habit Button
         habitButton.setTitle("Привычка", for: .normal)
         eventButton.setTitleColor(.white, for: .normal)
-        habitButton.backgroundColor = UIColor(red: 26.0/255.0, green: 27.0/255.0, blue: 34.0/255.0, alpha: 1)
+        habitButton.backgroundColor = Colors.black
         habitButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         habitButton.layer.cornerRadius = 16
         habitButton.addTarget(self, action: #selector(self.showHabitPopover), for: .touchUpInside)
@@ -49,7 +49,7 @@ final class AddTrackerViewController: UIViewController {
         // Event Button
         eventButton.setTitle("Нерегулярное событие", for: .normal)
         eventButton.setTitleColor(.white, for: .normal)
-        eventButton.backgroundColor = UIColor(red: 26.0/255.0, green: 27.0/255.0, blue: 34.0/255.0, alpha: 1)
+        eventButton.backgroundColor = Colors.black
         eventButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         eventButton.layer.cornerRadius = 16
         eventButton.addTarget(self, action: #selector(self.showNonRegularEventPopover), for: .touchUpInside)

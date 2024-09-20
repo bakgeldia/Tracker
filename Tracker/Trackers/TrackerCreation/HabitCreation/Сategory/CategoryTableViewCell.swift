@@ -24,7 +24,7 @@ final class CategoryTableViewCell: UITableViewCell {
     private func setupViews() {
         titleLabel.text = "Category"
         titleLabel.font = UIFont.systemFont(ofSize: 17, weight: .regular)
-        titleLabel.textColor = UIColor(red: 26.0/255.0, green: 27.0/255.0, blue: 34.0/255.0, alpha: 1)
+        titleLabel.textColor = Colors.black
         contentView.addSubview(titleLabel)
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         
@@ -40,7 +40,7 @@ final class CategoryTableViewCell: UITableViewCell {
     func configure(with title: String, isSelected: Bool) {
         titleLabel.text = title
         accessoryType = isSelected ? .checkmark : .none
-        backgroundColor = UIColor(red: 230.0/255.0, green: 232.0/255.0, blue: 235.0/255.0, alpha: 0.3)
+        backgroundColor = Colors.lightGray
     }
 }
 

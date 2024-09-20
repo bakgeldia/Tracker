@@ -19,7 +19,7 @@ final class OnboardingViewController: UIPageViewController, UIPageViewController
         pageControl.numberOfPages = pages.count
         pageControl.currentPage = 0
         
-        pageControl.currentPageIndicatorTintColor = UIColor(red: 26.0/255.0, green: 27.0/255.0, blue: 34.0/255.0, alpha: 1)
+        pageControl.currentPageIndicatorTintColor = Colors.black
         pageControl.pageIndicatorTintColor = .gray
         
         pageControl.translatesAutoresizingMaskIntoConstraints = false
@@ -42,7 +42,7 @@ final class OnboardingViewController: UIPageViewController, UIPageViewController
         button.layer.cornerRadius = 16
         button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         button.titleLabel?.textColor = .white
-        button.backgroundColor = UIColor(red: 26.0/255.0, green: 27.0/255.0, blue: 34.0/255.0, alpha: 1)
+        button.backgroundColor = Colors.black
         button.addTarget(self, action: #selector(buttonPressed), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(button)

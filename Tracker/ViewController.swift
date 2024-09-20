@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ViewController: UITabBarController {
+class TabBarController: UITabBarController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -21,7 +21,8 @@ class ViewController: UITabBarController {
     }
 
     private func showOnboard() {
-        let hasSeenOnboarding = UserDefaults.standard.bool(forKey: "hasSeenOnboarding")
+        let onboardKey = "hasSeenOnboarding"
+        let hasSeenOnboarding = UserDefaults.standard.bool(forKey: onboardKey)
         if !hasSeenOnboarding {
             let onboardingViewController = OnboardingViewController(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
             onboardingViewController.modalPresentationStyle = .fullScreen

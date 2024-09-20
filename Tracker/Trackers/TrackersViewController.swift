@@ -117,7 +117,7 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
             target: self,
             action: #selector(Self.didTapAddButton)
         )
-        addTrackerButton.tintColor = UIColor(red: 26.0/255.0, green: 27.0/255.0, blue: 34.0/255.0, alpha: 1)
+        addTrackerButton.tintColor = Colors.black
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: addTrackerButton)
         
         navigationItem.title = "Трекеры"
@@ -128,7 +128,7 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
         searchController = UISearchController(searchResultsController: nil)
         searchController.searchBar.delegate = self
         searchController.searchBar.placeholder = "Поиск"
-        searchController.searchBar.tintColor = UIColor(red: 118.0/255.0, green: 118.0/255.0, blue: 128.0/255.0, alpha: 0.12)
+        searchController.searchBar.tintColor = Colors.searchBarGray
         searchController.searchBar.layer.cornerRadius = 30
         searchController.searchBar.backgroundImage = UIImage()
         searchController.obscuresBackgroundDuringPresentation = false
@@ -137,7 +137,7 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
         
         // Настройка кнопки отмены
         let cancelButtonAttributes: [NSAttributedString.Key: Any] = [
-            .foregroundColor: UIColor(red: 55.0/255.0, green: 114.0/255.0, blue: 231.0/255.0, alpha: 1),
+            .foregroundColor: Colors.cancelSearchBarBlue,
             .font: UIFont.systemFont(ofSize: 17, weight: .regular)
         ]
         
@@ -191,7 +191,7 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
         ])
         
         errorLabel.text = "Что будем отслеживать?"
-        errorLabel.textColor = UIColor(red: 26.0/255.0, green: 27.0/255.0, blue: 34.0/255.0, alpha: 1)
+        errorLabel.textColor = Colors.black
         errorLabel.font = UIFont.systemFont(ofSize: 12, weight: .medium)
         errorLabel.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(errorLabel)
