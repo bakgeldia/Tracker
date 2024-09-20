@@ -15,8 +15,6 @@ final class CategoryViewController: UIViewController {
     
     weak var delegate: CategoryViewControllerDelegate?
     
-    private let trackerCategoryStore = TrackerCategoryStore()
-    
     private let titleLabel = UILabel()
     private let tableView = UITableView()
     private let addButton = UIButton()
@@ -107,7 +105,6 @@ final class CategoryViewController: UIViewController {
 
 extension CategoryViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // Возвращаем количество категорий
         return viewModel.categories.count
     }
     
