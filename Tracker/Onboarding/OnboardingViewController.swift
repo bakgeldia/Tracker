@@ -9,8 +9,8 @@ import UIKit
 
 final class OnboardingViewController: UIPageViewController, UIPageViewControllerDataSource, UIPageViewControllerDelegate {
     lazy var pages: [UIViewController] = {
-        let first = OnboardingFirstPageViewController()
-        let second = OnboardingSecondPageViewController()
+        let first = OnboardingPageViewController(pageType: .first)
+        let second = OnboardingPageViewController(pageType: .second)
         return [first, second]
     }()
     
