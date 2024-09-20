@@ -13,14 +13,15 @@ protocol ScheduleViewControllerDelegate: AnyObject {
 
 final class ScheduleViewController: UIViewController {
     
+    weak var delegate: ScheduleViewControllerDelegate?
+    
+    var selectedDays = [String]()
+    
     private let titleLabel = UILabel()
     private let tableView = UITableView()
     private let doneButton = UIButton()
     
     private let daysOfWeek = ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"]
-    var selectedDays = [String]()
-    
-    weak var delegate: ScheduleViewControllerDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()

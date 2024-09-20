@@ -15,10 +15,6 @@ final class NonRegularEventViewController: UIViewController {
     
     weak var delegate: NonRegularEventViewControllerDelegate?
     
-    private let titleLabel = UILabel()
-    private let textField = UITextField()
-    private let tableView = UITableView()
-    
     let emojis = ["😀", "😂", "🥰", "😎", "🤔", "🙌", "🎉", "💪", "🍕", "🏆", "🚀", "❤️", "🔥", "🌟", "🎶", "🌈", "🐶", "⚡️"]
     let colors: [UIColor] = [
         UIColor(red: 255/255, green: 99/255, blue: 71/255, alpha: 1.0),   // Tomato
@@ -40,6 +36,14 @@ final class NonRegularEventViewController: UIViewController {
         UIColor(red: 102/255, green: 205/255, blue: 170/255, alpha: 1.0), // MediumAquamarine
         UIColor(red: 220/255, green: 20/255, blue: 60/255, alpha: 1.0)    // Crimson
     ]
+    
+    var categories = [TrackerCategory]()
+    var selectedCategory: String?
+    
+    private let titleLabel = UILabel()
+    private let textField = UITextField()
+    private let tableView = UITableView()
+    
     private var collectionView: UICollectionView = {
         let collectionView = UICollectionView(
             frame: .zero,
@@ -57,9 +61,6 @@ final class NonRegularEventViewController: UIViewController {
     private let createButton = UIButton()
     
     private var selectedCategoryPath: IndexPath?
-    var categories = [TrackerCategory]()
-    var selectedCategory: String?
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()

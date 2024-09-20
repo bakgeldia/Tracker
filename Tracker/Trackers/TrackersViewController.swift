@@ -9,6 +9,12 @@ import UIKit
 
 final class TrackersViewController: UIViewController, UISearchBarDelegate {
     
+    var categories = [TrackerCategory]()
+    var completedTrackers = [TrackerRecord]()
+    var currentDate: Date = Date()
+    
+    private var filteredTrackers = [TrackerCategory]()
+    
     private var addTrackerButton = UIButton()
     private var datePicker = UIDatePicker()
     private var pageTitle = UILabel()
@@ -20,11 +26,6 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
     private let trackerStore = TrackerStore()
     private let trackerCategoryStore = TrackerCategoryStore()
     private let trackerRecordStore = TrackerRecordStore()
-    
-    var categories = [TrackerCategory]()
-    var completedTrackers = [TrackerRecord]()
-    var currentDate: Date = Date()
-    private var filteredTrackers = [TrackerCategory]()
     
     private let emojies = [
         "😀", "😂", "🥲", "😍", "😎", "🤔", "😱", "🤯", "🥳", "😅",
@@ -81,6 +82,31 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
         setupCollectionView()
         trackerCategoryStore.delegate = self
         trackerRecordStore.delegate = self
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        filterTrackers(for: searchText)
+        updatePlaceholderVisibility()
+        collectionView.reloadData()
+    }
+    
+    @objc func datePickerValueChanged(_ sender: UIDatePicker) {
+        currentDate = sender.date
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "EEEE" // Формат для полного названия дня недели
+        let selectedDay = dateFormatter.string(from: currentDate)
+        let capitalizedDay = selectedDay.capitalized
+        
+        // Фильтрация трекеров по выбранному дню недели
+        filteredTrackers = categories.compactMap { category in
+            let filteredTrackers = category.trackers.filter { tracker in
+                tracker.schedule.contains(capitalizedDay) || tracker.schedule.contains("Everyday")
+            }
+            return filteredTrackers.isEmpty ? nil : TrackerCategory(title: category.title, trackers: filteredTrackers)
+        }
+        
+        updatePlaceholderVisibility()
+        collectionView.reloadData()
     }
     
     private func updatePlaceholderVisibility() {
@@ -148,12 +174,6 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
         navigationItem.hidesSearchBarWhenScrolling = false
     }
     
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        filterTrackers(for: searchText)
-        updatePlaceholderVisibility()
-        collectionView.reloadData()
-    }
-    
     private func setupCollectionView() {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(collectionView)
@@ -219,25 +239,6 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
         
         // Отображаем popover
         present(addTrackerVC, animated: true, completion: nil)
-    }
-    
-    @objc func datePickerValueChanged(_ sender: UIDatePicker) {
-        currentDate = sender.date
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "EEEE" // Формат для полного названия дня недели
-        let selectedDay = dateFormatter.string(from: currentDate)
-        let capitalizedDay = selectedDay.capitalized
-        
-        // Фильтрация трекеров по выбранному дню недели
-        filteredTrackers = categories.compactMap { category in
-            let filteredTrackers = category.trackers.filter { tracker in
-                tracker.schedule.contains(capitalizedDay) || tracker.schedule.contains("Everyday")
-            }
-            return filteredTrackers.isEmpty ? nil : TrackerCategory(title: category.title, trackers: filteredTrackers)
-        }
-        
-        updatePlaceholderVisibility()
-        collectionView.reloadData()
     }
     
     private func filterTrackers(for searchText: String) {

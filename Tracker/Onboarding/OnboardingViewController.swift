@@ -59,11 +59,6 @@ final class OnboardingViewController: UIPageViewController, UIPageViewController
         ])
     }
     
-    @objc private func buttonPressed() {
-        UserDefaults.standard.set(true, forKey: "hasSeenOnboarding")
-        dismiss(animated: true)
-    }
-    
     // MARK: - UIPageViewControllerDataSource
     
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
@@ -102,5 +97,10 @@ final class OnboardingViewController: UIPageViewController, UIPageViewController
            let currentIndex = pages.firstIndex(of: currentViewController) {
             pageControl.currentPage = currentIndex
         }
+    }
+    
+    @objc private func buttonPressed() {
+        UserDefaults.standard.set(true, forKey: "hasSeenOnboarding")
+        dismiss(animated: true)
     }
 }

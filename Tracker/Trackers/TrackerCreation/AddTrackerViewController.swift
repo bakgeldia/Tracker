@@ -12,11 +12,12 @@ protocol AddTrackerViewControllerDelegate: AnyObject {
 }
 
 final class AddTrackerViewController: UIViewController {
+    
+    weak var delegate: AddTrackerViewControllerDelegate?
+    
     private let titleLabel = UILabel()
     private let habitButton = UIButton()
     private let eventButton = UIButton()
-    
-    weak var delegate: AddTrackerViewControllerDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()

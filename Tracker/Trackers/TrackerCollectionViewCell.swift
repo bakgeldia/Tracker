@@ -14,25 +14,28 @@ protocol TrackerCollectionViewCellDelegate: AnyObject {
 final class TrackerCollectionViewCell: UICollectionViewCell {
     weak var delegate: TrackerCollectionViewCellDelegate?
     
-    private let emojiBackgroundView = UIView()
     let emojiAndNameView = UIView()
     let emoji = UILabel()
     let trackerName = UILabel()
-    
-    private let daysAndButtonView = UIView()
     let numOfDays = UILabel()
     let completeTrackerButton = UIButton()
     
-    private let trackerView = UIView()
     var checkedButton = false
-    
     var trackerDate: Date?
     var dayCounter = 0
+    
+    private let emojiBackgroundView = UIView()
+    private let daysAndButtonView = UIView()
+    private let trackerView = UIView()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
 
         setupCell()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     private func setupCell() {
@@ -128,9 +131,5 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
     @objc
     private func didTapCompleteButton() {
         delegate?.didTapCompleteButton(in: self)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
 }

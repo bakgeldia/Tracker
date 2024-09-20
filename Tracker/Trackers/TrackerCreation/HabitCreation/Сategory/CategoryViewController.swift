@@ -15,13 +15,13 @@ final class CategoryViewController: UIViewController {
     
     weak var delegate: CategoryViewControllerDelegate?
     
+    var selectedIndexPath: IndexPath?
+    
     private let titleLabel = UILabel()
     private let tableView = UITableView()
     private let addButton = UIButton()
-    var selectedIndexPath: IndexPath?
     
     private var viewModel = CategoryViewModel()
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
