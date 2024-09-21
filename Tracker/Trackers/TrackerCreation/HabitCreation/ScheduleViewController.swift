@@ -13,14 +13,15 @@ protocol ScheduleViewControllerDelegate: AnyObject {
 
 final class ScheduleViewController: UIViewController {
     
+    weak var delegate: ScheduleViewControllerDelegate?
+    
+    var selectedDays = [String]()
+    
     private let titleLabel = UILabel()
     private let tableView = UITableView()
     private let doneButton = UIButton()
     
     private let daysOfWeek = ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"]
-    var selectedDays = [String]()
-    
-    weak var delegate: ScheduleViewControllerDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,7 +36,7 @@ final class ScheduleViewController: UIViewController {
         // Title Label
         titleLabel.text = "Расписание"
         titleLabel.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-        titleLabel.textColor = UIColor(red: 26.0/255.0, green: 27.0/255.0, blue: 34.0/255.0, alpha: 1)
+        titleLabel.textColor = Colors.black
         titleLabel.textAlignment = .center
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(titleLabel)
@@ -103,7 +104,7 @@ extension ScheduleViewController: UITableViewDataSource {
         switchControl.isOn = selectedDays.contains(day)
         switchControl.addTarget(self, action: #selector(switchValueChanged(_:)), for: .valueChanged)
         cell.accessoryView = switchControl
-        cell.backgroundColor = UIColor(red: 230.0/255.0, green: 232.0/255.0, blue: 235.0/255.0, alpha: 0.3)
+        cell.backgroundColor = Colors.lightGray
         cell.selectionStyle = .none
         
         return cell

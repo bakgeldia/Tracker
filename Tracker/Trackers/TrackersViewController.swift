@@ -9,6 +9,12 @@ import UIKit
 
 final class TrackersViewController: UIViewController, UISearchBarDelegate {
     
+    var categories = [TrackerCategory]()
+    var completedTrackers = [TrackerRecord]()
+    var currentDate: Date = Date()
+    
+    private var filteredTrackers = [TrackerCategory]()
+    
     private var addTrackerButton = UIButton()
     private var datePicker = UIDatePicker()
     private var pageTitle = UILabel()
@@ -20,11 +26,6 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
     private let trackerStore = TrackerStore()
     private let trackerCategoryStore = TrackerCategoryStore()
     private let trackerRecordStore = TrackerRecordStore()
-    
-    var categories = [TrackerCategory]()
-    var completedTrackers = [TrackerRecord]()
-    var currentDate: Date = Date()
-    private var filteredTrackers = [TrackerCategory]()
     
     private let emojies = [
         "😀", "😂", "🥲", "😍", "😎", "🤔", "😱", "🤯", "🥳", "😅",
@@ -83,6 +84,31 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
         trackerRecordStore.delegate = self
     }
     
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        filterTrackers(for: searchText)
+        updatePlaceholderVisibility()
+        collectionView.reloadData()
+    }
+    
+    @objc func datePickerValueChanged(_ sender: UIDatePicker) {
+        currentDate = sender.date
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "EEEE" // Формат для полного названия дня недели
+        let selectedDay = dateFormatter.string(from: currentDate)
+        let capitalizedDay = selectedDay.capitalized
+        
+        // Фильтрация трекеров по выбранному дню недели
+        filteredTrackers = categories.compactMap { category in
+            let filteredTrackers = category.trackers.filter { tracker in
+                tracker.schedule.contains(capitalizedDay) || tracker.schedule.contains("Everyday")
+            }
+            return filteredTrackers.isEmpty ? nil : TrackerCategory(title: category.title, trackers: filteredTrackers)
+        }
+        
+        updatePlaceholderVisibility()
+        collectionView.reloadData()
+    }
+    
     private func updatePlaceholderVisibility() {
         if filteredTrackers.flatMap({ $0.trackers }).isEmpty {
             errorImageView.isHidden = false
@@ -117,7 +143,7 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
             target: self,
             action: #selector(Self.didTapAddButton)
         )
-        addTrackerButton.tintColor = UIColor(red: 26.0/255.0, green: 27.0/255.0, blue: 34.0/255.0, alpha: 1)
+        addTrackerButton.tintColor = Colors.black
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: addTrackerButton)
         
         navigationItem.title = "Трекеры"
@@ -128,7 +154,7 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
         searchController = UISearchController(searchResultsController: nil)
         searchController.searchBar.delegate = self
         searchController.searchBar.placeholder = "Поиск"
-        searchController.searchBar.tintColor = UIColor(red: 118.0/255.0, green: 118.0/255.0, blue: 128.0/255.0, alpha: 0.12)
+        searchController.searchBar.tintColor = Colors.searchBarGray
         searchController.searchBar.layer.cornerRadius = 30
         searchController.searchBar.backgroundImage = UIImage()
         searchController.obscuresBackgroundDuringPresentation = false
@@ -137,7 +163,7 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
         
         // Настройка кнопки отмены
         let cancelButtonAttributes: [NSAttributedString.Key: Any] = [
-            .foregroundColor: UIColor(red: 55.0/255.0, green: 114.0/255.0, blue: 231.0/255.0, alpha: 1),
+            .foregroundColor: Colors.cancelSearchBarBlue,
             .font: UIFont.systemFont(ofSize: 17, weight: .regular)
         ]
         
@@ -146,12 +172,6 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
         definesPresentationContext = true
         navigationItem.searchController = searchController
         navigationItem.hidesSearchBarWhenScrolling = false
-    }
-    
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        filterTrackers(for: searchText)
-        updatePlaceholderVisibility()
-        collectionView.reloadData()
     }
     
     private func setupCollectionView() {
@@ -191,7 +211,7 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
         ])
         
         errorLabel.text = "Что будем отслеживать?"
-        errorLabel.textColor = UIColor(red: 26.0/255.0, green: 27.0/255.0, blue: 34.0/255.0, alpha: 1)
+        errorLabel.textColor = Colors.black
         errorLabel.font = UIFont.systemFont(ofSize: 12, weight: .medium)
         errorLabel.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(errorLabel)
@@ -215,30 +235,10 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
         
         // Настройки popover
         addTrackerVC.modalPresentationStyle = .popover
-        addTrackerVC.categories = self.categories
         addTrackerVC.delegate = self
         
         // Отображаем popover
         present(addTrackerVC, animated: true, completion: nil)
-    }
-    
-    @objc func datePickerValueChanged(_ sender: UIDatePicker) {
-        currentDate = sender.date
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "EEEE" // Формат для полного названия дня недели
-        let selectedDay = dateFormatter.string(from: currentDate)
-        let capitalizedDay = selectedDay.capitalized
-        
-        // Фильтрация трекеров по выбранному дню недели
-        filteredTrackers = categories.compactMap { category in
-            let filteredTrackers = category.trackers.filter { tracker in
-                tracker.schedule.contains(capitalizedDay) || tracker.schedule.contains("Everyday")
-            }
-            return filteredTrackers.isEmpty ? nil : TrackerCategory(title: category.title, trackers: filteredTrackers)
-        }
-        
-        updatePlaceholderVisibility()
-        collectionView.reloadData()
     }
     
     private func filterTrackers(for searchText: String) {
@@ -389,7 +389,7 @@ extension TrackersViewController: TrackerCollectionViewCellDelegate {
         let tracker = filteredTrackers[indexPath.section].trackers[indexPath.item]
         let trackerRecord = TrackerRecord(id: tracker.id, date: dateWithoutTime(from: currentDate))
         
-        if let index = completedTrackers.firstIndex(of: trackerRecord) {
+        if completedTrackers.firstIndex(of: trackerRecord) != nil {
             do {
                 try trackerRecordStore.deleteExistingTrackerRecord(trackerRecord)
             } catch {

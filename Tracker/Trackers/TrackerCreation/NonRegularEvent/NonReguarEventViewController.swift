@@ -15,10 +15,6 @@ final class NonRegularEventViewController: UIViewController {
     
     weak var delegate: NonRegularEventViewControllerDelegate?
     
-    private let titleLabel = UILabel()
-    private let textField = UITextField()
-    private let tableView = UITableView()
-    
     let emojis = ["😀", "😂", "🥰", "😎", "🤔", "🙌", "🎉", "💪", "🍕", "🏆", "🚀", "❤️", "🔥", "🌟", "🎶", "🌈", "🐶", "⚡️"]
     let colors: [UIColor] = [
         UIColor(red: 255/255, green: 99/255, blue: 71/255, alpha: 1.0),   // Tomato
@@ -40,6 +36,14 @@ final class NonRegularEventViewController: UIViewController {
         UIColor(red: 102/255, green: 205/255, blue: 170/255, alpha: 1.0), // MediumAquamarine
         UIColor(red: 220/255, green: 20/255, blue: 60/255, alpha: 1.0)    // Crimson
     ]
+    
+    var categories = [TrackerCategory]()
+    var selectedCategory: String?
+    
+    private let titleLabel = UILabel()
+    private let textField = UITextField()
+    private let tableView = UITableView()
+    
     private var collectionView: UICollectionView = {
         let collectionView = UICollectionView(
             frame: .zero,
@@ -57,15 +61,20 @@ final class NonRegularEventViewController: UIViewController {
     private let createButton = UIButton()
     
     private var selectedCategoryPath: IndexPath?
-    var categories = [TrackerCategory]()
-    var selectedCategory: String?
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setupView()
         setupCollectionView()
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        tapGesture.cancelsTouchesInView = false
+        view.addGestureRecognizer(tapGesture)
+    }
+    
+    @objc private func dismissKeyboard() {
+        view.endEditing(true)
     }
     
     private func setupView() {
@@ -76,7 +85,7 @@ final class NonRegularEventViewController: UIViewController {
         // Title Label
         titleLabel.text = "Нерегулярное событие"
         titleLabel.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-        titleLabel.textColor = UIColor(red: 26.0/255.0, green: 27.0/255.0, blue: 34.0/255.0, alpha: 1)
+        titleLabel.textColor = Colors.black
         titleLabel.textAlignment = .center
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(titleLabel)
@@ -84,7 +93,7 @@ final class NonRegularEventViewController: UIViewController {
         // TextField
         textField.placeholder = "Введите название события"
         textField.font = UIFont.systemFont(ofSize: 17, weight: .regular)
-        textField.backgroundColor = UIColor(red: 230.0/255.0, green: 232.0/255.0, blue: 235.0/255.0, alpha: 0.3)
+        textField.backgroundColor = Colors.lightGray
         textField.layer.cornerRadius = 16
         textField.textAlignment = .left
         
@@ -113,13 +122,12 @@ final class NonRegularEventViewController: UIViewController {
         view.addSubview(buttonStackView)
         
         // Cancel Button
-        let redColor = UIColor(red: 245.0/255.0, green: 107.0/255.0, blue: 108.0/255.0, alpha: 1)
         cancelButton.setTitle("Отменить", for: .normal)
         cancelButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-        cancelButton.setTitleColor(redColor, for: .normal)
+        cancelButton.setTitleColor(Colors.redColor, for: .normal)
         cancelButton.backgroundColor = .white
         cancelButton.layer.cornerRadius = 16
-        cancelButton.layer.borderColor = redColor.cgColor
+        cancelButton.layer.borderColor = Colors.redColor.cgColor
         cancelButton.layer.borderWidth = 1
         cancelButton.addTarget(self, action: #selector(cancelCreatingNewEvent), for: .touchUpInside)
         cancelButton.translatesAutoresizingMaskIntoConstraints = false
@@ -129,7 +137,7 @@ final class NonRegularEventViewController: UIViewController {
         createButton.setTitle("Создать", for: .normal)
         createButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         createButton.setTitleColor(.white, for: .normal)
-        createButton.backgroundColor = UIColor(red: 26.0/255.0, green: 27.0/255.0, blue: 34.0/255.0, alpha: 1)
+        createButton.backgroundColor = Colors.black
         createButton.layer.cornerRadius = 16
         createButton.addTarget(self, action: #selector(createNewEvent), for: .touchUpInside)
         createButton.translatesAutoresizingMaskIntoConstraints = false
@@ -235,7 +243,6 @@ final class NonRegularEventViewController: UIViewController {
         popover.permittedArrowDirections = []
         
         categoryVC.modalPresentationStyle = .popover
-        categoryVC.categories = self.categories
         categoryVC.selectedIndexPath = selectedCategoryPath
         categoryVC.delegate = self
         
@@ -260,7 +267,7 @@ extension NonRegularEventViewController: UITableViewDataSource {
         let categoryLabel = UILabel()
         categoryLabel.text = "Категория"
         categoryLabel.font = UIFont.systemFont(ofSize: 17, weight: .regular)
-        categoryLabel.textColor = UIColor(red: 26.0/255.0, green: 27.0/255.0, blue: 34.0/255.0, alpha: 1)
+        categoryLabel.textColor = Colors.black
         categoryLabel.translatesAutoresizingMaskIntoConstraints = false
         cell.contentView.addSubview(categoryLabel)
         
@@ -268,7 +275,7 @@ extension NonRegularEventViewController: UITableViewDataSource {
         let descriptionLabel = UILabel()
         descriptionLabel.text = "" // Initially empty
         descriptionLabel.font = UIFont.systemFont(ofSize: 17, weight: .regular)
-        descriptionLabel.textColor = UIColor(red: 174.0/255.0, green: 175.0/255.0, blue: 180.0/255.0, alpha: 1)
+        descriptionLabel.textColor = Colors.descriptionLabelColor
         descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
         descriptionLabel.isHidden = true // Initially hidden
         cell.contentView.addSubview(descriptionLabel)
@@ -287,7 +294,7 @@ extension NonRegularEventViewController: UITableViewDataSource {
             descriptionLabel.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor, constant: -15)
         ])
         
-        cell.backgroundColor = UIColor(red: 230.0/255.0, green: 232.0/255.0, blue: 235.0/255.0, alpha: 0.3)
+        cell.backgroundColor = Colors.lightGray
         
         return cell
     }
@@ -356,7 +363,7 @@ extension NonRegularEventViewController: UICollectionViewDataSource {
             
             if emojis[indexPath.item] == selectedEmoji {
                 cell.contentView.layer.cornerRadius = 16
-                cell.contentView.backgroundColor = UIColor(red: 230.0/255.0, green: 232.0/255.0, blue: 235.0/255.0, alpha: 1.0)
+                cell.contentView.backgroundColor = Colors.selectedEmojiColor
             } else {
                 cell.contentView.backgroundColor = UIColor.clear
             }

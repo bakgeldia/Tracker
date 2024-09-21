@@ -7,12 +7,27 @@
 
 import UIKit
 
-class ViewController: UITabBarController {
-
+class TabBarController: UITabBarController {
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setTabBarItems()
         customizeTabBarAppearance()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        showOnboard()
+    }
+
+    private func showOnboard() {
+        let onboardKey = "hasSeenOnboarding"
+        let hasSeenOnboarding = UserDefaults.standard.bool(forKey: onboardKey)
+        if !hasSeenOnboarding {
+            let onboardingViewController = OnboardingViewController(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
+            onboardingViewController.modalPresentationStyle = .fullScreen
+            present(onboardingViewController, animated: true, completion: nil)
+        }
     }
     
     private func setTabBarItems() {
