@@ -27,16 +27,6 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
     private let trackerCategoryStore = TrackerCategoryStore()
     private let trackerRecordStore = TrackerRecordStore()
     
-    private let emojies = [
-        "😀", "😂", "🥲", "😍", "😎", "🤔", "😱", "🤯", "🥳", "😅",
-        "🙈", "🙉", "🙊", "💩", "💖", "🌟", "🔥", "🌈", "🌹", "🎉",
-        "🎂", "🍕", "🍔", "🍣", "🍦", "🍩", "🍪", "🍉", "🍓", "🍑",
-        "🏠", "🚗", "✈️", "🚀", "🛳️", "🚤", "🚲", "🛵", "🕰️", "📱",
-        "💻", "⌚", "📚", "📝", "🖼️", "🎨", "🎵", "🎸", "🎻", "🎺",
-        "🎷", "🎹", "🎼", "🎧", "🎤", "🎬", "🎮", "🎲", "🎯", "🎳",
-        "🎮", "🏆", "🥇", "🥈", "🥉", "🏅", "🎖️", "🏅", "🛡️", "⚔️"
-    ]
-    
     private var visibleEmojies: [String] = []
     private var trackerCounters = [UInt: Int]()
     private let collectionView: UICollectionView = {
@@ -146,20 +136,25 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
         addTrackerButton.tintColor = Colors.black
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: addTrackerButton)
         
-        navigationItem.title = "Трекеры"
+        let trackersVCTitle = NSLocalizedString("trackersVC.title", comment: "Trackers View Controller Title")
+        navigationItem.title = trackersVCTitle
         navigationController?.navigationBar.prefersLargeTitles = true
     }
     
     private func setupSearchController() {
         searchController = UISearchController(searchResultsController: nil)
         searchController.searchBar.delegate = self
-        searchController.searchBar.placeholder = "Поиск"
+        
+        let searchBarPlaceholder = NSLocalizedString("searchBar.placeholer", comment: "SearchBar placeholder")
+        searchController.searchBar.placeholder = searchBarPlaceholder
         searchController.searchBar.tintColor = Colors.searchBarGray
         searchController.searchBar.layer.cornerRadius = 30
         searchController.searchBar.backgroundImage = UIImage()
         searchController.obscuresBackgroundDuringPresentation = false
         searchController.hidesNavigationBarDuringPresentation = false
-        searchController.searchBar.setValue("Отменить", forKey: "cancelButtonText")
+        
+        let searchBarCancel = NSLocalizedString("searchBar.cancel", comment: "SearchBar cancel")
+        searchController.searchBar.setValue(searchBarCancel, forKey: "cancelButtonText")
         
         // Настройка кнопки отмены
         let cancelButtonAttributes: [NSAttributedString.Key: Any] = [
@@ -210,7 +205,8 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
             errorImageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 402)
         ])
         
-        errorLabel.text = "Что будем отслеживать?"
+        let errorLabelText = NSLocalizedString("errorLabel.text", comment: "Error label")
+        errorLabel.text = errorLabelText
         errorLabel.textColor = Colors.black
         errorLabel.font = UIFont.systemFont(ofSize: 12, weight: .medium)
         errorLabel.translatesAutoresizingMaskIntoConstraints = false

@@ -1,0 +1,48 @@
+/* 
+  Localizable.strings
+  Tracker
+
+  Created by Bakgeldi Alkhabay on 24.09.2024.
+  
+*/
+
+//Onboarding page
+"onboardingButton" = "Вот это технологии!";
+"onboardingText1" = "Отслеживайте только то, что хотите";
+"onboardingText2" = "Даже если это \nне литры воды и йога";
+
+//TabBar
+"tabBar.trackers" = "Трекеры";
+"tabBar.statistics" = "Статистика";
+
+//Trackers
+"trackersVC.title" = "Трекеры";
+"searchBar.placeholer" = "Поиск";
+"searchBar.cancel" = "Отменить";
+"errorLabel.text" = "Что будем отслеживать?";
+
+//Add Tracker
+"addTrackerVC.title" = "Создание трекера";
+"habitButton.title" = "Привычка";
+"eventButton.title" = "Нерегулярное событие";
+
+//New Habit Creation
+"newHabitVC.title" = "Новая привычка";
+"textField.placeholder" = "Введите название трекера";
+"cancelButton.title" = "Отменить";
+"createButton.title" = "Создать";
+"categoryLabel.text" = "Категория";
+"scheduleLabel.text" = "Расписание";
+"emojiHeader.title" = "Emoji";
+"colorHeader.title" = "Цвет";
+
+//Non-Regular Event Creation
+"nonRegularEventVC.title" = "Нерегулярное событие";
+
+//Category
+"categoryVC.title" = "Категория";
+"addCategoryButton.title" = "Добавить категорию";
+
+//Schedule
+"scheduleVC.title" = "Расписание";
+"doneButton.title" = "Готово";

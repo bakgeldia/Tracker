@@ -34,7 +34,8 @@ final class ScheduleViewController: UIViewController {
         view.clipsToBounds = true
         
         // Title Label
-        titleLabel.text = "Расписание"
+        let titleText = NSLocalizedString("scheduleVC.title", comment: "Schedule VC Title")
+        titleLabel.text = titleText
         titleLabel.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         titleLabel.textColor = Colors.black
         titleLabel.textAlignment = .center
@@ -51,7 +52,8 @@ final class ScheduleViewController: UIViewController {
         view.addSubview(tableView)
         
         // Done Button
-        doneButton.setTitle("Готово", for: .normal)
+        let doneButtonTitle = NSLocalizedString("doneButton.title", comment: "Done Button Title")
+        doneButton.setTitle(doneButtonTitle, for: .normal)
         doneButton.backgroundColor = .black
         doneButton.setTitleColor(.white, for: .normal)
         doneButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)

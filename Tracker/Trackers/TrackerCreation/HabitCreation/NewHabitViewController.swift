@@ -84,7 +84,8 @@ final class NewHabitViewController: UIViewController {
         view.clipsToBounds = true
         
         // Title Label
-        titleLabel.text = "Новая привычка"
+        let titleText = NSLocalizedString("newHabitVC.title", comment: "New Habit VC Title")
+        titleLabel.text = titleText
         titleLabel.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         titleLabel.textColor = Colors.black
         titleLabel.textAlignment = .center
@@ -92,7 +93,8 @@ final class NewHabitViewController: UIViewController {
         view.addSubview(titleLabel)
         
         // TextField
-        textField.placeholder = "Введите название трекера"
+        let textFieldPlaceholder = NSLocalizedString("textField.placeholder", comment: "Text Field Placeholder")
+        textField.placeholder = textFieldPlaceholder
         textField.backgroundColor = Colors.lightGray
         textField.font = UIFont.systemFont(ofSize: 17, weight: .regular)
         textField.layer.cornerRadius = 16
@@ -123,7 +125,8 @@ final class NewHabitViewController: UIViewController {
         view.addSubview(buttonStackView)
         
         // Cancel Button
-        cancelButton.setTitle("Отменить", for: .normal)
+        let cancelButtonTitle = NSLocalizedString("cancelButton.title", comment: "Cancel Button Title")
+        cancelButton.setTitle(cancelButtonTitle, for: .normal)
         cancelButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         cancelButton.setTitleColor(Colors.redColor, for: .normal)
         cancelButton.backgroundColor = .white
@@ -135,7 +138,8 @@ final class NewHabitViewController: UIViewController {
         buttonStackView.addArrangedSubview(cancelButton)
         
         // Create Button
-        createButton.setTitle("Создать", for: .normal)
+        let createButtonTitle = NSLocalizedString("createButton.title", comment: "Create Button Title")
+        createButton.setTitle(createButtonTitle, for: .normal)
         createButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         createButton.setTitleColor(.white, for: .normal)
         createButton.backgroundColor = Colors.black
@@ -282,7 +286,9 @@ extension NewHabitViewController: UITableViewDataSource {
         
         if indexPath.row == 0 {
             let categoryLabel = UILabel()
-            categoryLabel.text = "Категория"
+            let categoryLabelText = NSLocalizedString("categoryLabel.text", comment: "Category Label Text")
+            
+            categoryLabel.text = categoryLabelText
             categoryLabel.font = UIFont.systemFont(ofSize: 17, weight: .regular)
             categoryLabel.textColor = Colors.black
             categoryLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -309,7 +315,9 @@ extension NewHabitViewController: UITableViewDataSource {
             
         } else {
             let scheduleLabel = UILabel()
-            scheduleLabel.text = "Расписание"
+            let scheduleLabelText = NSLocalizedString("scheduleLabel.text", comment: "Schedule Label Text")
+            
+            scheduleLabel.text = scheduleLabelText
             scheduleLabel.font = UIFont.systemFont(ofSize: 17, weight: .regular)
             scheduleLabel.textColor = Colors.black
             scheduleLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -479,6 +487,9 @@ extension NewHabitViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        let emojiHeaderTitle = NSLocalizedString("emojiHeader.title", comment: "Emoji Header Title")
+        let colorHeaderTitle = NSLocalizedString("colorHeader.title", comment: "Color Header Title")
+        
         guard let headerView = collectionView.dequeueReusableSupplementaryView(
             ofKind: kind,
             withReuseIdentifier: "CollectionHeader",
@@ -486,7 +497,7 @@ extension NewHabitViewController: UICollectionViewDataSource {
         ) as? CollectionHeaderReusableView else {
             return UICollectionViewCell()
         }
-        headerView.categoryTitle.text = indexPath.section == 0 ? "Emoji" : "Цвет"
+        headerView.categoryTitle.text = indexPath.section == 0 ? emojiHeaderTitle : colorHeaderTitle
         return headerView
     }
 }

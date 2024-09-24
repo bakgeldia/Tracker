@@ -14,9 +14,10 @@
 		FC0147FC2C9DCBE9001A6B72 /* OnboardingPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC0147FB2C9DCBE8001A6B72 /* OnboardingPageViewController.swift */; };
 		FC0147FE2C9DCC10001A6B72 /* OnboardingPageType.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC0147FD2C9DCC10001A6B72 /* OnboardingPageType.swift */; };
 		FCCCC4A12CA2F75D007598EB /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = FCCCC49F2CA2F75D007598EB /* Localizable.stringsdict */; };
+		FCCCC4AD2CA3073A007598EB /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = FCCCC4AB2CA3073A007598EB /* Localizable.strings */; };
 		FCD261682C6B73010073D483 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD261672C6B73010073D483 /* AppDelegate.swift */; };
 		FCD2616A2C6B73010073D483 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD261692C6B73010073D483 /* SceneDelegate.swift */; };
-		FCD2616C2C6B73010073D483 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD2616B2C6B73010073D483 /* ViewController.swift */; };
+		FCD2616C2C6B73010073D483 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD2616B2C6B73010073D483 /* TabBarController.swift */; };
 		FCD261712C6B73030073D483 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FCD261702C6B73030073D483 /* Assets.xcassets */; };
 		FCD261742C6B73030073D483 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = FCD261732C6B73030073D483 /* Base */; };
 		FCD2617D2C6B93B90073D483 /* TrackersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD2617C2C6B93B90073D483 /* TrackersViewController.swift */; };
@@ -55,10 +56,12 @@
 		FC0147FD2C9DCC10001A6B72 /* OnboardingPageType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingPageType.swift; sourceTree = "<group>"; };
 		FCCCC4A02CA2F75D007598EB /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = en; path = en.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
 		FCCCC4A22CA2F762007598EB /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = ru; path = ru.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
+		FCCCC4AC2CA3073A007598EB /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		FCCCC4AE2CA30740007598EB /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 		FCD261642C6B73010073D483 /* Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FCD261672C6B73010073D483 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FCD261692C6B73010073D483 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		FCD2616B2C6B73010073D483 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		FCD2616B2C6B73010073D483 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		FCD261702C6B73030073D483 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FCD261732C6B73030073D483 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		FCD261752C6B73030073D483 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -124,6 +127,7 @@
 			isa = PBXGroup;
 			children = (
 				FCCCC49F2CA2F75D007598EB /* Localizable.stringsdict */,
+				FCCCC4AB2CA3073A007598EB /* Localizable.strings */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -149,7 +153,7 @@
 			children = (
 				FCD261672C6B73010073D483 /* AppDelegate.swift */,
 				FCD261692C6B73010073D483 /* SceneDelegate.swift */,
-				FCD2616B2C6B73010073D483 /* ViewController.swift */,
+				FCD2616B2C6B73010073D483 /* TabBarController.swift */,
 				FC0147F92C9DC0AF001A6B72 /* Colors.swift */,
 				FCCCC48F2CA1B1F4007598EB /* Resources */,
 				FC0147E82C9C62B5001A6B72 /* Onboarding */,
@@ -309,6 +313,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FCD261712C6B73030073D483 /* Assets.xcassets in Resources */,
+				FCCCC4AD2CA3073A007598EB /* Localizable.strings in Resources */,
 				FCD261742C6B73030073D483 /* Base in Resources */,
 				FCCCC4A12CA2F75D007598EB /* Localizable.stringsdict in Resources */,
 			);
@@ -332,7 +337,7 @@
 				FCDC3F9F2C7A4AD300BC490A /* CategoryViewController.swift in Sources */,
 				FCD261CB2C71E3250073D483 /* TrackerRecord.swift in Sources */,
 				FCD7BFE32C78E3A7004559A5 /* ScheduleViewController.swift in Sources */,
-				FCD2616C2C6B73010073D483 /* ViewController.swift in Sources */,
+				FCD2616C2C6B73010073D483 /* TabBarController.swift in Sources */,
 				FC0147FC2C9DCBE9001A6B72 /* OnboardingPageViewController.swift in Sources */,
 				FCD261802C6B93DB0073D483 /* StatisticsViewController.swift in Sources */,
 				FCDC3F9C2C7A361600BC490A /* CategoryHeaderReusableView.swift in Sources */,
@@ -368,6 +373,15 @@
 				FCCCC4A22CA2F762007598EB /* ru */,
 			);
 			name = Localizable.stringsdict;
+			sourceTree = "<group>";
+		};
+		FCCCC4AB2CA3073A007598EB /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FCCCC4AC2CA3073A007598EB /* en */,
+				FCCCC4AE2CA30740007598EB /* ru */,
+			);
+			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
 		FCD261722C6B73030073D483 /* LaunchScreen.storyboard */ = {

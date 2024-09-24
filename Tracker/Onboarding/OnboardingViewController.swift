@@ -38,7 +38,8 @@ final class OnboardingViewController: UIPageViewController, UIPageViewController
             setViewControllers([first], direction: .forward, animated: true, completion: nil)
         }
         
-        button.setTitle("Вот это технологии!", for: .normal)
+        let buttonText = NSLocalizedString("onboardingButton", comment: "Onboarding button text")
+        button.setTitle(buttonText, for: .normal)
         button.layer.cornerRadius = 16
         button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         button.titleLabel?.textColor = .white

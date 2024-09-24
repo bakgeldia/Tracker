@@ -30,7 +30,8 @@ final class AddTrackerViewController: UIViewController {
         view.clipsToBounds = true
         
         // Title Label
-        titleLabel.text = "Создание трекера"
+        let titleText = NSLocalizedString("addTrackerVC.title", comment: "Add Tracker VC Title")
+        titleLabel.text = titleText
         titleLabel.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         titleLabel.textColor = Colors.black
         titleLabel.textAlignment = .center
@@ -38,7 +39,8 @@ final class AddTrackerViewController: UIViewController {
         view.addSubview(titleLabel)
         
         // Habit Button
-        habitButton.setTitle("Привычка", for: .normal)
+        let habitButtonTitle = NSLocalizedString("habitButton.title", comment: "Habit Button Title")
+        habitButton.setTitle(habitButtonTitle, for: .normal)
         eventButton.setTitleColor(.white, for: .normal)
         habitButton.backgroundColor = Colors.black
         habitButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
@@ -48,7 +50,8 @@ final class AddTrackerViewController: UIViewController {
         view.addSubview(habitButton)
         
         // Event Button
-        eventButton.setTitle("Нерегулярное событие", for: .normal)
+        let eventButtonTitle = NSLocalizedString("eventButton.title", comment: "Event Button Title")
+        eventButton.setTitle(eventButtonTitle, for: .normal)
         eventButton.setTitleColor(.white, for: .normal)
         eventButton.backgroundColor = Colors.black
         eventButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)

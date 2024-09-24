@@ -1,0 +1,48 @@
+/* 
+  Localizable.strings
+  Tracker
+
+  Created by Bakgeldi Alkhabay on 24.09.2024.
+  
+*/
+
+//Onboarding page
+"onboardingButton" = "Those technologies!";
+"onboardingText1" = "Track only what you want";
+"onboardingText2" = "Even if it's not \nliters of water and yoga";
+
+//TabBar
+"tabBar.trackers" = "Trackers";
+"tabBar.statistics" = "Statistics";
+
+//Trackers
+"trackersVC.title" = "Trackers";
+"searchBar.placeholer" = "Search";
+"searchBar.cancel" = "Cancel";
+"errorLabel.text" = "What are we going to track?";
+
+//Add Tracker
+"addTrackerVC.title" = "Tracker Creation";
+"habitButton.title" = "Habit";
+"eventButton.title" = "Non-Regular event";
+
+//New Habit
+"newHabitVC.title" = "New habit";
+"textField.placeholder" = "Enter the name of the tracker";
+"cancelButton.title" = "Cancel";
+"createButton.title" = "Create";
+"categoryLabel.text" = "Category";
+"scheduleLabel.text" = "Schedule";
+"emojiHeader.title" = "Emoji";
+"colorHeader.title" = "Color";
+
+//Non-Regular Event Creation
+"nonRegularEventVC.title" = "Non-Regular Event";
+
+//Category
+"categoryVC.title" = "Category";
+"addCategoryButton.title" = "Add category";
+
+//Schedule
+"scheduleVC.title" = "Schedule";
+"doneButton.title" = "Ready";

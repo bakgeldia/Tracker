@@ -50,7 +50,8 @@ final class CategoryViewController: UIViewController {
         view.backgroundColor = .white
         
         // Title Label
-        titleLabel.text = "Категория"
+        let titleText = NSLocalizedString("categoryVC.title", comment: "Category VC Title")
+        titleLabel.text = titleText
         titleLabel.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         titleLabel.textColor = Colors.black
         titleLabel.textAlignment = .center
@@ -68,7 +69,8 @@ final class CategoryViewController: UIViewController {
         tableView.register(CategoryTableViewCell.self, forCellReuseIdentifier: CategoryTableViewCell.identifier)
         
         // Add Button
-        addButton.setTitle("Добавить категорию", for: .normal)
+        let addButtonTitle = NSLocalizedString("addCategoryButton.title", comment: "Add Button Title")
+        addButton.setTitle(addButtonTitle, for: .normal)
         addButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         addButton.setTitleColor(.white, for: .normal)
         addButton.backgroundColor = Colors.black
