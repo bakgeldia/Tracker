@@ -21,11 +21,21 @@ final class ScheduleViewController: UIViewController {
     private let tableView = UITableView()
     private let doneButton = UIButton()
     
-    private let daysOfWeek = ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"]
+    private let monday = NSLocalizedString("monday", comment: "Monday")
+    private let tuesday = NSLocalizedString("tuesday", comment: "Monday")
+    private let wednesday = NSLocalizedString("wednesday", comment: "Monday")
+    private let thursday = NSLocalizedString("thursday", comment: "Monday")
+    private let friday = NSLocalizedString("friday", comment: "Monday")
+    private let saturday = NSLocalizedString("saturday", comment: "Monday")
+    private let sunday = NSLocalizedString("sunday", comment: "Monday")
+    
+    private var daysOfWeek = [String]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
+        
+        daysOfWeek = [monday, tuesday, wednesday, thursday, friday, saturday, sunday]
     }
     
     private func setupView() {

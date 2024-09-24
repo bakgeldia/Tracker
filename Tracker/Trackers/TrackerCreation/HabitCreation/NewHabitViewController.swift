@@ -403,25 +403,21 @@ extension NewHabitViewController: ScheduleViewControllerDelegate {
                 "Четверг": "Чт",
                 "Пятница": "Пт",
                 "Суббота": "Сб",
-                "Воскресенье": "Вс"
+                "Воскресенье": "Вс",
+                "Monday": "Mon",
+                "Tuesday": "Tue",
+                "Wednesday": "Wed",
+                "Thursday": "Thu",
+                "Friday": "Fri",
+                "Saturday": "Sat",
+                "Sunday": "Sun"
             ]
             
             // Преобразование выбранных дней в сокращенные названия
             let shortNames = days.compactMap { dayAbbreviations[$0] }
                 .joined(separator: ", ")
-            
-            //Сохранение англ версий
-            let daysTranslated: [String: String] = [
-                "Понедельник": "Monday",
-                "Вторник": "Tuesday",
-                "Среда": "Wednesday",
-                "Четверг": "Thursday",
-                "Пятница": "Friday",
-                "Суббота": "Saturday",
-                "Воскресенье": "Sunday"
-            ]
-            let englishDays = days.compactMap { daysTranslated[$0] }
-            selectedDays = englishDays
+    
+            selectedDays = days
             
             daysLabel.text = shortNames
             daysLabel.isHidden = false

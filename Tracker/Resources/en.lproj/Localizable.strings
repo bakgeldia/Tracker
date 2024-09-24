@@ -46,3 +46,12 @@
 //Schedule
 "scheduleVC.title" = "Schedule";
 "doneButton.title" = "Ready";
+
+//Days of week
+"monday" = "Monday";
+"tuesday" = "Tuesday";
+"wednesday" = "Wednesday";
+"thursday" = "Thursday";
+"friday" = "Friday";
+"saturday" = "Saturday";
+"sunday" = "Sunday";

@@ -46,3 +46,12 @@
 //Schedule
 "scheduleVC.title" = "Расписание";
 "doneButton.title" = "Готово";
+
+//Days of week
+"monday" = "Понедельник";
+"tuesday" = "Вторник";
+"wednesday" = "Среда";
+"thursday" = "Четверг";
+"friday" = "Пятница";
+"saturday" = "Суббота";
+"sunday" = "Воскресенье";
