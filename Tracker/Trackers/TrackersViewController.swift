@@ -331,9 +331,13 @@ extension TrackersViewController: UICollectionViewDataSource {
             cell.completeTrackerButton.backgroundColor?.withAlphaComponent(1)
         }
         
-        //let count = trackerCounters[tracker.id, default: 0]
         let count = trackerRecordStore.countTrackerRecords(byId: Int(tracker.id))
-        cell.numOfDays.text = "\(count) день"
+        let daysString = String.localizedStringWithFormat(
+            NSLocalizedString("numberOfDays", comment: "Number of completed days"),
+            count
+        )
+
+        cell.numOfDays.text = daysString
         
         cell.delegate = self
         
