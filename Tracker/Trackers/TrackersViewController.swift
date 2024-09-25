@@ -479,7 +479,7 @@ extension TrackersViewController: UICollectionViewDelegate {
         popover.permittedArrowDirections = []
         editHabitVC.modalPresentationStyle = .popover
         editHabitVC.delegate = self
-
+        
         present(editHabitVC, animated: true, completion: nil)
     }
     
@@ -493,11 +493,58 @@ extension TrackersViewController: UICollectionViewDelegate {
         popover.permittedArrowDirections = []
         editEventVC.modalPresentationStyle = .popover
         editEventVC.delegate = self
-
+        
         present(editEventVC, animated: true, completion: nil)
     }
     
     private func deleteTracker(for indexPath: IndexPath) {
+        showDeleteConfirmation(indexPath: indexPath)
+    }
+    
+    private func showDeleteConfirmation(indexPath: IndexPath) {
+        let alert = UIAlertController(
+            title: nil,
+            message: nil,
+            preferredStyle: .actionSheet
+        )
+        
+        let messageAttributes: [NSAttributedString.Key: Any] = [
+            .font: UIFont.systemFont(ofSize: 13),
+            .foregroundColor: UIColor.black
+        ]
+        let messageAttributedString = NSAttributedString(string: "Уверены что хотите удалить трекер?", attributes: messageAttributes)
+        alert.setValue(messageAttributedString, forKey: "attributedMessage")
+        
+        let deleteAttributes: [NSAttributedString.Key: Any] = [
+            .font: UIFont.systemFont(ofSize: 20, weight: .regular),
+            .foregroundColor: UIColor.red
+        ]
+        let deleteAttributedTitle = NSAttributedString(string: "Удалить", attributes: deleteAttributes)
+        
+        alert.addAction(UIAlertAction(
+            title: deleteAttributedTitle.string,
+            style: .destructive,
+            handler: { _ in
+                self.confirmTrackerDeletion(indexPath)
+            }
+        ))
+        
+        let cancelAttributes: [NSAttributedString.Key: Any] = [
+            .font: UIFont.systemFont(ofSize: 20, weight: .bold),
+            .foregroundColor: UIColor.blue
+        ]
+        let cancelAttributedTitle = NSAttributedString(string: "Отменить", attributes: cancelAttributes)
+        
+        alert.addAction(UIAlertAction(
+            title: cancelAttributedTitle.string,
+            style: .cancel,
+            handler: { _ in }
+        ))
+        
+        present(alert, animated: true, completion: nil)
+    }
+    
+    private func confirmTrackerDeletion(_ indexPath: IndexPath) {
         let tracker = filteredTrackers[indexPath.section].trackers[indexPath.item]
         
         do {
