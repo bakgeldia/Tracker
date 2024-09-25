@@ -16,6 +16,7 @@ final class CategoryViewController: UIViewController {
     weak var delegate: CategoryViewControllerDelegate?
     
     var selectedIndexPath: IndexPath?
+    var selectedCategory: String?
     
     private let titleLabel = UILabel()
     private let tableView = UITableView()
@@ -115,7 +116,7 @@ extension CategoryViewController: UITableViewDataSource {
             return UITableViewCell()
         }
         let title = viewModel.categoryTitle(at: indexPath)
-        let isSelected = selectedIndexPath == indexPath
+        let isSelected = selectedIndexPath == indexPath || title == selectedCategory
         cell.configure(with: title, isSelected: isSelected)
         
         return cell

@@ -384,8 +384,8 @@ extension TrackersViewController: UICollectionViewDelegate {
         
         // Возвращаем конфигурацию для контекстного меню
         return UIContextMenuConfiguration(
-            identifier: indexPath as NSCopying, // идентификатор — indexPath
-            previewProvider: nil, // Превью настраивается позже
+            identifier: indexPath as NSCopying,
+            previewProvider: nil,
             actionProvider: { _ in
                 // Настройка элементов контекстного меню
                 let pinActionTitle = tracker.isPinned ? "Открепить" : "Закрепить"
@@ -458,9 +458,43 @@ extension TrackersViewController: UICollectionViewDelegate {
     }
     
     private func editTracker(for indexPath: IndexPath) {
+        let tracker = filteredTrackers[indexPath.section].trackers[indexPath.item]
         
+        if tracker.schedule.contains("Everyday") {
+            showEditEventVC(tracker)
+        } else {
+            showEditHabitVC(tracker)
+        }
         
         datePickerValueChanged(datePicker)
+    }
+    
+    private func showEditHabitVC(_ tracker: Tracker) {
+        let editHabitVC = EditHabitViewController()
+        editHabitVC.tracker = tracker
+        
+        let popover = UIPopoverPresentationController(presentedViewController: editHabitVC, presenting: self)
+        popover.sourceView = self.view
+        popover.sourceRect = CGRect(x: view.bounds.midX, y: view.bounds.midY, width: 0, height: 0)
+        popover.permittedArrowDirections = []
+        editHabitVC.modalPresentationStyle = .popover
+        editHabitVC.delegate = self
+
+        present(editHabitVC, animated: true, completion: nil)
+    }
+    
+    private func showEditEventVC(_ tracker: Tracker) {
+        let editEventVC = EditEventViewController()
+        editEventVC.tracker = tracker
+        
+        let popover = UIPopoverPresentationController(presentedViewController: editEventVC, presenting: self)
+        popover.sourceView = self.view
+        popover.sourceRect = CGRect(x: view.bounds.midX, y: view.bounds.midY, width: 0, height: 0)
+        popover.permittedArrowDirections = []
+        editEventVC.modalPresentationStyle = .popover
+        editEventVC.delegate = self
+
+        present(editEventVC, animated: true, completion: nil)
     }
     
     private func deleteTracker(for indexPath: IndexPath) {
@@ -544,11 +578,53 @@ extension TrackersViewController: AddTrackerViewControllerDelegate {
             print("Ошибка при добавлении нового трекера в бд")
         }
         
-        // Обновляем массив категорий и перезагружаем коллекцию
+        datePickerValueChanged(datePicker)
+    }
+}
+
+extension TrackersViewController: EditHabitViewControllerDelegate {
+    func updateHabit(id: UInt, title: String, category: String, emoji: String, color: UIColor, schedule: [String], isPinned: Bool) {
+        dismiss(animated: true)
+        
+        let tracker = Tracker(
+            id: id,
+            name: title,
+            color: color,
+            emoji: emoji,
+            schedule: schedule,
+            isPinned: isPinned,
+            trackerCategory: category
+        )
+        
         do {
-            self.categories = try trackerCategoryStore.fetchTrackerCategories()
+            try trackerStore.updateExistingTracker(with: tracker)
         } catch {
-            print("Ошибка при получении категории из бд")
+            print("Ошибка при обновлении привычки")
+        }
+        
+        datePickerValueChanged(datePicker)
+        
+    }
+}
+
+extension TrackersViewController: EditEventViewControllerDelegate {
+    func updateEvent(id: UInt, title: String, category: String, emoji: String, color: UIColor, schedule: [String], isPinned: Bool) {
+        dismiss(animated: true)
+        
+        let tracker = Tracker(
+            id: id,
+            name: title,
+            color: color,
+            emoji: emoji,
+            schedule: schedule,
+            isPinned: isPinned,
+            trackerCategory: category
+        )
+        
+        do {
+            try trackerStore.updateExistingTracker(with: tracker)
+        } catch {
+            print("Ошибка при обновлении события")
         }
         
         datePickerValueChanged(datePicker)

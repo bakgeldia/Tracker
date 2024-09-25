@@ -94,12 +94,22 @@ final class TrackerStore: NSObject {
         dbStore.saveContext()
     }
 
-    func updateExistingTracker(_ trackerCoreData: TrackerCoreData, with tracker: Tracker) {
-        trackerCoreData.id = Int16(tracker.id)
-        trackerCoreData.name = tracker.name
-        trackerCoreData.emoji = tracker.emoji
-        trackerCoreData.color = uiColorMarshalling.hexString(from: tracker.color)
-        trackerCoreData.schedule = scheduleMarshalling.transformToNSObject(from: tracker.schedule)
+    func updateExistingTracker(with tracker: Tracker) throws {
+        let fetchRequest: NSFetchRequest<TrackerCoreData> = TrackerCoreData.fetchRequest()
+        let trackerId = NSNumber(value: tracker.id)
+        fetchRequest.predicate = NSPredicate(format: "id == %@", trackerId)
+        
+        let trackersFromCoreData = try context.fetch(fetchRequest)
+        
+        guard let trackerFromCoreData = trackersFromCoreData.first else {
+            throw NSError(domain: "TrackerNotFound", code: 404, userInfo: nil)
+        }
+        
+        trackerFromCoreData.name = tracker.name
+        trackerFromCoreData.emoji = tracker.emoji
+        trackerFromCoreData.color = uiColorMarshalling.hexString(from: tracker.color)
+        trackerFromCoreData.schedule = tracker.schedule as NSObject
+        trackerFromCoreData.trackerCategory = tracker.trackerCategory
         
         dbStore.saveContext()
     }

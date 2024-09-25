@@ -131,6 +131,17 @@ final class TrackerCategoryStore: NSObject {
         }
     }
     
+    func fetchCategories() throws -> [TrackerCategory] {
+        let fetchRequest = TrackerCategoryCoreData.fetchRequest()
+        let trackerCategoriesFromCoreData = try context.fetch(fetchRequest)
+        
+        // Фильтрация: исключаем категорию с названием "Закрепленные"
+        return try trackerCategoriesFromCoreData
+            .filter { $0.title != "Закрепленные" }
+            .map { try self.getCategory(from: $0) }
+    }
+
+    
 }
 
 extension TrackerCategoryStore: NSFetchedResultsControllerDelegate {
