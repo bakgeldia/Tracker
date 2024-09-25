@@ -14,7 +14,9 @@ final class TrackersArrayMarshalling {
             "name": tracker.name,
             "color": tracker.color,
             "emoji": tracker.emoji,
-            "schedule": tracker.schedule
+            "schedule": tracker.schedule,
+            "isPinned": tracker.isPinned,
+            "trackerCategory": tracker.trackerCategory
         ] as NSDictionary
     }
     
@@ -23,11 +25,14 @@ final class TrackersArrayMarshalling {
               let name = dictionary["name"] as? String,
               let color = dictionary["color"] as? UIColor,
               let emoji = dictionary["emoji"] as? String,
-              let schedule = dictionary["schedule"] as? [String] else {
+              let schedule = dictionary["schedule"] as? [String],
+              let isPinned = dictionary["isPinned"] as? Bool,
+              let trackerCategory = dictionary["trackerCategory"] as? String
+        else {
             return nil
         }
         
-        return Tracker(id: id, name: name, color: color, emoji: emoji, schedule: schedule)
+        return Tracker(id: id, name: name, color: color, emoji: emoji, schedule: schedule, isPinned: isPinned, trackerCategory: trackerCategory)
     }
     
     func trackersToNSObject(_ trackers: [Tracker]) -> NSObject {

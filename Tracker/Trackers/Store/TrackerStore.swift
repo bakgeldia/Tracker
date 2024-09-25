@@ -82,14 +82,14 @@ final class TrackerStore: NSObject {
         return tracker
     }
     
-    func addNewTracker(_ tracker: Tracker, _ category: String) throws {
+    func addNewTracker(_ tracker: Tracker) throws {
         let trackerCoreData = TrackerCoreData(context: context)
         trackerCoreData.id = Int16(tracker.id)
         trackerCoreData.name = tracker.name
         trackerCoreData.emoji = tracker.emoji
         trackerCoreData.color = uiColorMarshalling.hexString(from: tracker.color)
         trackerCoreData.schedule = tracker.schedule as NSObject
-        trackerCoreData.trackerCategory = category
+        trackerCoreData.trackerCategory = tracker.trackerCategory
         
         dbStore.saveContext()
     }
@@ -100,6 +100,60 @@ final class TrackerStore: NSObject {
         trackerCoreData.emoji = tracker.emoji
         trackerCoreData.color = uiColorMarshalling.hexString(from: tracker.color)
         trackerCoreData.schedule = scheduleMarshalling.transformToNSObject(from: tracker.schedule)
+        
+        dbStore.saveContext()
+    }
+    
+    func updateTrackerPinStatus(_ tracker: Tracker) throws {
+        let fetchRequest: NSFetchRequest<TrackerCoreData> = TrackerCoreData.fetchRequest()
+        let trackerId = NSNumber(value: tracker.id)
+        fetchRequest.predicate = NSPredicate(format: "id == %@", trackerId)
+
+        do {
+            let results = try context.fetch(fetchRequest)
+            if let trackerCoreData = results.first {
+                // Обновляем статус закрепления
+                trackerCoreData.isPinned.toggle()
+                
+                // Сохраняем изменения
+                try context.save()
+                print("Статус закрепления трекера обновлен на: \(trackerCoreData.isPinned)")
+            } else {
+                print("Трекер не найден.")
+            }
+        } catch {
+            print("Ошибка при обновлении статуса закрепления трекера: \(error.localizedDescription)")
+            throw error
+        }
+    }
+    
+    func updateTrackerCategoryToPinned(_ tracker: Tracker) throws {
+        let fetchRequest = TrackerCoreData.fetchRequest()
+        let trackerID = NSNumber(value: tracker.id)
+        fetchRequest.predicate = NSPredicate(format: "id == %@", trackerID)
+        
+        let trackersFromCoreData = try context.fetch(fetchRequest)
+        
+        guard let trackerFromCoreData = trackersFromCoreData.first else {
+            throw NSError(domain: "TrackerNotFound", code: 404, userInfo: nil)
+        }
+        trackerFromCoreData.lastCategory = tracker.trackerCategory
+        trackerFromCoreData.trackerCategory = "Закрепленные"
+        
+        dbStore.saveContext()
+    }
+    
+    func updateTrackerCategoryToPrevious(_ tracker: Tracker) throws {
+        let fetchRequest = TrackerCoreData.fetchRequest()
+        let trackerID = NSNumber(value: tracker.id)
+        fetchRequest.predicate = NSPredicate(format: "id == %@", trackerID)
+        
+        let trackersFromCoreData = try context.fetch(fetchRequest)
+        
+        guard let trackerFromCoreData = trackersFromCoreData.first else {
+            throw NSError(domain: "TrackerNotFound", code: 404, userInfo: nil)
+        }
+        trackerFromCoreData.trackerCategory = trackerFromCoreData.lastCategory
         
         dbStore.saveContext()
     }
@@ -133,11 +187,16 @@ final class TrackerStore: NSObject {
         guard let schedule = trackersCoreData.schedule else {
             throw TrackerStoreError.decodingErrorInvalidEmojies
         }
+        guard let category = trackersCoreData.trackerCategory else {
+            throw TrackerStoreError.decodingErrorInvalidEmojies
+        }
         return Tracker(id: UInt(id),
                        name: name,
                        color: uiColorMarshalling.color(from: color),
                        emoji: emoji,
-                       schedule: scheduleMarshalling.transformToArray(from: schedule) 
+                       schedule: scheduleMarshalling.transformToArray(from: schedule),
+                       isPinned: trackersCoreData.isPinned,
+                       trackerCategory: category
         )
     }
     

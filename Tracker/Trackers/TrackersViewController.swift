@@ -61,11 +61,7 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
             }
         }
         
-        do {
-            categories = try trackerCategoryStore.fetchTrackerCategories()
-        } catch {
-            print("Ошибка при получении категории")
-        }
+        getCategories()
         //-------------- Example -------------------
         
         searchController.searchBar.delegate = self
@@ -92,16 +88,23 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
     @objc func datePickerValueChanged(_ sender: UIDatePicker) {
         currentDate = sender.date
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "EEEE" // Формат для полного названия дня недели
+        dateFormatter.dateFormat = "EEEE"
         let selectedDay = dateFormatter.string(from: currentDate)
         let capitalizedDay = selectedDay.capitalized
         
         // Фильтрация трекеров по выбранному дню недели
+        getCategories()
         filteredTrackers = categories.compactMap { category in
             let filteredTrackers = category.trackers.filter { tracker in
                 tracker.schedule.contains(capitalizedDay) || tracker.schedule.contains("Everyday")
             }
             return filteredTrackers.isEmpty ? nil : TrackerCategory(title: category.title, trackers: filteredTrackers)
+        }
+        
+        // Проверяем, есть ли категория "Закрепленные" и перемещаем её на первое место
+        if let pinnedCategoryIndex = filteredTrackers.firstIndex(where: { $0.title == "Закрепленные" }) {
+            let pinnedCategory = filteredTrackers.remove(at: pinnedCategoryIndex)
+            filteredTrackers.insert(pinnedCategory, at: 0)
         }
         
         updatePlaceholderVisibility()
@@ -125,7 +128,7 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
         appearance.configureWithOpaqueBackground()
         appearance.backgroundColor = .white
         appearance.shadowColor = .clear
-
+        
         navigationController?.navigationBar.standardAppearance = appearance
         navigationController?.navigationBar.scrollEdgeAppearance = appearance
         navigationController?.navigationBar.compactAppearance = appearance
@@ -225,6 +228,14 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
             errorLabel.topAnchor.constraint(equalTo: errorImageView.bottomAnchor, constant: 8),
             errorLabel.centerXAnchor.constraint(equalTo: errorImageView.centerXAnchor)
         ])
+    }
+    
+    private func getCategories() {
+        do {
+            categories = try trackerCategoryStore.fetchTrackerCategories()
+        } catch {
+            print("Ошибка при получении категории")
+        }
     }
     
     @objc
@@ -341,7 +352,7 @@ extension TrackersViewController: UICollectionViewDataSource {
             NSLocalizedString("numberOfDays", comment: "Number of completed days"),
             count
         )
-
+        
         cell.numOfDays.text = daysString
         
         cell.delegate = self
@@ -365,6 +376,84 @@ extension TrackersViewController: UICollectionViewDataSource {
 
 extension TrackersViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        let tracker = filteredTrackers[indexPath.section].trackers[indexPath.item]
+        
+        // Возвращаем конфигурацию для контекстного меню
+        return UIContextMenuConfiguration(
+            identifier: indexPath as NSCopying, // идентификатор — indexPath
+            previewProvider: nil, // Превью настраивается позже
+            actionProvider: { _ in
+                // Настройка элементов контекстного меню
+                let pinActionTitle = tracker.isPinned ? "Открепить" : "Закрепить"
+                let pinAction = UIAction(title: pinActionTitle) { _ in
+                    self.togglePin(for: indexPath)
+                }
+                
+                let editAction = UIAction(title: "Редактировать") { _ in
+                    //self.editTracker(at: indexPath)
+                }
+                
+                let deleteAction = UIAction(title: "Удалить", attributes: .destructive) { _ in
+                    //self.deleteTracker(at: indexPath)
+                }
+                
+                return UIMenu(title: "", children: [pinAction, editAction, deleteAction])
+            }
+        )
+    }
+    
+    
+    // Метод для предотвращения случайного свайпа при долгом нажатии
+    func collectionView(_ collectionView: UICollectionView, willPerformPreviewActionForMenuWith configuration: UIContextMenuConfiguration, animator: UIContextMenuInteractionCommitAnimating) {
+        animator.preferredCommitStyle = .dismiss
+    }
+    
+    func collectionView(
+        _ collectionView: UICollectionView,
+        previewForHighlightingContextMenuWithConfiguration configuration: UIContextMenuConfiguration
+    ) -> UITargetedPreview? {
+        guard let indexPath = configuration.identifier as? IndexPath else { return nil }
+        guard let cell = collectionView.cellForItem(at: indexPath) as? TrackerCollectionViewCell else { return nil }
+        
+        // Выделяем только часть ячейки, например, иконку
+        let targetView = cell.emojiAndNameView
+        let parameters = UIPreviewParameters()
+        parameters.backgroundColor = .clear
+        
+        return UITargetedPreview(view: targetView, parameters: parameters)
+    }
+    
+    private func togglePin(for indexPath: IndexPath) {
+        // Получаем трекер по indexPath
+        let tracker = filteredTrackers[indexPath.section].trackers[indexPath.item]
+        
+        // Логика для закрепления/открепления трекера
+        // Обновляем данные в хранилище или базе данных
+        do {
+            try trackerStore.updateTrackerPinStatus(tracker)
+            
+            if !tracker.isPinned {
+                let pinnedCategory = TrackerCategory(title: "Закрепленные", trackers: [])
+                if !trackerCategoryStore.categoryExists(pinnedCategory) {
+                    try trackerCategoryStore.addNewTrackerCategory(pinnedCategory)
+                }
+                
+                try trackerStore.updateTrackerCategoryToPinned(tracker)
+                print("Category changed to Pinned")
+            } else {
+                //TO-DO: убрать из категории "Закрепленные"
+                try trackerStore.updateTrackerCategoryToPrevious(tracker)
+                print("Category back to prev")
+            }
+            
+        } catch {
+            print("Ошибка при закрепления/открепления трекера: \(error)")
+        }
+        // Обновляем коллекцию для перерисовки
+        datePickerValueChanged(datePicker)
     }
 }
 
@@ -425,11 +514,13 @@ extension TrackersViewController: AddTrackerViewControllerDelegate {
             name: title,
             color: color,
             emoji: emoji,
-            schedule: schedule ?? ["Everyday"]
+            schedule: schedule ?? ["Everyday"],
+            isPinned: false,
+            trackerCategory: category
         )
         
         do {
-            try trackerStore.addNewTracker(newTracker, category)
+            try trackerStore.addNewTracker(newTracker)
         } catch {
             print("Ошибка при добавлении нового трекера в бд")
         }
