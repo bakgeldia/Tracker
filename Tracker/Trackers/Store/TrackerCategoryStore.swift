@@ -123,7 +123,7 @@ final class TrackerCategoryStore: NSObject {
         }
         
         do {
-            let trackers = try trackerStore.fetchTrackers()
+            let trackers = try trackerStore.fetchTrackersByCategory(name)
             return TrackerCategory(title: name, trackers: trackers)
         } catch {
             print("Ошибка при получении трекеров: \(error)")

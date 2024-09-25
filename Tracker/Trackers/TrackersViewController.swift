@@ -43,10 +43,19 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
         
         //-------------- Example ------------------
         let category2 = TrackerCategory(title: "Здоровый образ жизни", trackers: [])
+        let category1 = TrackerCategory(title: "Домашний уют", trackers: [])
         
         if !trackerCategoryStore.categoryExists(category2) {
             do {
                 try trackerCategoryStore.addNewTrackerCategory(category2)
+            } catch {
+                print(error)
+            }
+        }
+        
+        if !trackerCategoryStore.categoryExists(category1) {
+            do {
+                try trackerCategoryStore.addNewTrackerCategory(category1)
             } catch {
                 print(error)
             }
@@ -420,7 +429,7 @@ extension TrackersViewController: AddTrackerViewControllerDelegate {
         )
         
         do {
-            try trackerStore.addNewTracker(newTracker)
+            try trackerStore.addNewTracker(newTracker, category)
         } catch {
             print("Ошибка при добавлении нового трекера в бд")
         }

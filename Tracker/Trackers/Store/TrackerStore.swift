@@ -82,13 +82,14 @@ final class TrackerStore: NSObject {
         return tracker
     }
     
-    func addNewTracker(_ tracker: Tracker) throws {
+    func addNewTracker(_ tracker: Tracker, _ category: String) throws {
         let trackerCoreData = TrackerCoreData(context: context)
         trackerCoreData.id = Int16(tracker.id)
         trackerCoreData.name = tracker.name
         trackerCoreData.emoji = tracker.emoji
         trackerCoreData.color = uiColorMarshalling.hexString(from: tracker.color)
         trackerCoreData.schedule = tracker.schedule as NSObject
+        trackerCoreData.trackerCategory = category
         
         dbStore.saveContext()
     }
@@ -105,6 +106,13 @@ final class TrackerStore: NSObject {
     
     func fetchTrackers() throws -> [Tracker] {
         let fetchRequest = TrackerCoreData.fetchRequest()
+        let trackersFromCoreData = try context.fetch(fetchRequest)
+        return try trackersFromCoreData.map { try self.getTracker(from: $0) }
+    }
+    
+    func fetchTrackersByCategory(_ category: String) throws -> [Tracker] {
+        let fetchRequest = TrackerCoreData.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "trackerCategory == %@", category)
         let trackersFromCoreData = try context.fetch(fetchRequest)
         return try trackersFromCoreData.map { try self.getTracker(from: $0) }
     }
