@@ -158,6 +158,24 @@ final class TrackerStore: NSObject {
         dbStore.saveContext()
     }
     
+    func deleteTracker(_ tracker: Tracker) throws {
+        let fetchRequest = TrackerCoreData.fetchRequest()
+        let trackerID = NSNumber(value: tracker.id)
+        fetchRequest.predicate = NSPredicate(format: "id == %@", trackerID)
+        
+        do {
+            let trackerCoreDataArray = try context.fetch(fetchRequest)
+            if let trackerToDelete = trackerCoreDataArray.first {
+                context.delete(trackerToDelete)
+                dbStore.saveContext()
+            } else {
+                throw NSError(domain: "", code: 404, userInfo: [NSLocalizedDescriptionKey: "Tracker not found"])
+            }
+        } catch {
+            throw error
+        }
+    }
+    
     func fetchTrackers() throws -> [Tracker] {
         let fetchRequest = TrackerCoreData.fetchRequest()
         let trackersFromCoreData = try context.fetch(fetchRequest)

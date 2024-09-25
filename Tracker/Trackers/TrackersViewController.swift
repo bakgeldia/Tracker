@@ -394,11 +394,11 @@ extension TrackersViewController: UICollectionViewDelegate {
                 }
                 
                 let editAction = UIAction(title: "Редактировать") { _ in
-                    //self.editTracker(at: indexPath)
+                    self.editTracker(for: indexPath)
                 }
                 
                 let deleteAction = UIAction(title: "Удалить", attributes: .destructive) { _ in
-                    //self.deleteTracker(at: indexPath)
+                    self.deleteTracker(for: indexPath)
                 }
                 
                 return UIMenu(title: "", children: [pinAction, editAction, deleteAction])
@@ -453,7 +453,25 @@ extension TrackersViewController: UICollectionViewDelegate {
         } catch {
             print("Ошибка при закрепления/открепления трекера: \(error)")
         }
-        // Обновляем коллекцию для перерисовки
+        
+        datePickerValueChanged(datePicker)
+    }
+    
+    private func editTracker(for indexPath: IndexPath) {
+        
+        
+        datePickerValueChanged(datePicker)
+    }
+    
+    private func deleteTracker(for indexPath: IndexPath) {
+        let tracker = filteredTrackers[indexPath.section].trackers[indexPath.item]
+        
+        do {
+            try trackerStore.deleteTracker(tracker)
+        } catch {
+            print("Error deleting tracker")
+        }
+        
         datePickerValueChanged(datePicker)
     }
 }
