@@ -41,6 +41,7 @@ final class EditEventViewController: UIViewController {
     var categories = [TrackerCategory]()
     var selectedCategory: String?
     
+    private let counterLabel = UILabel()
     private let titleLabel = UILabel()
     private let textField = UITextField()
     private let tableView = UITableView()
@@ -62,6 +63,8 @@ final class EditEventViewController: UIViewController {
     private let saveButton = UIButton()
     
     private var selectedCategoryPath: IndexPath?
+    
+    private let trackerRecordStore = TrackerRecordStore()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -101,6 +104,20 @@ final class EditEventViewController: UIViewController {
         titleLabel.textAlignment = .center
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(titleLabel)
+        
+        //Counter Label
+        guard let trackerID = tracker?.id else { return }
+        let count = trackerRecordStore.countTrackerRecords(byId: Int(trackerID))
+        let daysString = String.localizedStringWithFormat(
+            NSLocalizedString("numberOfDays", comment: "Number of completed days"),
+            count
+        )
+        counterLabel.text = daysString
+        counterLabel.textAlignment = .center
+        counterLabel.font = UIFont.systemFont(ofSize: 32, weight: .bold)
+        counterLabel.textColor = Colors.black
+        counterLabel.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(counterLabel)
         
         // TextField
         let textFieldPlaceholder = NSLocalizedString("textField.placeholder", comment: "Text Field Placeholder")
@@ -166,8 +183,13 @@ final class EditEventViewController: UIViewController {
             titleLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 20),
             titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             
+            //Counter Label
+            counterLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 38),
+            counterLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            counterLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            
             // TextField
-            textField.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 38),
+            textField.topAnchor.constraint(equalTo: counterLabel.bottomAnchor, constant: 38),
             textField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             textField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             textField.heightAnchor.constraint(equalToConstant: 75),
