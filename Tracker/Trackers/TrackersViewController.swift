@@ -354,6 +354,7 @@ extension TrackersViewController: UICollectionViewDataSource {
         )
         
         cell.numOfDays.text = daysString
+        cell.pinImageView.isHidden = !tracker.isPinned
         
         cell.delegate = self
         
