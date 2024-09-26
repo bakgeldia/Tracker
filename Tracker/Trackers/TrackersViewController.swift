@@ -124,6 +124,9 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
             getCategories()
             datePicker.isEnabled = false
             datePicker.setDate(Date(), animated: false)
+            currentDate = datePicker.date
+            let day = dateFormatter.string(from: currentDate)
+            let capitalizedDay = day.capitalized
             filteredTrackers = categories.compactMap { category in
                 let filteredTrackers = category.trackers.filter { tracker in
                     tracker.schedule.contains(capitalizedDay) || tracker.schedule.contains("Everyday")
@@ -177,7 +180,7 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
     private func setupNavBar() {
         let appearance = UINavigationBarAppearance()
         appearance.configureWithOpaqueBackground()
-        appearance.backgroundColor = .white
+        appearance.backgroundColor = .systemBackground
         appearance.shadowColor = .clear
         
         navigationController?.navigationBar.standardAppearance = appearance
@@ -196,7 +199,7 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
             target: self,
             action: #selector(Self.didTapAddButton)
         )
-        addTrackerButton.tintColor = Colors.black
+        addTrackerButton.tintColor = Colors.addTrackerButtonColor
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: addTrackerButton)
         
         let trackersVCTitle = NSLocalizedString("trackersVC.title", comment: "Trackers View Controller Title")
@@ -209,8 +212,12 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
         searchController.searchBar.delegate = self
         
         let searchBarPlaceholder = NSLocalizedString("searchBar.placeholer", comment: "SearchBar placeholder")
-        searchController.searchBar.placeholder = searchBarPlaceholder
-        searchController.searchBar.tintColor = Colors.searchBarGray
+        searchController.searchBar.searchTextField.backgroundColor = Colors.searchBarTextFieldBackground
+        searchController.searchBar.searchTextField.attributedPlaceholder = NSAttributedString(
+            string: searchBarPlaceholder,
+            attributes: [.foregroundColor: Colors.searchBarPlaceholderColor]
+        )
+        searchController.searchBar.searchTextField.leftView?.tintColor = Colors.searchBarSearchIcon
         searchController.searchBar.layer.cornerRadius = 30
         searchController.searchBar.backgroundImage = UIImage()
         searchController.obscuresBackgroundDuringPresentation = false
@@ -258,7 +265,7 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
     }
     
     private func setupView() {
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor.systemBackground
         
         errorImageView.image = UIImage(named: "error")
         errorImageView.translatesAutoresizingMaskIntoConstraints = false
@@ -273,7 +280,7 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
         
         let errorLabelText = NSLocalizedString("errorLabel.text", comment: "Error label")
         errorLabel.text = errorLabelText
-        errorLabel.textColor = Colors.black
+        errorLabel.textColor = Colors.errorLabelColor
         errorLabel.font = UIFont.systemFont(ofSize: 12, weight: .medium)
         errorLabel.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(errorLabel)
@@ -357,12 +364,16 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
             return TrackerCategory(title: category.title, trackers: filteredTrackers)
         }
         
-        // Фильтруем только если поисковый текст не пустой
         if searchText.isEmpty {
             filteredTrackers = categories
             datePickerValueChanged(datePicker)
         } else {
             filteredTrackers = filteredCategories.filter { !$0.trackers.isEmpty }
+        }
+        
+        if filteredTrackers.flatMap({ $0.trackers }).isEmpty {
+            errorImageView.image = UIImage(named: "notFound")
+            errorLabel.text = "Ничего не найдено"
         }
         
         updatePlaceholderVisibility()

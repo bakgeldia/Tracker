@@ -23,7 +23,7 @@ final class CategoryHeaderReusableView: UICollectionReusableView {
         addSubview(categoryTitle)
         categoryTitle.translatesAutoresizingMaskIntoConstraints = false
         categoryTitle.font = UIFont.systemFont(ofSize: 19, weight: .bold)
-        categoryTitle.textColor = Colors.black
+        categoryTitle.textColor = Colors.categoryHeaderColor
         
         NSLayoutConstraint.activate([
             categoryTitle.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),

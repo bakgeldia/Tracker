@@ -87,7 +87,7 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         
         //Button
         completeTrackerButton.setImage(UIImage(systemName: "plus"), for: .normal)
-        completeTrackerButton.imageView?.tintColor = .white
+        completeTrackerButton.imageView?.tintColor = Colors.plusButtonColor
         completeTrackerButton.layer.cornerRadius = 22
         completeTrackerButton.addTarget(self, action: #selector(self.didTapCompleteButton), for: .touchUpInside)
         daysAndButtonView.addSubview(completeTrackerButton)

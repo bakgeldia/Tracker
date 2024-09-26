@@ -57,9 +57,9 @@ class TabBarController: UITabBarController {
     private func customizeTabBarAppearance() {
         let appearance = UITabBarAppearance()
         appearance.configureWithOpaqueBackground()
-        appearance.backgroundColor = .white
+        appearance.backgroundColor = .systemBackground
         
-        appearance.shadowColor = .lightGray
+        appearance.shadowColor = Colors.tabBarShadowColor
         
         tabBar.standardAppearance = appearance
         
