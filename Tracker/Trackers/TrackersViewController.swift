@@ -84,6 +84,7 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
         
         setupFiltersButton()
         changefilterVisibility()
+        getFilterName()
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
@@ -151,14 +152,6 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
                 print("no uncompleted trackers")
             }
         }
-        
-//        // Фильтрация трекеров по выбранному дню недели
-//        filteredTrackers = categories.compactMap { category in
-//            let filteredTrackers = category.trackers.filter { tracker in
-//                tracker.schedule.contains(capitalizedDay) || tracker.schedule.contains("Everyday")
-//            }
-//            return filteredTrackers.isEmpty ? nil : TrackerCategory(title: category.title, trackers: filteredTrackers)
-//        }
         
         // Проверяем, есть ли категория "Закрепленные" и перемещаем её на первое место
         if let pinnedCategoryIndex = filteredTrackers.firstIndex(where: { $0.title == "Закрепленные" }) {
@@ -655,6 +648,15 @@ extension TrackersViewController: UICollectionViewDelegate {
         
         datePickerValueChanged(datePicker)
     }
+    
+    private func getFilterName() {
+        if let filter = UserDefaults.standard.string(forKey: "selectedFilter") {
+            selectedFilter = filter
+        } else {
+            selectedFilter = "Все трекеры"
+        }
+        datePickerValueChanged(datePicker)
+    }
 }
 
 extension TrackersViewController: UICollectionViewDelegateFlowLayout {
@@ -780,29 +782,9 @@ extension TrackersViewController: EditEventViewControllerDelegate {
 
 extension TrackersViewController: FiltersViewControllerDelegate {
     func getFilter(_ filter: String) {
-        selectedFilter = filter
-        
         errorImageView.image = UIImage(named: "notFound")
         errorLabel.text = "Ничего не найдено"
         
-        datePickerValueChanged(datePicker)
-//        let filters = ["Все трекеры", "Трекеры на сегодня", "Завершенные", "Не завершенные"]
-//        
-//        switch filter {
-//        case filters[0]:
-//            datePickerValueChanged(datePicker)
-//        case filters[1]:
-//            datePicker.setDate(Date(), animated: false)
-//            datePickerValueChanged(datePicker)
-//        case filters[2]:
-//            do {
-//                let completedTrackers = try trackerRecordStore.filterCompletedTrackers(for: dateWithoutTime(from: currentDate))
-//                print(completedTrackers)
-//            } catch {
-//                print("no completed trackers")
-//            }
-//        default:
-//            print(filters[3])
-//        }
+        getFilterName()
     }
 }

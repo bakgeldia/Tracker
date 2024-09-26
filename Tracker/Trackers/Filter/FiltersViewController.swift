@@ -89,6 +89,8 @@ extension FiltersViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         selectedFilter = filters[indexPath.row]
         
+        UserDefaults.standard.set(selectedFilter, forKey: "selectedFilter")
+        
         guard let filter = selectedFilter else { return }
         delegate?.getFilter(filter)
         
