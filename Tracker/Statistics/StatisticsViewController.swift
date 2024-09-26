@@ -74,12 +74,15 @@ final class StatisticsViewController: UIViewController {
     
     private func setupStatsView() {
         completedTrackersView.layer.cornerRadius = 16
+        completedTrackersView.layer.borderWidth = 1
+        completedTrackersView.layer.borderColor = UIColor.clear.cgColor
+        completedTrackersView.backgroundColor = .systemBackground
         completedTrackersView.isHidden = true
         completedTrackersView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(completedTrackersView)
         
-        addGradient()
-        
+        addGradientToBorder()
+
         countLabel.text = "\(completedTrackersCounter)"
         countLabel.font = UIFont.systemFont(ofSize: 34, weight: .bold)
         countLabel.textColor = Colors.statisticsTitle
@@ -111,8 +114,8 @@ final class StatisticsViewController: UIViewController {
             completedLabel.bottomAnchor.constraint(equalTo: completedTrackersView.bottomAnchor, constant: -12)
         ])
     }
-    
-    private func addGradient() {
+
+    private func addGradientToBorder() {
         let gradientLayer = CAGradientLayer()
         gradientLayer.colors = [
             UIColor(red: 0/255, green: 123/255, blue: 250/255, alpha: 1).cgColor,
@@ -123,31 +126,29 @@ final class StatisticsViewController: UIViewController {
         gradientLayer.endPoint = CGPoint(x: 1, y: 1)
         gradientLayer.frame = completedTrackersView.bounds
         gradientLayer.cornerRadius = 16
-        
-        let borderLayer = CALayer()
-        borderLayer.frame = completedTrackersView.bounds
-        borderLayer.cornerRadius = 16
-        borderLayer.borderWidth = 1
-        borderLayer.borderColor = UIColor.clear.cgColor
-        
+
+        let shapeLayer = CAShapeLayer()
+        shapeLayer.lineWidth = 3
+        shapeLayer.path = UIBezierPath(roundedRect: completedTrackersView.bounds, cornerRadius: 16).cgPath
+        shapeLayer.fillColor = UIColor.clear.cgColor
+        shapeLayer.strokeColor = UIColor.black.cgColor
+        gradientLayer.mask = shapeLayer
+
         completedTrackersView.layer.addSublayer(gradientLayer)
-        completedTrackersView.layer.addSublayer(borderLayer)
-        
-        updateGradientBorderLayer()
-    }
-    
-    private func updateGradientBorderLayer() {
-        if let gradientLayer = completedTrackersView.layer.sublayers?[0] as? CAGradientLayer {
-            gradientLayer.frame = completedTrackersView.bounds
-        }
-        if let borderLayer = completedTrackersView.layer.sublayers?[1] {
-            borderLayer.frame = completedTrackersView.bounds
-        }
     }
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         updateGradientBorderLayer()
+    }
+
+    private func updateGradientBorderLayer() {
+        if let gradientLayer = completedTrackersView.layer.sublayers?.first as? CAGradientLayer {
+            gradientLayer.frame = completedTrackersView.bounds
+            if let shapeLayer = gradientLayer.mask as? CAShapeLayer {
+                shapeLayer.path = UIBezierPath(roundedRect: completedTrackersView.bounds, cornerRadius: 16).cgPath
+            }
+        }
     }
     
     private func checkStats() {
