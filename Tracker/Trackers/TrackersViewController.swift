@@ -137,8 +137,6 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
             getCategories()
             do {
                 filteredTrackers = try trackerCategoryStore.fetchCategoriesWithCompletedTrackers(for: dateWithoutTime(from: currentDate))
-                let completedCategories = try trackerCategoryStore.fetchCategoriesWithCompletedTrackers(for: dateWithoutTime(from: currentDate))
-                print(completedCategories)
             } catch {
                 print("no completed trackers")
             }
@@ -146,10 +144,6 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
             getCategories()
             do {
                 filteredTrackers = try trackerCategoryStore.fetchCategoriesWithUnmarkedTrackers(for: dateWithoutTime(from: currentDate))
-                let unmarkedCategories = try trackerCategoryStore.fetchCategoriesWithUnmarkedTrackers(for: dateWithoutTime(from: dateWithoutTime(from: currentDate)))
-                let trackers = try trackerRecordStore.filterUnmarkedTrackers(for: currentDate)
-                print("unmarked")
-                print(unmarkedCategories)
             } catch {
                 print("no uncompleted trackers")
             }
