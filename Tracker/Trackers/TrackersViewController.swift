@@ -13,6 +13,15 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
     var completedTrackers = [TrackerRecord]()
     var currentDate: Date = Date()
     
+    private var completedTrackersCounter: Int {
+        get {
+            UserDefaults.standard.integer(forKey: "completedTrackersCounter")
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: "completedTrackersCounter")
+        }
+    }
+    
     private var filteredTrackers = [TrackerCategory]()
     
     private var addTrackerButton = UIButton()
@@ -712,12 +721,14 @@ extension TrackersViewController: TrackerCollectionViewCellDelegate {
         if completedTrackers.firstIndex(of: trackerRecord) != nil {
             do {
                 try trackerRecordStore.deleteExistingTrackerRecord(trackerRecord)
+                completedTrackersCounter -= 1
             } catch {
                 print("Ошибка удаления трекера из отмеченных")
             }
         } else {
             do {
                 try trackerRecordStore.addNewTrackerRecord(trackerRecord)
+                completedTrackersCounter += 1
             } catch {
                 print("Ошибка добавленмя трекера в отмеченные")
             }

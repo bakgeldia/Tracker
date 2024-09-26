@@ -80,4 +80,12 @@ struct Colors {
             return black
         }
     }
+    
+    static let statisticsTitle = UIColor { (traits: UITraitCollection) -> UIColor in
+        if traits.userInterfaceStyle == .light {
+            return black
+        } else {
+            return .white
+        }
+    }
 }
