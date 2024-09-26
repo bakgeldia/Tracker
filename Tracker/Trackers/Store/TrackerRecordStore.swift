@@ -33,6 +33,7 @@ protocol TrackerRecordDelegate: AnyObject {
 
 final class TrackerRecordStore: NSObject {
     private var dbStore = DBStore.shared
+    private let trackerStore = TrackerStore()
     
     private var context: NSManagedObjectContext
     private var fetchedResultsController: NSFetchedResultsController<TrackerRecordCoreData>?
@@ -142,9 +143,59 @@ final class TrackerRecordStore: NSObject {
     
     func fetchTrackerRecords() throws -> [TrackerRecord] {
         let fetchRequest = TrackerRecordCoreData.fetchRequest()
-        fetchRequest.fetchLimit = 1
+        //fetchRequest.fetchLimit = 1
         let trackerRecordCoreData = try context.fetch(fetchRequest)
         return try trackerRecordCoreData.map { try self.getTrackerRecord(from: $0) }
+    }
+    
+    func fetchCompletedTrackers(for date: Date) throws -> [TrackerRecord] {
+        let fetchRequest = TrackerRecordCoreData.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "date == %@", date as NSDate)
+        let trackerRecordCoreDate = try context.fetch(fetchRequest)
+        
+        return try trackerRecordCoreDate.map { try self.getTrackerRecord(from: $0) }
+    }
+    
+    func filterCompletedTrackers(for date: Date) throws -> [Tracker] {
+        let allTrackers = try trackerStore.fetchTrackers()
+        let trackerRecords = try fetchCompletedTrackers(for: date)
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "EEEE"
+        let weekday = dateFormatter.string(from: date)
+        let capitalizedDay = weekday.capitalized
+        
+        let completedTrackers = allTrackers.filter { tracker in
+            let isCompleted = trackerRecords.contains { record in
+                tracker.id == record.id
+            }
+            
+            let isInSchedule = tracker.schedule.contains(capitalizedDay) || tracker.schedule.contains("Everyday")
+            return isCompleted && isInSchedule
+        }
+        
+        return completedTrackers
+    }
+    
+    func filterUnmarkedTrackers(for date: Date) throws -> [Tracker] {
+        let allTrackers = try trackerStore.fetchTrackers()
+        let trackerRecords = try fetchCompletedTrackers(for: date)
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "EEEE"
+        let weekday = dateFormatter.string(from: date)
+        let capitalizedDay = weekday.capitalized
+        
+        let unmarkedTrackers = allTrackers.filter { tracker in
+            let isCompleted = trackerRecords.contains { record in
+                tracker.id == record.id
+            }
+            
+            let isInSchedule = tracker.schedule.contains(capitalizedDay) || tracker.schedule.contains("Everyday")
+            return !isCompleted && isInSchedule
+        }
+
+        return unmarkedTrackers
     }
     
     func getTrackerRecord(from trackerRecordCoreData: TrackerRecordCoreData) throws -> TrackerRecord {

@@ -17,6 +17,7 @@
 		FCCCC4AD2CA3073A007598EB /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = FCCCC4AB2CA3073A007598EB /* Localizable.strings */; };
 		FCCCC4CB2CA48198007598EB /* EditHabitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCCCC4CA2CA48198007598EB /* EditHabitViewController.swift */; };
 		FCCCC4CD2CA485DA007598EB /* EditEventViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCCCC4CC2CA485DA007598EB /* EditEventViewController.swift */; };
+		FCCCC4D22CA4B117007598EB /* FiltersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCCCC4D12CA4B117007598EB /* FiltersViewController.swift */; };
 		FCD261682C6B73010073D483 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD261672C6B73010073D483 /* AppDelegate.swift */; };
 		FCD2616A2C6B73010073D483 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD261692C6B73010073D483 /* SceneDelegate.swift */; };
 		FCD2616C2C6B73010073D483 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD2616B2C6B73010073D483 /* TabBarController.swift */; };
@@ -62,6 +63,7 @@
 		FCCCC4AE2CA30740007598EB /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 		FCCCC4CA2CA48198007598EB /* EditHabitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditHabitViewController.swift; sourceTree = "<group>"; };
 		FCCCC4CC2CA485DA007598EB /* EditEventViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditEventViewController.swift; sourceTree = "<group>"; };
+		FCCCC4D12CA4B117007598EB /* FiltersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FiltersViewController.swift; sourceTree = "<group>"; };
 		FCD261642C6B73010073D483 /* Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FCD261672C6B73010073D483 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FCD261692C6B73010073D483 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -145,6 +147,14 @@
 			path = TrackerEdit;
 			sourceTree = "<group>";
 		};
+		FCCCC4D02CA4B0EF007598EB /* Filter */ = {
+			isa = PBXGroup;
+			children = (
+				FCCCC4D12CA4B117007598EB /* FiltersViewController.swift */,
+			);
+			path = Filter;
+			sourceTree = "<group>";
+		};
 		FCD2615B2C6B73010073D483 = {
 			isa = PBXGroup;
 			children = (
@@ -187,6 +197,7 @@
 				FCD2617C2C6B93B90073D483 /* TrackersViewController.swift */,
 				FCD7BFB92C78B502004559A5 /* TrackerCollectionViewCell.swift */,
 				FCDC3F9B2C7A361600BC490A /* CategoryHeaderReusableView.swift */,
+				FCCCC4D02CA4B0EF007598EB /* Filter */,
 				FCCCC4C92CA480ED007598EB /* TrackerEdit */,
 				FCD7BFBB2C78B961004559A5 /* TrackerCreation */,
 				FCDC40142C90A12000BC490A /* Store */,
@@ -346,6 +357,7 @@
 				FCD261C72C71E2F50073D483 /* Tracker.swift in Sources */,
 				FC0147FA2C9DC0B0001A6B72 /* Colors.swift in Sources */,
 				FCDC401E2C91EF5700BC490A /* ScheduleMarshalling.swift in Sources */,
+				FCCCC4D22CA4B117007598EB /* FiltersViewController.swift in Sources */,
 				FCDC3FB52C8B05F400BC490A /* CollectionHeaderReusableView.swift in Sources */,
 				FCD7BFE12C78C996004559A5 /* NewHabitViewController.swift in Sources */,
 				FCDC3FB12C8A099200BC490A /* EmojiCell.swift in Sources */,
