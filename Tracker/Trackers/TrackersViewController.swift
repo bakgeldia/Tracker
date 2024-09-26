@@ -84,7 +84,6 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
         
         setupFiltersButton()
         changefilterVisibility()
-        getFilterName()
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
