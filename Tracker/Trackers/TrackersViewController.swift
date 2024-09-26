@@ -26,6 +26,8 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
     
     private var selectedFilter = "Все трекеры"
     
+    private let analyticsService = AnalyticsService()
+    
     private let trackerStore = TrackerStore()
     private let trackerCategoryStore = TrackerCategoryStore()
     private let trackerRecordStore = TrackerRecordStore()
@@ -43,6 +45,8 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        analyticsService.report(event: "open", params: ["screen": "Main"])
         
         //-------------- Example ------------------
         let category2 = TrackerCategory(title: "Здоровый образ жизни", trackers: [])
@@ -309,8 +313,11 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
     }
     
     @objc private func filtersButtonTapped() {
+        let params = ["screen": "Main", "item": "filter"]
+        analyticsService.report(event: "click", params: params)
+        analyticsService.report(event: "close", params: ["screen": "Main"])
+        
         let filtersVC = FiltersViewController()
-       
         let popover = UIPopoverPresentationController(presentedViewController: filtersVC, presenting: self)
         popover.sourceView = self.view
         popover.sourceRect = CGRect(x: view.bounds.midX, y: view.bounds.midY, width: 0, height: 0)
@@ -333,20 +340,19 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
     
     @objc
     private func didTapAddButton() {
-        // Инициализируем PopoverViewController
-        let addTrackerVC = AddTrackerViewController()
+        let params = ["screen": "Main", "item": "add_track"]
+        analyticsService.report(event: "click", params: params)
+        analyticsService.report(event: "close", params: ["screen": "Main"])
         
-        // Создаем контейнер для popover
+        let addTrackerVC = AddTrackerViewController()
         let popover = UIPopoverPresentationController(presentedViewController: addTrackerVC, presenting: self)
         popover.sourceView = self.view
         popover.sourceRect = CGRect(x: view.bounds.midX, y: view.bounds.midY, width: 0, height: 0)
         popover.permittedArrowDirections = []
         
-        // Настройки popover
         addTrackerVC.modalPresentationStyle = .popover
         addTrackerVC.delegate = self
         
-        // Отображаем popover
         present(addTrackerVC, animated: true, completion: nil)
     }
     
@@ -555,6 +561,10 @@ extension TrackersViewController: UICollectionViewDelegate {
     }
     
     private func editTracker(for indexPath: IndexPath) {
+        let params = ["screen": "Main", "item": "edit"]
+        analyticsService.report(event: "click", params: params)
+        analyticsService.report(event: "close", params: ["screen": "Main"])
+        
         let tracker = filteredTrackers[indexPath.section].trackers[indexPath.item]
         
         if tracker.schedule.contains("Everyday") {
@@ -595,6 +605,9 @@ extension TrackersViewController: UICollectionViewDelegate {
     }
     
     private func deleteTracker(for indexPath: IndexPath) {
+        let params = ["screen": "Main", "item": "delete"]
+        analyticsService.report(event: "click", params: params)
+        
         showDeleteConfirmation(indexPath: indexPath)
     }
     
@@ -689,6 +702,9 @@ extension TrackersViewController: UICollectionViewDelegateFlowLayout {
 
 extension TrackersViewController: TrackerCollectionViewCellDelegate {
     func didTapCompleteButton(in cell: TrackerCollectionViewCell) {
+        let params = ["screen": "Main", "item": "track"]
+        analyticsService.report(event: "click", params: params)
+        
         guard let indexPath = collectionView.indexPath(for: cell) else { return }
         let tracker = filteredTrackers[indexPath.section].trackers[indexPath.item]
         let trackerRecord = TrackerRecord(id: tracker.id, date: dateWithoutTime(from: currentDate))
@@ -714,13 +730,14 @@ extension TrackersViewController: TrackerCollectionViewCellDelegate {
                 print("Error deleting tracker")
             }
         }
-        datePickerValueChanged(datePicker       )
+        datePickerValueChanged(datePicker)
     }
 }
 
 extension TrackersViewController: AddTrackerViewControllerDelegate {
     func getTrackerDetail(title: String, category: String, emoji: String, color: UIColor, schedule: [String]?) {
-        //Закрываем все экраны одновременно после создания трекера
+        analyticsService.report(event: "open", params: ["screen": "Main"])
+
         dismiss(animated: true)
         
         // Создаем новый трекер с параметрами по умолчанию
@@ -746,6 +763,8 @@ extension TrackersViewController: AddTrackerViewControllerDelegate {
 
 extension TrackersViewController: EditHabitViewControllerDelegate {
     func updateHabit(id: UInt, title: String, category: String, emoji: String, color: UIColor, schedule: [String], isPinned: Bool) {
+        analyticsService.report(event: "open", params: ["screen": "Main"])
+        
         dismiss(animated: true)
         
         let tracker = Tracker(
@@ -771,6 +790,8 @@ extension TrackersViewController: EditHabitViewControllerDelegate {
 
 extension TrackersViewController: EditEventViewControllerDelegate {
     func updateEvent(id: UInt, title: String, category: String, emoji: String, color: UIColor, schedule: [String], isPinned: Bool) {
+        analyticsService.report(event: "open", params: ["screen": "Main"])
+        
         dismiss(animated: true)
         
         let tracker = Tracker(
@@ -795,6 +816,8 @@ extension TrackersViewController: EditEventViewControllerDelegate {
 
 extension TrackersViewController: FiltersViewControllerDelegate {
     func getFilter(_ filter: String) {
+        analyticsService.report(event: "open", params: ["screen": "Main"])
+        
         errorImageView.image = UIImage(named: "notFound")
         errorLabel.text = "Ничего не найдено"
         

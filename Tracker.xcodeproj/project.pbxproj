@@ -23,6 +23,7 @@
 		FCCCC4DA2CA5D38D007598EB /* TrackerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCCCC4D92CA5D38D007598EB /* TrackerTests.swift */; };
 		FCCCC4E42CA5D40F007598EB /* InlineSnapshotTesting in Frameworks */ = {isa = PBXBuildFile; productRef = FCCCC4E32CA5D40F007598EB /* InlineSnapshotTesting */; };
 		FCCCC4E62CA5D40F007598EB /* SnapshotTesting in Frameworks */ = {isa = PBXBuildFile; productRef = FCCCC4E52CA5D40F007598EB /* SnapshotTesting */; };
+		FCCCC4E92CA5FF91007598EB /* AnalyticsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCCCC4E82CA5FF91007598EB /* AnalyticsService.swift */; };
 		FCD261682C6B73010073D483 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD261672C6B73010073D483 /* AppDelegate.swift */; };
 		FCD2616A2C6B73010073D483 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD261692C6B73010073D483 /* SceneDelegate.swift */; };
 		FCD2616C2C6B73010073D483 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD2616B2C6B73010073D483 /* TabBarController.swift */; };
@@ -87,6 +88,7 @@
 		FCCCC4D12CA4B117007598EB /* FiltersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FiltersViewController.swift; sourceTree = "<group>"; };
 		FCCCC4D72CA5D38D007598EB /* TrackerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TrackerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		FCCCC4D92CA5D38D007598EB /* TrackerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerTests.swift; sourceTree = "<group>"; };
+		FCCCC4E82CA5FF91007598EB /* AnalyticsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsService.swift; sourceTree = "<group>"; };
 		FCD261642C6B73010073D483 /* Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FCD261672C6B73010073D483 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FCD261692C6B73010073D483 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -217,6 +219,14 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		FCCCC4E72CA5FF84007598EB /* Analytics */ = {
+			isa = PBXGroup;
+			children = (
+				FCCCC4E82CA5FF91007598EB /* AnalyticsService.swift */,
+			);
+			path = Analytics;
+			sourceTree = "<group>";
+		};
 		FCD2615B2C6B73010073D483 = {
 			isa = PBXGroup;
 			children = (
@@ -244,6 +254,7 @@
 				FCD261692C6B73010073D483 /* SceneDelegate.swift */,
 				FCD2616B2C6B73010073D483 /* TabBarController.swift */,
 				FC0147F92C9DC0AF001A6B72 /* Colors.swift */,
+				FCCCC4E72CA5FF84007598EB /* Analytics */,
 				FCCCC48F2CA1B1F4007598EB /* Resources */,
 				FC0147E82C9C62B5001A6B72 /* Onboarding */,
 				FCD261C52C71E2E30073D483 /* Models */,
@@ -551,6 +562,7 @@
 				FCDC40292C932D6D00BC490A /* TrackersTransformer.swift in Sources */,
 				FC0147F82C9C8B68001A6B72 /* CategoryTableViewCell.swift in Sources */,
 				FCD7BFBA2C78B502004559A5 /* TrackerCollectionViewCell.swift in Sources */,
+				FCCCC4E92CA5FF91007598EB /* AnalyticsService.swift in Sources */,
 				FCDC402B2C94556500BC490A /* DBStore.swift in Sources */,
 				FCD7BFBD2C78B999004559A5 /* AddTrackerViewController.swift in Sources */,
 				FCDC40162C90A15000BC490A /* TrackerStore.swift in Sources */,
