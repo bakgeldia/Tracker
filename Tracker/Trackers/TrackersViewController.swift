@@ -701,6 +701,15 @@ extension TrackersViewController: TrackerCollectionViewCellDelegate {
                 print("Ошибка добавленмя трекера в отмеченные")
             }
         }
+        
+        if tracker.schedule.contains("Everyday") {
+            do {
+                try trackerStore.deleteTracker(tracker)
+            } catch {
+                print("Error deleting tracker")
+            }
+        }
+        datePickerValueChanged(datePicker       )
     }
 }
 
