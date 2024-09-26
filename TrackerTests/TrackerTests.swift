@@ -11,12 +11,20 @@ import SnapshotTesting
 
 final class TrackerTests: XCTestCase {
 
-    func testViewController() {
+    func testViewControllerLightMode() {
         let vc = TrackersViewController()
-        vc.view.backgroundColor = .blue
+        //vc.view.backgroundColor = .blue
         
-        //assertSnapshot(of: vc, as: .image, record: true)
-        assertSnapshot(of: vc, as: .image)
+        // Скриншот-тест для светлой темы
+        assertSnapshot(of: vc, as: .image(traits: .init(userInterfaceStyle: .light)))
+    }
+
+    func testViewControllerDarkMode() {
+        let vc = TrackersViewController()
+        //vc.view.backgroundColor = .blue
+        
+        // Скриншот-тест для тёмной темы
+        assertSnapshot(of: vc, as: .image(traits: .init(userInterfaceStyle: .dark)))
     }
 
 }
