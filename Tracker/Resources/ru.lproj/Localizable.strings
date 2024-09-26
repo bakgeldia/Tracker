@@ -26,6 +26,9 @@
 "habitButton.title" = "Привычка";
 "eventButton.title" = "Нерегулярное событие";
 
+//Filters Button
+"filtersButton.title" = "Фильтры";
+
 //New Habit Creation
 "newHabitVC.title" = "Новая привычка";
 "textField.placeholder" = "Введите название трекера";

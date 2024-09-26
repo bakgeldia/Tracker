@@ -300,7 +300,8 @@ final class TrackersViewController: UIViewController, UISearchBarDelegate {
     
     private func setupFiltersButton() {
         filtersButton.isHidden = false
-        filtersButton.setTitle("Фильтры", for: .normal)
+        let filtersButtonTitle = NSLocalizedString("filtersButton.title", comment: "Filters Button Title")
+        filtersButton.setTitle(filtersButtonTitle, for: .normal)
         filtersButton.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .regular)
         filtersButton.setTitleColor(.white, for: .normal)
         filtersButton.layer.cornerRadius = 16

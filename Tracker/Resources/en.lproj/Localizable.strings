@@ -26,6 +26,9 @@
 "habitButton.title" = "Habit";
 "eventButton.title" = "Non-Regular event";
 
+//Filters Button
+"filtersButton.title" = "Filters";
+
 //New Habit
 "newHabitVC.title" = "New habit";
 "textField.placeholder" = "Enter the name of the tracker";
