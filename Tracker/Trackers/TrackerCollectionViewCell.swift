@@ -19,6 +19,7 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
     let trackerName = UILabel()
     let numOfDays = UILabel()
     let completeTrackerButton = UIButton()
+    let pinImageView = UIImageView()
     
     var checkedButton = false
     var trackerDate: Date?
@@ -68,6 +69,12 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         trackerName.translatesAutoresizingMaskIntoConstraints = false
         //trackerName.numberOfLines = 0
         
+        //Pin Image View
+        pinImageView.image = UIImage(named: "pin")
+        pinImageView.isHidden = true
+        pinImageView.translatesAutoresizingMaskIntoConstraints = false
+        emojiAndNameView.addSubview(pinImageView)
+        
         //Num of days and button
         trackerView.addSubview(daysAndButtonView)
         daysAndButtonView.translatesAutoresizingMaskIntoConstraints = false
@@ -80,7 +87,7 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         
         //Button
         completeTrackerButton.setImage(UIImage(systemName: "plus"), for: .normal)
-        completeTrackerButton.imageView?.tintColor = .white
+        completeTrackerButton.imageView?.tintColor = Colors.plusButtonColor
         completeTrackerButton.layer.cornerRadius = 22
         completeTrackerButton.addTarget(self, action: #selector(self.didTapCompleteButton), for: .touchUpInside)
         daysAndButtonView.addSubview(completeTrackerButton)
@@ -105,6 +112,11 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
             
             emoji.centerXAnchor.constraint(equalTo: emojiBackgroundView.centerXAnchor),
             emoji.centerYAnchor.constraint(equalTo: emojiBackgroundView.centerYAnchor),
+            
+            pinImageView.heightAnchor.constraint(equalToConstant: 24),
+            pinImageView.widthAnchor.constraint(equalToConstant: 24),
+            pinImageView.topAnchor.constraint(equalTo: emojiAndNameView.topAnchor, constant: 12),
+            pinImageView.trailingAnchor.constraint(equalTo: emojiAndNameView.trailingAnchor, constant: -4),
             
             trackerName.topAnchor.constraint(equalTo: emoji.bottomAnchor, constant: 8),
             trackerName.leadingAnchor.constraint(equalTo: emojiAndNameView.leadingAnchor, constant: 12),

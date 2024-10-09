@@ -34,14 +34,17 @@ class TabBarController: UITabBarController {
         let trackersViewController = TrackersViewController()
         let statisticsViewController = StatisticsViewController()
         
+        let tabBarTrackers = NSLocalizedString("tabBar.trackers", comment: "Tab Bar Trackers")
+        let tabBarStatistics = NSLocalizedString("tabBar.statistics", comment: "Tab Bar Statistics")
+        
         trackersViewController.tabBarItem = UITabBarItem(
-            title: "Трекеры",
+            title: tabBarTrackers,
             image: UIImage(named: "tab_trackers"),
             selectedImage: nil
         )
         
         statisticsViewController.tabBarItem = UITabBarItem(
-            title: "Статистика",
+            title: tabBarStatistics,
             image: UIImage(named: "tab_statistics"),
             selectedImage: nil
         )
@@ -54,9 +57,9 @@ class TabBarController: UITabBarController {
     private func customizeTabBarAppearance() {
         let appearance = UITabBarAppearance()
         appearance.configureWithOpaqueBackground()
-        appearance.backgroundColor = .white
+        appearance.backgroundColor = .systemBackground
         
-        appearance.shadowColor = .lightGray
+        appearance.shadowColor = Colors.tabBarShadowColor
         
         tabBar.standardAppearance = appearance
         

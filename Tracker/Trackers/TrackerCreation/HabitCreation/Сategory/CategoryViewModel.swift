@@ -34,7 +34,7 @@ final class CategoryViewModel {
     
     func fetchCategories() {
         do {
-            categories = try trackerCategoryStore.fetchTrackerCategories()
+            categories = try trackerCategoryStore.fetchCategories()
         } catch {
             print("Ошибка при получении категории")
         }

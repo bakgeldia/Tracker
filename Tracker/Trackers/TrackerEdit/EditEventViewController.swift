@@ -1,19 +1,20 @@
 //
-//  NonReguarEventViewController.swift
+//  EditEventViewController.swift
 //  Tracker
 //
-//  Created by Bakgeldi Alkhabay on 27.08.2024.
+//  Created by Bakgeldi Alkhabay on 25.09.2024.
 //
 
 import UIKit
 
-protocol NonRegularEventViewControllerDelegate: AnyObject {
-    func createNewEvent(title: String, category: String, emoji: String, color: UIColor)
+protocol EditEventViewControllerDelegate: AnyObject {
+    func updateEvent(id: UInt, title: String, category: String, emoji: String, color: UIColor, schedule: [String], isPinned: Bool)
 }
 
-final class NonRegularEventViewController: UIViewController {
+final class EditEventViewController: UIViewController {
+    weak var delegate: EditEventViewControllerDelegate?
     
-    weak var delegate: NonRegularEventViewControllerDelegate?
+    var tracker: Tracker?
     
     let emojis = ["😀", "😂", "🥰", "😎", "🤔", "🙌", "🎉", "💪", "🍕", "🏆", "🚀", "❤️", "🔥", "🌟", "🎶", "🌈", "🐶", "⚡️"]
     let colors: [UIColor] = [
@@ -40,6 +41,7 @@ final class NonRegularEventViewController: UIViewController {
     var categories = [TrackerCategory]()
     var selectedCategory: String?
     
+    private let counterLabel = UILabel()
     private let titleLabel = UILabel()
     private let textField = UITextField()
     private let tableView = UITableView()
@@ -58,9 +60,11 @@ final class NonRegularEventViewController: UIViewController {
     
     private let buttonStackView = UIStackView()
     private let cancelButton = UIButton()
-    private let createButton = UIButton()
+    private let saveButton = UIButton()
     
     private var selectedCategoryPath: IndexPath?
+    
+    private let trackerRecordStore = TrackerRecordStore()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -71,6 +75,16 @@ final class NonRegularEventViewController: UIViewController {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         tapGesture.cancelsTouchesInView = false
         view.addGestureRecognizer(tapGesture)
+        
+        setTrackerValues()
+    }
+    
+    private func setTrackerValues() {
+        selectedEmoji = tracker?.emoji
+        selectedColor = tracker?.color
+        
+        guard let category = tracker?.trackerCategory else { return }
+        selectedCategory = category
     }
     
     @objc private func dismissKeyboard() {
@@ -84,16 +98,31 @@ final class NonRegularEventViewController: UIViewController {
         
         // Title Label
         let titleText = NSLocalizedString("nonRegularEventVC.title", comment: "Non-Regular VC Title")
-        titleLabel.text = titleText
+        titleLabel.text = "Редактирование нерегулярного события"
         titleLabel.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         titleLabel.textColor = Colors.black
         titleLabel.textAlignment = .center
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(titleLabel)
         
+        //Counter Label
+        guard let trackerID = tracker?.id else { return }
+        let count = trackerRecordStore.countTrackerRecords(byId: Int(trackerID))
+        let daysString = String.localizedStringWithFormat(
+            NSLocalizedString("numberOfDays", comment: "Number of completed days"),
+            count
+        )
+        counterLabel.text = daysString
+        counterLabel.textAlignment = .center
+        counterLabel.font = UIFont.systemFont(ofSize: 32, weight: .bold)
+        counterLabel.textColor = Colors.black
+        counterLabel.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(counterLabel)
+        
         // TextField
         let textFieldPlaceholder = NSLocalizedString("textField.placeholder", comment: "Text Field Placeholder")
         textField.placeholder = textFieldPlaceholder
+        textField.text = tracker?.name
         textField.font = UIFont.systemFont(ofSize: 17, weight: .regular)
         textField.backgroundColor = Colors.lightGray
         textField.layer.cornerRadius = 16
@@ -138,14 +167,15 @@ final class NonRegularEventViewController: UIViewController {
         
         // Create Button
         let createButtonTitle = NSLocalizedString("createButton.title", comment: "Create Button Title")
-        createButton.setTitle(createButtonTitle, for: .normal)
-        createButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-        createButton.setTitleColor(.white, for: .normal)
-        createButton.backgroundColor = Colors.black
-        createButton.layer.cornerRadius = 16
-        createButton.addTarget(self, action: #selector(createNewEvent), for: .touchUpInside)
-        createButton.translatesAutoresizingMaskIntoConstraints = false
-        buttonStackView.addArrangedSubview(createButton)
+        saveButton.setTitle("Сохранить", for: .normal)
+        saveButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+        saveButton.setTitleColor(.white, for: .normal)
+        saveButton.backgroundColor = Colors.black
+        saveButton.isEnabled = true
+        saveButton.layer.cornerRadius = 16
+        saveButton.addTarget(self, action: #selector(saveButtonPressed), for: .touchUpInside)
+        saveButton.translatesAutoresizingMaskIntoConstraints = false
+        buttonStackView.addArrangedSubview(saveButton)
         
         // Layout constraints
         NSLayoutConstraint.activate([
@@ -153,8 +183,13 @@ final class NonRegularEventViewController: UIViewController {
             titleLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 20),
             titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             
+            //Counter Label
+            counterLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 38),
+            counterLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            counterLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            
             // TextField
-            textField.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 38),
+            textField.topAnchor.constraint(equalTo: counterLabel.bottomAnchor, constant: 38),
             textField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             textField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             textField.heightAnchor.constraint(equalToConstant: 75),
@@ -163,7 +198,7 @@ final class NonRegularEventViewController: UIViewController {
             tableView.topAnchor.constraint(equalTo: textField.bottomAnchor, constant: 24),
             tableView.leadingAnchor.constraint(equalTo: textField.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: textField.trailingAnchor),
-            tableView.heightAnchor.constraint(equalToConstant: 75), // Only one row, so height is smaller
+            tableView.heightAnchor.constraint(equalToConstant: 75),
             
             // Button Stack View
             buttonStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
@@ -172,8 +207,8 @@ final class NonRegularEventViewController: UIViewController {
             buttonStackView.heightAnchor.constraint(equalToConstant: 60),
             
             // Button Heights
-            cancelButton.heightAnchor.constraint(equalToConstant: 60),
-            createButton.heightAnchor.constraint(equalToConstant: 60)
+            saveButton.heightAnchor.constraint(equalToConstant: 60),
+            saveButton.heightAnchor.constraint(equalToConstant: 60)
         ])
     }
     
@@ -212,7 +247,7 @@ final class NonRegularEventViewController: UIViewController {
     }
     
     @objc
-    private func createNewEvent() {
+    private func saveButtonPressed() {
         guard let eventTitle = textField.text, !eventTitle.isEmpty else {
             print("Название события не может быть пустым")
             return
@@ -234,9 +269,20 @@ final class NonRegularEventViewController: UIViewController {
             return
         }
         
-        createButton.isEnabled = false
+        guard let id = tracker?.id else {
+            return
+        }
         
-        delegate?.createNewEvent(title: eventTitle, category: category, emoji: emoji, color: color)
+        guard let isPinned = tracker?.isPinned else {
+            return
+        }
+        
+        guard let schedule = tracker?.schedule else {
+            return
+        }
+        
+        saveButton.isEnabled = false
+        delegate?.updateEvent(id: id, title: eventTitle, category: category, emoji: emoji, color: color, schedule: schedule, isPinned: isPinned)
     }
     
     private func showCategoriesPopover() {
@@ -248,13 +294,14 @@ final class NonRegularEventViewController: UIViewController {
         
         categoryVC.modalPresentationStyle = .popover
         categoryVC.selectedIndexPath = selectedCategoryPath
+        categoryVC.selectedCategory = selectedCategory
         categoryVC.delegate = self
         
         self.present(categoryVC, animated: true, completion: nil)
     }
 }
 
-extension NonRegularEventViewController: UITableViewDataSource {
+extension EditEventViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 1
     }
@@ -279,14 +326,12 @@ extension NonRegularEventViewController: UITableViewDataSource {
         
         // Description Label
         let descriptionLabel = UILabel()
-        descriptionLabel.text = "" // Initially empty
+        descriptionLabel.text = selectedCategory
         descriptionLabel.font = UIFont.systemFont(ofSize: 17, weight: .regular)
         descriptionLabel.textColor = Colors.descriptionLabelColor
         descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
-        descriptionLabel.isHidden = true // Initially hidden
         cell.contentView.addSubview(descriptionLabel)
         
-        // Layout constraints
         NSLayoutConstraint.activate([
             // Category Label
             categoryLabel.topAnchor.constraint(equalTo: cell.contentView.topAnchor, constant: 15),
@@ -306,7 +351,7 @@ extension NonRegularEventViewController: UITableViewDataSource {
     }
 }
 
-extension NonRegularEventViewController: UITableViewDelegate {
+extension EditEventViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 75
     }
@@ -328,7 +373,7 @@ extension NonRegularEventViewController: UITableViewDelegate {
     }
 }
 
-extension NonRegularEventViewController: CategoryViewControllerDelegate {
+extension EditEventViewController: CategoryViewControllerDelegate {
     func didSelectCategory(_ category: TrackerCategory, _ selectedIndexPath: IndexPath?) {
         // Сохраняем выбранную категорию
         selectedCategoryPath = selectedIndexPath
@@ -336,12 +381,11 @@ extension NonRegularEventViewController: CategoryViewControllerDelegate {
         if let descriptionLabel = categoryCell?.contentView.subviews.last as? UILabel {
             descriptionLabel.text = category.title
             selectedCategory = category.title
-            descriptionLabel.isHidden = false // Делаем лейбл видимым
         }
     }
 }
 
-extension NonRegularEventViewController: UICollectionViewDataSource {
+extension EditEventViewController: UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 2
     }
@@ -414,7 +458,7 @@ extension NonRegularEventViewController: UICollectionViewDataSource {
     }
 }
 
-extension NonRegularEventViewController: UICollectionViewDelegate {
+extension EditEventViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if indexPath.section == 0 {
             selectedEmoji = emojis[indexPath.item]
@@ -426,7 +470,7 @@ extension NonRegularEventViewController: UICollectionViewDelegate {
     }
 }
 
-extension NonRegularEventViewController: UICollectionViewDelegateFlowLayout {
+extension EditEventViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(
         _ collectionView: UICollectionView,
         layout collectionViewLayout: UICollectionViewLayout,

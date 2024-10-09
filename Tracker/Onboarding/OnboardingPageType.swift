@@ -23,9 +23,9 @@ enum OnboardingPageType {
     var labelText: String {
         switch self {
         case .first:
-            return "Отслеживайте только то, что хотите"
+            return NSLocalizedString("onboardingText1", comment: "Onboarding first screen text")
         case .second:
-            return "Даже если это \nне литры воды и йога"
+            return NSLocalizedString("onboardingText2", comment: "Onboarding second screen text")
         }
     }
 }

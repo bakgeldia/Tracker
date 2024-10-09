@@ -33,6 +33,7 @@ protocol TrackerCategoryDelegate: AnyObject {
 
 final class TrackerCategoryStore: NSObject {
     private let trackerStore = TrackerStore()
+    private let trackerRecordStore = TrackerRecordStore()
     private let trackersArrayMarshalling = TrackersArrayMarshalling()
     private let dbStore = DBStore.shared
     
@@ -123,12 +124,86 @@ final class TrackerCategoryStore: NSObject {
         }
         
         do {
-            let trackers = try trackerStore.fetchTrackers()
+            let trackers = try trackerStore.fetchTrackersByCategory(name)
             return TrackerCategory(title: name, trackers: trackers)
         } catch {
             print("Ошибка при получении трекеров: \(error)")
             throw error
         }
+    }
+    
+    func fetchCategories() throws -> [TrackerCategory] {
+        let fetchRequest = TrackerCategoryCoreData.fetchRequest()
+        let trackerCategoriesFromCoreData = try context.fetch(fetchRequest)
+        
+        // Фильтрация: исключаем категорию с названием "Закрепленные"
+        return try trackerCategoriesFromCoreData
+            .filter { $0.title != "Закрепленные" }
+            .map { try self.getCategory(from: $0) }
+    }
+
+    func fetchCategoriesWithCompletedTrackers(for date: Date) throws -> [TrackerCategory] {
+        let completedTrackers = try trackerRecordStore.filterCompletedTrackers(for: date)
+        
+        let fetchRequest = TrackerCategoryCoreData.fetchRequest()
+        let categoriesCoreData = try context.fetch(fetchRequest)
+        
+        let filteredCategories = try categoriesCoreData.filter { category in
+            return completedTrackers.contains { tracker in
+                tracker.trackerCategory == category.title
+            }
+        }.map { category in
+            return try getCompletedTrackersCategory(from: category, with: completedTrackers)
+        }
+        
+        return filteredCategories
+    }
+    
+    func getCompletedTrackersCategory(from categoryCoreData: TrackerCategoryCoreData, with completedTrackers: [Tracker]) throws -> TrackerCategory {
+        guard let title = categoryCoreData.title else {
+            throw TrackerCategoryStoreError.decodingErrorInvalidEmojies
+        }
+        
+        let trackersInCategory = completedTrackers.filter { tracker in
+            tracker.trackerCategory == title
+        }
+
+        return TrackerCategory(
+            title: title,
+            trackers: trackersInCategory
+        )
+    }
+    
+    func fetchCategoriesWithUnmarkedTrackers(for date: Date) throws -> [TrackerCategory] {
+        let unmarkedTrackers = try trackerRecordStore.filterUnmarkedTrackers(for: date)
+        
+        let fetchRequest = TrackerCategoryCoreData.fetchRequest()
+        let categoriesCoreData = try context.fetch(fetchRequest)
+        
+        let filteredCategories = try categoriesCoreData.filter { category in
+            return unmarkedTrackers.contains { tracker in
+                tracker.trackerCategory == category.title
+            }
+        }.map { category in
+            return try getUnmarkedTrackersCategory(from: category, with: unmarkedTrackers)
+        }
+        
+        return filteredCategories
+    }
+    
+    func getUnmarkedTrackersCategory(from categoryCoreData: TrackerCategoryCoreData, with unmarkedTrackers: [Tracker]) throws -> TrackerCategory {
+        guard let title = categoryCoreData.title else {
+            throw TrackerCategoryStoreError.decodingErrorInvalidEmojies
+        }
+        
+        let trackersInCategory = unmarkedTrackers.filter { tracker in
+            tracker.trackerCategory == title
+        }
+
+        return TrackerCategory(
+            title: title,
+            trackers: trackersInCategory
+        )   
     }
     
 }

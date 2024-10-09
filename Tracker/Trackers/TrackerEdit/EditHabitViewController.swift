@@ -1,19 +1,21 @@
 //
-//  NonReguarEventViewController.swift
+//  editHabitViewController.swift
 //  Tracker
 //
-//  Created by Bakgeldi Alkhabay on 27.08.2024.
+//  Created by Bakgeldi Alkhabay on 25.09.2024.
 //
 
 import UIKit
 
-protocol NonRegularEventViewControllerDelegate: AnyObject {
-    func createNewEvent(title: String, category: String, emoji: String, color: UIColor)
+protocol EditHabitViewControllerDelegate: AnyObject {
+    func updateHabit(id: UInt, title: String, category: String, emoji: String, color: UIColor, schedule: [String], isPinned: Bool)
 }
 
-final class NonRegularEventViewController: UIViewController {
+final class EditHabitViewController: UIViewController {
     
-    weak var delegate: NonRegularEventViewControllerDelegate?
+    weak var delegate: EditHabitViewControllerDelegate?
+    
+    var tracker: Tracker?
     
     let emojis = ["😀", "😂", "🥰", "😎", "🤔", "🙌", "🎉", "💪", "🍕", "🏆", "🚀", "❤️", "🔥", "🌟", "🎶", "🌈", "🐶", "⚡️"]
     let colors: [UIColor] = [
@@ -37,9 +39,29 @@ final class NonRegularEventViewController: UIViewController {
         UIColor(red: 220/255, green: 20/255, blue: 60/255, alpha: 1.0)    // Crimson
     ]
     
-    var categories = [TrackerCategory]()
-    var selectedCategory: String?
+    let dayAbbreviations: [String: String] = [
+        "Понедельник": "Пн",
+        "Вторник": "Вт",
+        "Среда": "Ср",
+        "Четверг": "Чт",
+        "Пятница": "Пт",
+        "Суббота": "Сб",
+        "Воскресенье": "Вс",
+        "Monday": "Mon",
+        "Tuesday": "Tue",
+        "Wednesday": "Wed",
+        "Thursday": "Thu",
+        "Friday": "Fri",
+        "Saturday": "Sat",
+        "Sunday": "Sun"
+    ]
     
+    
+    var selectedCategory: String?
+    var selectedCategoryPath: IndexPath?
+    var selectedDays: [String]?
+    
+    private let counterLabel = UILabel()
     private let titleLabel = UILabel()
     private let textField = UITextField()
     private let tableView = UITableView()
@@ -58,9 +80,11 @@ final class NonRegularEventViewController: UIViewController {
     
     private let buttonStackView = UIStackView()
     private let cancelButton = UIButton()
-    private let createButton = UIButton()
+    private let saveButton = UIButton()
     
-    private var selectedCategoryPath: IndexPath?
+    private var prevDays: [String] = []
+    
+    private let trackerRecordStore = TrackerRecordStore()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -71,6 +95,19 @@ final class NonRegularEventViewController: UIViewController {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         tapGesture.cancelsTouchesInView = false
         view.addGestureRecognizer(tapGesture)
+        
+        setTrackerValues()
+    }
+    
+    private func setTrackerValues() {
+        selectedEmoji = tracker?.emoji
+        selectedColor = tracker?.color
+        
+        guard let category = tracker?.trackerCategory else { return }
+        guard let days = tracker?.schedule else { return }
+        
+        selectedCategory = category
+        selectedDays = days
     }
     
     @objc private func dismissKeyboard() {
@@ -83,19 +120,34 @@ final class NonRegularEventViewController: UIViewController {
         view.clipsToBounds = true
         
         // Title Label
-        let titleText = NSLocalizedString("nonRegularEventVC.title", comment: "Non-Regular VC Title")
-        titleLabel.text = titleText
+        let titleText = NSLocalizedString("newHabitVC.title", comment: "New Habit VC Title")
+        titleLabel.text = "Редактирование привычки"
         titleLabel.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         titleLabel.textColor = Colors.black
         titleLabel.textAlignment = .center
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(titleLabel)
         
+        //Counter Label
+        guard let trackerID = tracker?.id else { return }
+        let count = trackerRecordStore.countTrackerRecords(byId: Int(trackerID))
+        let daysString = String.localizedStringWithFormat(
+            NSLocalizedString("numberOfDays", comment: "Number of completed days"),
+            count
+        )
+        counterLabel.text = daysString
+        counterLabel.textAlignment = .center
+        counterLabel.font = UIFont.systemFont(ofSize: 32, weight: .bold)
+        counterLabel.textColor = Colors.black
+        counterLabel.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(counterLabel)
+        
         // TextField
         let textFieldPlaceholder = NSLocalizedString("textField.placeholder", comment: "Text Field Placeholder")
         textField.placeholder = textFieldPlaceholder
-        textField.font = UIFont.systemFont(ofSize: 17, weight: .regular)
+        textField.text = tracker?.name
         textField.backgroundColor = Colors.lightGray
+        textField.font = UIFont.systemFont(ofSize: 17, weight: .regular)
         textField.layer.cornerRadius = 16
         textField.textAlignment = .left
         
@@ -132,20 +184,20 @@ final class NonRegularEventViewController: UIViewController {
         cancelButton.layer.cornerRadius = 16
         cancelButton.layer.borderColor = Colors.redColor.cgColor
         cancelButton.layer.borderWidth = 1
-        cancelButton.addTarget(self, action: #selector(cancelCreatingNewEvent), for: .touchUpInside)
+        cancelButton.addTarget(self, action: #selector(cancelCreatingNewHabit), for: .touchUpInside)
         cancelButton.translatesAutoresizingMaskIntoConstraints = false
         buttonStackView.addArrangedSubview(cancelButton)
         
         // Create Button
-        let createButtonTitle = NSLocalizedString("createButton.title", comment: "Create Button Title")
-        createButton.setTitle(createButtonTitle, for: .normal)
-        createButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-        createButton.setTitleColor(.white, for: .normal)
-        createButton.backgroundColor = Colors.black
-        createButton.layer.cornerRadius = 16
-        createButton.addTarget(self, action: #selector(createNewEvent), for: .touchUpInside)
-        createButton.translatesAutoresizingMaskIntoConstraints = false
-        buttonStackView.addArrangedSubview(createButton)
+        let saveButtonTitle = NSLocalizedString("saveButton.title", comment: "Save Button Title")
+        saveButton.setTitle("Сохранить", for: .normal)
+        saveButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+        saveButton.setTitleColor(.white, for: .normal)
+        saveButton.backgroundColor = Colors.black
+        saveButton.layer.cornerRadius = 16
+        saveButton.addTarget(self, action: #selector(updateButtonPressed), for: .touchUpInside)
+        saveButton.translatesAutoresizingMaskIntoConstraints = false
+        buttonStackView.addArrangedSubview(saveButton)
         
         // Layout constraints
         NSLayoutConstraint.activate([
@@ -153,8 +205,13 @@ final class NonRegularEventViewController: UIViewController {
             titleLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 20),
             titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             
+            //Counter Label
+            counterLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 38),
+            counterLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            counterLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            
             // TextField
-            textField.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 38),
+            textField.topAnchor.constraint(equalTo: counterLabel.bottomAnchor, constant: 40),
             textField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             textField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             textField.heightAnchor.constraint(equalToConstant: 75),
@@ -163,7 +220,7 @@ final class NonRegularEventViewController: UIViewController {
             tableView.topAnchor.constraint(equalTo: textField.bottomAnchor, constant: 24),
             tableView.leadingAnchor.constraint(equalTo: textField.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: textField.trailingAnchor),
-            tableView.heightAnchor.constraint(equalToConstant: 75), // Only one row, so height is smaller
+            tableView.heightAnchor.constraint(equalToConstant: 150),
             
             // Button Stack View
             buttonStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
@@ -172,8 +229,8 @@ final class NonRegularEventViewController: UIViewController {
             buttonStackView.heightAnchor.constraint(equalToConstant: 60),
             
             // Button Heights
-            cancelButton.heightAnchor.constraint(equalToConstant: 60),
-            createButton.heightAnchor.constraint(equalToConstant: 60)
+            saveButton.heightAnchor.constraint(equalToConstant: 60),
+            saveButton.heightAnchor.constraint(equalToConstant: 60)
         ])
     }
     
@@ -207,20 +264,26 @@ final class NonRegularEventViewController: UIViewController {
     }
     
     @objc
-    private func cancelCreatingNewEvent() {
+    private func cancelCreatingNewHabit() {
         dismiss(animated: true)
     }
     
     @objc
-    private func createNewEvent() {
-        guard let eventTitle = textField.text, !eventTitle.isEmpty else {
-            print("Название события не может быть пустым")
+    private func updateButtonPressed() {
+        guard let habitTitle = textField.text, !habitTitle.isEmpty else {
+            print("Название привычки не может быть пустым")
             return
         }
         
         // Проверяем, выбрана ли категория
         guard let category = selectedCategory else {
             print("Категория не выбрана")
+            return
+        }
+        
+        // Проверяем, установлено ли расписание
+        guard let schedule = selectedDays else {
+            print("Расписание пусто")
             return
         }
         
@@ -234,9 +297,31 @@ final class NonRegularEventViewController: UIViewController {
             return
         }
         
-        createButton.isEnabled = false
+        guard let id = tracker?.id else {
+            return
+        }
         
-        delegate?.createNewEvent(title: eventTitle, category: category, emoji: emoji, color: color)
+        guard let isPinned = tracker?.isPinned else {
+            return
+        }
+        
+        saveButton.isEnabled = false
+        delegate?.updateHabit(id: id, title: habitTitle, category: category, emoji: emoji, color: color, schedule: schedule, isPinned: isPinned)
+    }
+    
+    private func showSchedulePopover() {
+        let scheduleVC = ScheduleViewController()
+        let popover = UIPopoverPresentationController(presentedViewController: scheduleVC, presenting: self)
+        popover.sourceView = self.view
+        popover.sourceRect = CGRect(x: view.bounds.midX, y: view.bounds.midY, width: 0, height: 0)
+        popover.permittedArrowDirections = []
+        scheduleVC.modalPresentationStyle = .popover
+        
+        guard let selectedDays = selectedDays else { return }
+        scheduleVC.selectedDays = selectedDays
+        scheduleVC.delegate = self
+        
+        self.present(scheduleVC, animated: true, completion: nil)
     }
     
     private func showCategoriesPopover() {
@@ -248,74 +333,100 @@ final class NonRegularEventViewController: UIViewController {
         
         categoryVC.modalPresentationStyle = .popover
         categoryVC.selectedIndexPath = selectedCategoryPath
+        categoryVC.selectedCategory = selectedCategory
         categoryVC.delegate = self
         
         self.present(categoryVC, animated: true, completion: nil)
     }
 }
 
-extension NonRegularEventViewController: UITableViewDataSource {
+extension EditHabitViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        return 2
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
-        
-        cell.accessoryType = .disclosureIndicator
-        
-        // Удаляем все существующие субвью
         cell.contentView.subviews.forEach { $0.removeFromSuperview() }
         
-        // Category Label
-        let categoryLabel = UILabel()
-        let categoryLabelText = NSLocalizedString("categoryLabel.text", comment: "Category Label Text")
-        
-        categoryLabel.text = categoryLabelText
-        categoryLabel.font = UIFont.systemFont(ofSize: 17, weight: .regular)
-        categoryLabel.textColor = Colors.black
-        categoryLabel.translatesAutoresizingMaskIntoConstraints = false
-        cell.contentView.addSubview(categoryLabel)
-        
-        // Description Label
-        let descriptionLabel = UILabel()
-        descriptionLabel.text = "" // Initially empty
-        descriptionLabel.font = UIFont.systemFont(ofSize: 17, weight: .regular)
-        descriptionLabel.textColor = Colors.descriptionLabelColor
-        descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
-        descriptionLabel.isHidden = true // Initially hidden
-        cell.contentView.addSubview(descriptionLabel)
-        
-        // Layout constraints
-        NSLayoutConstraint.activate([
-            // Category Label
-            categoryLabel.topAnchor.constraint(equalTo: cell.contentView.topAnchor, constant: 15),
-            categoryLabel.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor, constant: 16),
-            categoryLabel.trailingAnchor.constraint(equalTo: cell.contentView.trailingAnchor, constant: -16),
+        if indexPath.row == 0 {
+            let categoryLabel = UILabel()
+            let categoryLabelText = NSLocalizedString("categoryLabel.text", comment: "Category Label Text")
             
-            // Description Label
-            descriptionLabel.topAnchor.constraint(equalTo: categoryLabel.bottomAnchor, constant: 8),
-            descriptionLabel.leadingAnchor.constraint(equalTo: categoryLabel.leadingAnchor),
-            descriptionLabel.trailingAnchor.constraint(equalTo: categoryLabel.trailingAnchor),
-            descriptionLabel.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor, constant: -15)
-        ])
+            categoryLabel.text = categoryLabelText
+            categoryLabel.font = UIFont.systemFont(ofSize: 17, weight: .regular)
+            categoryLabel.textColor = Colors.black
+            categoryLabel.translatesAutoresizingMaskIntoConstraints = false
+            cell.contentView.addSubview(categoryLabel)
+            
+            let descriptionLabel = UILabel()
+            descriptionLabel.text = selectedCategory
+            descriptionLabel.font = UIFont.systemFont(ofSize: 17, weight: .regular)
+            descriptionLabel.textColor = Colors.descriptionLabelColor
+            descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
+            cell.contentView.addSubview(descriptionLabel)
+            
+            NSLayoutConstraint.activate([
+                categoryLabel.topAnchor.constraint(equalTo: cell.contentView.topAnchor, constant: 15),
+                categoryLabel.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor, constant: 16),
+                categoryLabel.trailingAnchor.constraint(equalTo: cell.contentView.trailingAnchor, constant: -16),
+                
+                descriptionLabel.topAnchor.constraint(equalTo: categoryLabel.bottomAnchor, constant: 8),
+                descriptionLabel.leadingAnchor.constraint(equalTo: categoryLabel.leadingAnchor),
+                descriptionLabel.trailingAnchor.constraint(equalTo: categoryLabel.trailingAnchor),
+                descriptionLabel.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor, constant: -15)
+            ])
+            
+        } else {
+            let scheduleLabel = UILabel()
+            let scheduleLabelText = NSLocalizedString("scheduleLabel.text", comment: "Schedule Label Text")
+            
+            scheduleLabel.text = scheduleLabelText
+            scheduleLabel.font = UIFont.systemFont(ofSize: 17, weight: .regular)
+            scheduleLabel.textColor = Colors.black
+            scheduleLabel.translatesAutoresizingMaskIntoConstraints = false
+            cell.contentView.addSubview(scheduleLabel)
+            
+            let daysLabel = UILabel()
+            let shortNames = selectedDays?.compactMap { dayAbbreviations[$0] }
+                .joined(separator: ", ")
+            daysLabel.text = shortNames
+            daysLabel.font = UIFont.systemFont(ofSize: 17, weight: .regular)
+            daysLabel.textColor = Colors.descriptionLabelColor
+            daysLabel.translatesAutoresizingMaskIntoConstraints = false
+            cell.contentView.addSubview(daysLabel)
+            
+            NSLayoutConstraint.activate([
+                scheduleLabel.topAnchor.constraint(equalTo: cell.contentView.topAnchor, constant: 15),
+                scheduleLabel.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor, constant: 16),
+                scheduleLabel.trailingAnchor.constraint(equalTo: cell.contentView.trailingAnchor, constant: -16),
+                
+                daysLabel.topAnchor.constraint(equalTo: scheduleLabel.bottomAnchor, constant: 8),
+                daysLabel.leadingAnchor.constraint(equalTo: scheduleLabel.leadingAnchor),
+                daysLabel.trailingAnchor.constraint(equalTo: scheduleLabel.trailingAnchor),
+                daysLabel.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor, constant: -15)
+            ])
+        }
         
+        cell.accessoryType = .disclosureIndicator
         cell.backgroundColor = Colors.lightGray
-        
         return cell
     }
 }
 
-extension NonRegularEventViewController: UITableViewDelegate {
+
+extension EditHabitViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 75
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        // Handle button taps
-        print("Категория tapped")
-        showCategoriesPopover()
-        
+        if indexPath.row == 0 {
+            showCategoriesPopover()
+            
+        } else if indexPath.row == 1 {
+            showSchedulePopover()
+        }
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
@@ -328,20 +439,38 @@ extension NonRegularEventViewController: UITableViewDelegate {
     }
 }
 
-extension NonRegularEventViewController: CategoryViewControllerDelegate {
+extension EditHabitViewController: CategoryViewControllerDelegate {
     func didSelectCategory(_ category: TrackerCategory, _ selectedIndexPath: IndexPath?) {
         // Сохраняем выбранную категорию
         selectedCategoryPath = selectedIndexPath
         let categoryCell = tableView.cellForRow(at: IndexPath(row: 0, section: 0))
         if let descriptionLabel = categoryCell?.contentView.subviews.last as? UILabel {
-            descriptionLabel.text = category.title
             selectedCategory = category.title
-            descriptionLabel.isHidden = false // Делаем лейбл видимым
+            descriptionLabel.text = category.title
         }
     }
 }
 
-extension NonRegularEventViewController: UICollectionViewDataSource {
+extension EditHabitViewController: ScheduleViewControllerDelegate {
+    func didSelectDays(_ days: [String]) {
+        prevDays = days
+        
+        // Сохраняем выбранную категорию
+        let scheduleCell = tableView.cellForRow(at: IndexPath(row: 1, section: 0))
+        
+        if let daysLabel = scheduleCell?.contentView.subviews.last as? UILabel {
+            // Преобразование выбранных дней в сокращенные названия
+            let shortNames = days.compactMap { dayAbbreviations[$0] }
+                .joined(separator: ", ")
+    
+            selectedDays = days
+            
+            daysLabel.text = shortNames
+        }
+    }
+}
+
+extension EditHabitViewController: UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 2
     }
@@ -375,6 +504,7 @@ extension NonRegularEventViewController: UICollectionViewDataSource {
             }
             
             return cell
+            
         } else {
             
             guard let cell = collectionView.dequeueReusableCell(
@@ -383,7 +513,6 @@ extension NonRegularEventViewController: UICollectionViewDataSource {
             ) as? ColorCell else {
                 return UICollectionViewCell()
             }
-            
             cell.square.backgroundColor = colors[indexPath.item]
             
             if colors[indexPath.item] == selectedColor {
@@ -414,19 +543,19 @@ extension NonRegularEventViewController: UICollectionViewDataSource {
     }
 }
 
-extension NonRegularEventViewController: UICollectionViewDelegate {
+extension EditHabitViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if indexPath.section == 0 {
             selectedEmoji = emojis[indexPath.item]
         } else {
             selectedColor = colors[indexPath.item]
         }
-
+        
         collectionView.reloadData()
     }
 }
 
-extension NonRegularEventViewController: UICollectionViewDelegateFlowLayout {
+extension EditHabitViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(
         _ collectionView: UICollectionView,
         layout collectionViewLayout: UICollectionViewLayout,
